@@ -2,7 +2,7 @@
 // STRICT SPECIFICATION: ICON-ONLY, NO TEXT LABELS
 // Features center elevated floating action button, safe-area support, and micro-dot active glow
 import { motion } from 'framer-motion';
-import { LayoutDashboard, PieChart, Plus, TrendingUp, Sparkles } from 'lucide-react';
+import { LayoutDashboard, PieChart, Plus, TrendingUp, Sparkles, Bot } from 'lucide-react';
 import { useAppStore } from '../../store/useAppStore';
 import { playClickSound } from '../../services/soundService';
 
@@ -50,22 +50,22 @@ export default function MobileBottomNav() {
           )}
         </button>
 
-        {/* Tab 2: Analytics & Cash Flow (Icon Only) */}
+        {/* Tab 2: 50/30/20 Rule (Icon Only) */}
         <button
-          onClick={() => handleTabClick('sankey')}
+          onClick={() => handleTabClick('50-30-20')}
           className={`flex flex-col items-center justify-center p-2 rounded-2xl transition-all duration-200 cursor-pointer ${
-            isAnalyticsActive
-              ? 'text-cyan-400'
+            activeView === '50-30-20'
+              ? 'text-amber-400'
               : 'text-slate-400 hover:text-slate-200 active:scale-90'
           }`}
-          aria-label="Analytics & Cash Flow"
-          title="Analytics & Cash Flow"
+          aria-label="50/30/20 Budget Rule"
+          title="50/30/20 Budget Rule"
         >
-          <PieChart size={24} strokeWidth={isAnalyticsActive ? 2.3 : 1.8} />
-          {isAnalyticsActive && (
+          <PieChart size={24} strokeWidth={activeView === '50-30-20' ? 2.3 : 1.8} />
+          {activeView === '50-30-20' && (
             <motion.div
               layoutId="mobile-nav-glow"
-              className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-1 shadow-[0_0_8px_#06B6D4]"
+              className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1 shadow-[0_0_8px_#F59E0B]"
             />
           )}
         </button>
@@ -101,22 +101,22 @@ export default function MobileBottomNav() {
           )}
         </button>
 
-        {/* Tab 4: AI Co-Pilot / Roast (Icon Only) */}
+        {/* Tab 4: AI Chatbot (Icon Only) */}
         <button
-          onClick={() => handleTabClick('ai-copilot')}
+          onClick={() => handleTabClick('ai-chatbot')}
           className={`flex flex-col items-center justify-center p-2 rounded-2xl transition-all duration-200 cursor-pointer ${
-            isAIActive
-              ? 'text-fuchsia-400'
+            activeView === 'ai-chatbot'
+              ? 'text-cyan-400'
               : 'text-slate-400 hover:text-slate-200 active:scale-90'
           }`}
-          aria-label="AI Wealth Copilot"
-          title="AI Wealth Copilot"
+          aria-label="AI Budget Assistant"
+          title="AI Budget Assistant"
         >
-          <Sparkles size={24} strokeWidth={isAIActive ? 2.3 : 1.8} />
-          {isAIActive && (
+          <Bot size={24} strokeWidth={activeView === 'ai-chatbot' ? 2.3 : 1.8} />
+          {activeView === 'ai-chatbot' && (
             <motion.div
               layoutId="mobile-nav-glow"
-              className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 mt-1 shadow-[0_0_8px_#D946EF]"
+              className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-1 shadow-[0_0_8px_#06B6D4]"
             />
           )}
         </button>

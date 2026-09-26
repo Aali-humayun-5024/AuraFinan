@@ -1,12 +1,12 @@
-// AuraFinance OS — Main App Shell (Code-Split & Hardware-Adaptive)
+// BudgetBasics — Main App Shell (NextGen BudgetBee)
+// Complies with TechWiz 7 SRS Specification v1.0
 import React, { useEffect, Suspense, lazy } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAppStore } from './store/useAppStore';
 import { useHardwareProfile } from './context/HardwareProfileContext';
 import { fetchFXRates } from './services/fxService';
-import Sidebar from './components/Sidebar';
-import TopNav from './components/TopNav';
-import MobileHeader from './components/mobile/MobileHeader';
+import Navbar from './components/Navbar';
+import TickerBanner from './components/srs/TickerBanner';
 import MobileBottomNav from './components/mobile/MobileBottomNav';
 import CommandPalette from './components/CommandPalette';
 import ViewSkeleton from './components/common/ViewSkeleton';
@@ -16,7 +16,19 @@ import { jsonVaultService } from './services/jsonVaultService';
 import { ledgerDb } from './db/ledgerSchema';
 import masterSeedData from './data/masterSeed.json';
 
-// Route Code-Splitting: Lazy load all views to keep initial bundle size well below 220KB gzipped
+// Core SRS Views
+const FiftyThirtyTwentyModule = lazy(() => import('./components/srs/FiftyThirtyTwentyModule'));
+const BudgetingBasicsModule = lazy(() => import('./components/srs/BudgetingBasicsModule'));
+const NeedsVsWantsModule = lazy(() => import('./components/srs/NeedsVsWantsModule'));
+const SavingsGoalsModule = lazy(() => import('./components/srs/SavingsGoalsModule'));
+const ExpensePlannerModule = lazy(() => import('./components/srs/ExpensePlannerModule'));
+const MoneyMistakesModule = lazy(() => import('./components/srs/MoneyMistakesModule'));
+const InfographicsGalleryModule = lazy(() => import('./components/srs/InfographicsGalleryModule'));
+const AIChatbotModule = lazy(() => import('./components/srs/AIChatbotModule'));
+const SearchFilterModule = lazy(() => import('./components/srs/SearchFilterModule'));
+const AboutFeedbackContactModule = lazy(() => import('./components/srs/AboutFeedbackContactModule'));
+
+// Advanced & Legacy Feature Views (accessible via 'More Tools')
 const DashboardView = lazy(() => import('./views/DashboardView'));
 const DailyBazaarView = lazy(() => import('./views/DailyBazaarView'));
 const TransactionsView = lazy(() => import('./views/TransactionsView'));
@@ -33,7 +45,7 @@ const CashFlowEngineView = lazy(() => import('./views/CashFlowEngineView'));
 const AcademicSuiteView = lazy(() => import('./views/AcademicSuiteView'));
 const SettingsView = lazy(() => import('./views/SettingsView'));
 
-// Lazy load heavy voice and persona studios on-demand
+// Modals
 const AudioWalkthroughWidget = lazy(() => import('./components/voice/AudioWalkthroughWidget'));
 const VoiceAssistantModal = lazy(() =>
   import('./components/voice/VoiceAssistantModal').then((m) => ({ default: m.VoiceAssistantModal }))
@@ -43,9 +55,9 @@ const CopilotChatbot = lazy(() => import('./components/ai/CopilotChatbot'));
 const SiteMapModal = lazy(() => import('./components/layout/SiteMapModal'));
 
 const pageVariants = {
-  initial: { opacity: 0, x: 15 },
-  animate: { opacity: 1, x: 0, transition: { duration: 0.25, ease: 'easeOut' as const } },
-  exit: { opacity: 0, x: -15, transition: { duration: 0.15 } },
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.2, ease: 'easeOut' as const } },
+  exit: { opacity: 0, y: -8, transition: { duration: 0.12 } },
 };
 
 function ViewRouter() {
@@ -53,10 +65,44 @@ function ViewRouter() {
 
   const renderActiveView = () => {
     switch (activeView) {
+      // Primary SRS Requirements
       case 'dashboard':
         return <DashboardView />;
+      case '50-30-20':
+      case 'fifty-thirty-twenty':
+        return <FiftyThirtyTwentyModule />;
+      case 'budgeting-basics':
+        return <BudgetingBasicsModule />;
+      case 'needs-vs-wants':
+        return <NeedsVsWantsModule />;
+      case 'savings-goals':
+        return <SavingsGoalsModule />;
+      case 'expense-planner':
+        return <ExpensePlannerModule />;
+      case 'money-mistakes':
+        return <MoneyMistakesModule />;
+      case 'infographics':
+        return <InfographicsGalleryModule />;
+      case 'ai-chatbot':
+        return <AIChatbotModule />;
+      case 'search-resources':
+        return <SearchFilterModule />;
+      case 'feedback-contact':
+        return <AboutFeedbackContactModule />;
+
+      // Advanced Power Tools ('More Tools')
+      case 'general-ledger':
+        return <GeneralLedgerView />;
+      case 'cash-flow-engine':
+        return <CashFlowEngineView />;
+      case 'academic-suite':
+        return <AcademicSuiteView />;
       case 'daily-bazaar':
         return <DailyBazaarView />;
+      case 'bazaar-sentinel':
+        return <BazaarSentinelView />;
+      case 'split-ledger':
+        return <SplitLedgerView />;
       case 'transactions':
         return <TransactionsView />;
       case 'goals':
@@ -71,16 +117,6 @@ function ViewRouter() {
         return <SubscriptionsView />;
       case 'impulse-interceptor':
         return <ImpulseInterceptorView />;
-      case 'split-ledger':
-        return <SplitLedgerView />;
-      case 'bazaar-sentinel':
-        return <BazaarSentinelView />;
-      case 'general-ledger':
-        return <GeneralLedgerView />;
-      case 'cash-flow-engine':
-        return <CashFlowEngineView />;
-      case 'academic-suite':
-        return <AcademicSuiteView />;
       case 'settings':
         return <SettingsView />;
       default:
@@ -114,7 +150,7 @@ export default function App() {
       try {
         const count = await ledgerDb.accounts.count();
         if (count === 0) {
-          console.log('[AuraFinance OS] Bootstrapping complete system from masterSeed.json...');
+          console.log('[BudgetBasics] Bootstrapping system data...');
           await jsonVaultService.hydrateFromJSON(masterSeedData as any, 'wipe_and_restore');
         }
       } catch (err) {
@@ -125,8 +161,7 @@ export default function App() {
     bootstrapVault();
   }, []);
 
-  // Continuous "Hey Aura" background wake word listener
-  // In Eco Voice Mode or low-tier devices, continuous recognition is pruned to eliminate CPU/battery drain
+  // Continuous "Hey Aura / Hey Bee" background wake word listener
   useEffect(() => {
     if (ecoVoiceMode || profile.ecoVoiceMode) {
       return;
@@ -160,7 +195,7 @@ export default function App() {
     }
   }, [theme]);
 
-  // Flashlight bento cursor coordinates — pruned completely on low hardware tier
+  // Flashlight cursor coordinates
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (profile.tier === 'low') return;
     const target = e.currentTarget;
@@ -171,42 +206,36 @@ export default function App() {
   return (
     <div
       onMouseMove={handleMouseMove}
-      className={`flex h-screen w-screen overflow-hidden bg-aura-bg transition-colors duration-300 ${
+      className={`flex flex-col h-screen w-screen overflow-hidden bg-aura-bg transition-colors duration-300 ${
         theme === 'light' ? 'theme-light text-slate-900' : 'theme-dark text-slate-100'
       }`}
     >
       {/* Animated Background */}
       <div className="aura-bg-gradient" />
 
-      {/* Desktop Sidebar (hidden lg:flex inside Sidebar) */}
-      <Sidebar />
+      {/* Top Navbar (Replaces sidebar completely with responsive header) */}
+      <Navbar />
 
-      {/* Main App Container */}
-      <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden relative">
-        {/* Desktop Top Navigation (hidden lg:flex inside TopNav) */}
-        <TopNav />
+      {/* Real-time Ticker Banner: Visitor Counter, Clock & Financial Quotes Ticker (SRS 1.6 & 1.6.11) */}
+      <TickerBanner />
 
-        {/* Mobile & Tablet App Header (< 1024px: flex lg:hidden) */}
-        <MobileHeader />
+      {/* Main Viewport Container */}
+      <main className="flex-1 flex flex-col min-h-0 overflow-y-auto pb-20 lg:pb-6 relative z-10">
+        <ViewRouter />
+      </main>
 
-        {/* View Router with safe bottom padding on mobile for bottom dock */}
-        <div className="flex-1 flex flex-col min-h-0 overflow-y-auto pb-20 lg:pb-0">
-          <ViewRouter />
-        </div>
+      {/* Mobile Native Bottom Tab Bar (< 1024px) */}
+      <MobileBottomNav />
 
-        {/* Mobile Native Bottom Tab Bar (< 1024px: fixed bottom-0 z-50 lg:hidden) */}
-        <MobileBottomNav />
-      </div>
-
-      {/* Command Palette Overlay */}
+      {/* Command Palette Overlay (⌘K) */}
       <CommandPalette />
 
-      {/* Voice-Activated Audio Walkthrough Widget */}
+      {/* Audio Walkthrough Widget */}
       <Suspense fallback={null}>
         <AudioWalkthroughWidget />
       </Suspense>
 
-      {/* "Hey Aura" Voice Assistant HUD & Frequency Orb Modal */}
+      {/* Voice Assistant HUD Modal */}
       {voiceAssistantOpen && (
         <Suspense fallback={null}>
           <VoiceAssistantModal
@@ -216,7 +245,7 @@ export default function App() {
         </Suspense>
       )}
 
-      {/* Dynamic User-Crafted Experience Persona Architect Studio */}
+      {/* Dynamic Persona Studio Modal */}
       <Suspense fallback={null}>
         <PersonaStudioModal />
       </Suspense>

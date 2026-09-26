@@ -70,7 +70,7 @@ export const HeroLiquidityBanner: React.FC = () => {
     playClickSound();
     try {
       await generate24HourStatementPDF({
-        vaultName: 'AuraFinance OS — Institutional Vault',
+        vaultName: 'BudgetBasics — Institutional Vault',
         baseCurrency,
         accountHolder: personaLabel,
         coherentLiquidity: coherentState.liquidity,

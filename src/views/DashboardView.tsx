@@ -34,6 +34,7 @@ import ReconciliationBanner from '../components/common/ReconciliationBanner';
 import { useCommodities } from '../hooks/useCommodities';
 import StandardMetricBentoCard from '../components/common/StandardMetricBentoCard';
 import HeroLiquidityBanner from '../components/dashboard/HeroLiquidityBanner';
+import SRSWelcomeHero from '../components/srs/SRSWelcomeHero';
 import { useCoherentFinancialState } from '../context/FinancialStateContext';
 import { createCoherentTransaction } from '../services/transactionLedgerSync';
 
@@ -276,6 +277,9 @@ export default function DashboardView() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* ─── 0. SRS WELCOME HERO & CORE FUNCTIONS GRID (SRS 1.1, 1.2, 1.6) ─── */}
+      <SRSWelcomeHero />
 
       {/* ─── HERO LIQUIDITY BANNER & STAGE ─── */}
       <HeroLiquidityBanner />

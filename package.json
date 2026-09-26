@@ -1,6 +1,6 @@
 {
-  "name": "aurafinance-os",
-  "description": "AuraFinance OS — Autonomous Client-Side AI Wealth Operating System",
+  "name": "budgetbasics",
+  "description": "BudgetBasics — NextGen BudgetBee | Student Financial Education Platform (TechWiz 7)",
   "private": true,
   "version": "2.0.0",
   "type": "module",
