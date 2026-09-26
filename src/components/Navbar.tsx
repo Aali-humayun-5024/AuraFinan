@@ -342,8 +342,8 @@ export default function Navbar() {
                   >
                     <BookOpen size={14} className="text-cyan-500" />
                     <div>
-                      <div className="font-semibold">General Ledger (GAAP)</div>
-                      <div className="text-[10px] text-slate-400">Debit-credit atomic balance</div>
+                      <div className="font-semibold">Accounting Simulator (Ledger)</div>
+                      <div className="text-[10px] text-slate-400">Commerce lab: Double-entry $Dr = $Cr</div>
                     </div>
                   </button>
 
@@ -669,7 +669,7 @@ export default function Navbar() {
                   className="p-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-left flex items-center gap-2 text-slate-700 dark:text-slate-300"
                 >
                   <BookOpen size={14} className="text-blue-500" />
-                  <span>General Ledger</span>
+                  <span>Accounting Simulator</span>
                 </button>
                 <button
                   onClick={() => navigateTo('academic-suite')}

@@ -332,11 +332,11 @@ export default function GeneralJournal() {
               <span className="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse" />
               <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                 <FileText size={17} className="text-cyan-500" />
-                <span>{t.generalLedger.journalTitle}</span>
+                <span>Double-Entry General Journal (Accounting Simulator Desk)</span>
               </h2>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              CPA-Grade Double-Entry Validation Engine. Automatic atomic posting to Chart of Accounts.
+              Interactive bookkeeping workspace for Commerce &amp; Accounting students: Practice balanced Debit ($Dr) &amp; Credit ($Cr) transactions with instant atomic posting.
             </p>
           </div>
 
