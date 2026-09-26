@@ -1,6 +1,6 @@
-// BudgetBasics — Master Top Navigation Bar (Linear / Apple Pro Design)
-// Fully Responsive: Adaptive Icon + Short-Form Text, Auto-Collapsing Breakpoints,
-// Floating Pill Hover/Active Highlights, and Native-Style Mobile Sheet.
+// BudgetBasics — Master Pro Navigation Bar (Linear / Apple Sequoia Design System)
+// Features: Floating Glass Island, Fluid Spring Active Pill (layoutId),
+// Multi-Tier Adaptive Breakpoints, 50/30/20 Radiant Golden Capsule, and iOS Dynamic Sheet.
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -25,18 +25,16 @@ import {
   GraduationCap,
   Briefcase,
   UserPlus,
-  Scale,
   Users,
   CreditCard,
   Settings,
   Menu,
   X,
   Check,
-  Command,
+  Zap,
 } from 'lucide-react';
 import { useAppStore, type CurrencyCode } from '../store/useAppStore';
-import { useTranslation } from '../i18n/useTranslation';
-import { playClickSound, playToggleSound } from '../services/soundService';
+import { playClickSound } from '../services/soundService';
 import VoiceTriggerButton from './voice/VoiceTriggerButton';
 import confetti from 'canvas-confetti';
 import { seedPersona } from '../data/seedData';
@@ -76,14 +74,14 @@ const PERSONA_OPTIONS = [
   },
 ];
 
-// Short-form punchy navigation items with crisp icons
-const PRIMARY_NAV = [
+// Adaptive Prioritized Navigation Modules
+const NAV_MODULES = [
   {
     id: 'dashboard',
     shortLabel: 'Home',
-    fullTitle: 'Home Dashboard',
+    fullTitle: 'Home Workstation',
     icon: Home,
-    desktopText: 'block', // Always show text on desktop
+    tier: 'core', // Always shows text on desktop
   },
   {
     id: '50-30-20',
@@ -91,56 +89,56 @@ const PRIMARY_NAV = [
     fullTitle: '50/30/20 Budget Rule & Calculator',
     icon: PieChart,
     isFeatured: true,
-    desktopText: 'block',
+    tier: 'core',
   },
   {
     id: 'budgeting-basics',
     shortLabel: 'Basics',
-    fullTitle: 'Budgeting Basics 101 & Quiz',
+    fullTitle: 'Budgeting Basics 101 & Interactive Quiz',
     icon: BookOpen,
-    desktopText: 'hidden lg:inline',
+    tier: 'core',
   },
   {
     id: 'needs-vs-wants',
     shortLabel: 'Needs/Wants',
-    fullTitle: 'Needs vs Wants Decision Game',
+    fullTitle: 'Needs vs Wants Classification Game',
     icon: ShieldCheck,
-    desktopText: 'hidden xl:inline',
+    tier: 'secondary', // Text on lg+, icon on md
   },
   {
     id: 'savings-goals',
     shortLabel: 'Goals',
     fullTitle: 'Savings Goals & Timeline Estimator',
     icon: Target,
-    desktopText: 'hidden xl:inline',
+    tier: 'secondary',
   },
   {
     id: 'expense-planner',
     shortLabel: 'Planner',
-    fullTitle: 'Student Expense Planner',
+    fullTitle: 'Student Expense Planner Ledger',
     icon: Receipt,
-    desktopText: 'hidden 2xl:inline',
+    tier: 'tertiary', // Text on xl+, icon on md/lg
   },
   {
     id: 'money-mistakes',
     shortLabel: 'Mistakes',
-    fullTitle: 'Common Money Mistakes to Avoid',
+    fullTitle: 'Common Student Money Mistakes',
     icon: AlertTriangle,
-    desktopText: 'hidden 2xl:inline',
+    tier: 'tertiary',
   },
   {
     id: 'infographics',
     shortLabel: 'Gallery',
-    fullTitle: 'Visual Learning Gallery',
+    fullTitle: 'Visual Learning Infographics',
     icon: Image,
-    desktopText: 'hidden 2xl:inline',
+    tier: 'extended', // Text on 2xl+, icon on xl
   },
   {
     id: 'ai-chatbot',
     shortLabel: 'AI Bot',
-    fullTitle: 'AI Budget Assistant (BudgetBee)',
+    fullTitle: 'AI Student Assistant (BudgetBee)',
     icon: Bot,
-    desktopText: 'hidden 2xl:inline',
+    tier: 'extended',
   },
 ];
 
@@ -161,8 +159,9 @@ export default function Navbar() {
   const [moreToolsOpen, setMoreToolsOpen] = useState(false);
   const [personaMenuOpen, setPersonaMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [hoveredNav, setHoveredNav] = useState<string | null>(null);
 
-  // Close menus on Escape or Outside Click
+  // Close overlays on Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -203,27 +202,30 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/85 dark:bg-[#070A13]/85 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/[0.08] shadow-xs transition-colors duration-200">
-      <div className="w-full px-3 sm:px-5 lg:px-6 h-15 flex items-center justify-between gap-2">
+    <div className="sticky top-0 z-40 w-full px-2 sm:px-4 py-2 pointer-events-none transition-all duration-200">
+      {/* ─── Floating Glass Capsule Header (Apple Sequoia / Linear Style) ─── */}
+      <header className="pointer-events-auto max-w-7xl mx-auto h-14 sm:h-15 px-3 sm:px-4 rounded-2xl bg-white/85 dark:bg-[#070A13]/85 backdrop-blur-2xl border border-slate-200/80 dark:border-white/[0.08] shadow-lg shadow-black/[0.03] dark:shadow-black/40 flex items-center justify-between gap-2 sm:gap-3 transition-all duration-300">
+        
         {/* ─── 1. Brand Logo Lockup ─── */}
         <div
           onClick={() => navigateTo('dashboard')}
           className="flex items-center gap-2 cursor-pointer select-none shrink-0 group py-1"
           title="BudgetBasics — NextGen BudgetBee"
         >
-          <div className="w-8.5 h-8.5 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 flex items-center justify-center text-slate-950 font-black text-lg shadow-md shadow-amber-500/25 group-hover:scale-105 transition-transform">
+          <div className="relative w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 flex items-center justify-center text-slate-950 font-black text-base shadow-md shadow-amber-500/25 group-hover:scale-105 transition-transform">
             🐝
+            <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#070A13]" />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col text-left">
             <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-sm sm:text-base tracking-tight text-slate-900 dark:text-white leading-none">
+              <span className="font-extrabold text-xs sm:text-sm tracking-tight text-slate-900 dark:text-white leading-none">
                 BudgetBasics
               </span>
-              <span className="hidden sm:inline-flex text-[9px] font-mono px-1.5 py-0.2 rounded-md bg-amber-500/15 text-amber-700 dark:text-amber-300 font-bold border border-amber-500/30">
+              <span className="hidden sm:inline-flex text-[9px] font-mono font-bold px-1 py-0.2 rounded-md bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30">
                 v1.0
               </span>
             </div>
-            <span className="text-[9px] font-semibold text-slate-400 dark:text-slate-400 tracking-wider uppercase leading-tight mt-0.5 hidden xs:inline">
+            <span className="text-[9px] font-semibold text-slate-400 tracking-wider uppercase leading-tight mt-0.5 hidden xs:inline">
               BudgetBee
             </span>
           </div>
@@ -231,30 +233,42 @@ export default function Navbar() {
 
         {/* ─── 2. Adaptive Desktop Dock (md:flex) ─── */}
         <nav
-          aria-label="Main Navigation"
-          className="hidden md:flex items-center gap-1 bg-slate-100/70 dark:bg-white/[0.04] p-1 rounded-2xl border border-slate-200/70 dark:border-white/[0.06] text-xs font-semibold"
+          aria-label="Main Navigation Dock"
+          onMouseLeave={() => setHoveredNav(null)}
+          className="hidden md:flex items-center gap-0.5 sm:gap-1 bg-slate-100/70 dark:bg-white/[0.03] p-1 rounded-xl border border-slate-200/60 dark:border-white/[0.06] text-xs font-semibold relative"
         >
-          {PRIMARY_NAV.map((item) => {
+          {NAV_MODULES.map((item) => {
             const Icon = item.icon;
             const isActive = activeView === item.id;
             const isFeatured = item.isFeatured;
 
+            // Responsive text visibility based on item priority
+            const textClass =
+              item.tier === 'core'
+                ? 'inline'
+                : item.tier === 'secondary'
+                ? 'hidden lg:inline'
+                : item.tier === 'tertiary'
+                ? 'hidden xl:inline'
+                : 'hidden 2xl:inline';
+
             if (isFeatured) {
-              // 🌟 50/30/20 Rule: Prominent pill button with amber glow
+              // 🌟 50/30/20 Rule: Radiant Gold Highlight Pill (Prominently Outside)
               return (
                 <button
                   key={item.id}
                   onClick={() => navigateTo(item.id)}
+                  onMouseEnter={() => setHoveredNav(item.id)}
                   title={item.fullTitle}
-                  className={`relative px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 font-bold cursor-pointer shrink-0 ${
+                  className={`relative px-2.5 sm:px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 font-black cursor-pointer shrink-0 ${
                     isActive
-                      ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/25'
-                      : 'bg-amber-500/15 hover:bg-amber-500/25 text-amber-700 dark:text-amber-300 border border-amber-500/30'
+                      ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/30'
+                      : 'bg-amber-500/15 hover:bg-amber-500/25 text-amber-700 dark:text-amber-300 border border-amber-500/35 hover:scale-[1.02]'
                   }`}
                 >
-                  <Icon size={14} className="animate-pulse shrink-0" />
-                  <span className="tracking-tight">{item.shortLabel}</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping hidden lg:inline" />
+                  <Icon size={14} className="animate-pulse shrink-0 text-amber-500 dark:text-amber-300" />
+                  <span className="tracking-tight text-[11px] sm:text-xs">{item.shortLabel}</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping hidden lg:inline" />
                 </button>
               );
             }
@@ -263,29 +277,49 @@ export default function Navbar() {
               <button
                 key={item.id}
                 onClick={() => navigateTo(item.id)}
+                onMouseEnter={() => setHoveredNav(item.id)}
                 title={item.fullTitle}
-                className={`relative px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${
+                className={`relative px-2 sm:px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shrink-0 z-10 text-[11px] sm:text-xs ${
                   isActive
-                    ? 'bg-white dark:bg-slate-800 text-slate-950 dark:text-white font-bold shadow-xs border border-slate-200/90 dark:border-white/10'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/[0.06]'
+                    ? 'text-slate-950 dark:text-white font-bold'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                <Icon size={14} className={isActive ? 'text-amber-500' : 'text-slate-400'} />
-                <span className={item.desktopText}>{item.shortLabel}</span>
+                {/* Floating Active Pill Indicator */}
+                {isActive && (
+                  <motion.div
+                    layoutId="navbar-sliding-pill"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    className="absolute inset-0 rounded-lg bg-white dark:bg-slate-800 shadow-xs border border-slate-200/90 dark:border-white/10 -z-10"
+                  />
+                )}
+
+                <Icon
+                  size={14}
+                  className={`shrink-0 transition-colors ${
+                    isActive
+                      ? 'text-amber-500 dark:text-amber-400'
+                      : 'text-slate-400 group-hover:text-slate-600'
+                  }`}
+                />
+                <span className={textClass}>{item.shortLabel}</span>
               </button>
             );
           })}
 
-          {/* 📂 "More ▾" Dropdown for Institutional/Advanced Features */}
+          {/* 📂 "More ▾" Dropdown Hub */}
           <div className="relative">
             <button
               onClick={() => setMoreToolsOpen(!moreToolsOpen)}
-              className="px-2.5 py-1.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/[0.06] transition-all flex items-center gap-1 cursor-pointer shrink-0"
-              title="Advanced Features & Tools"
+              className="px-2 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white transition-all flex items-center gap-1 cursor-pointer shrink-0 text-[11px] sm:text-xs"
+              title="Advanced Features & Accounting Tools"
             >
-              <Layers size={14} className="text-slate-400" />
+              <Layers size={13} className="text-slate-400" />
               <span className="hidden xl:inline">More</span>
-              <ChevronDown size={12} className={`transition-transform duration-200 ${moreToolsOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown
+                size={11}
+                className={`transition-transform duration-200 ${moreToolsOpen ? 'rotate-180' : ''}`}
+              />
             </button>
 
             {/* Dropdown Menu */}
@@ -296,10 +330,10 @@ export default function Navbar() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 8, scale: 0.96 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-2xl p-1.5 z-50 space-y-0.5"
+                  className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-white/10 shadow-2xl p-1.5 z-50 space-y-0.5 backdrop-blur-xl"
                 >
-                  <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
-                    Advanced Wealth Suite
+                  <div className="px-3 py-1.5 text-[9px] font-mono uppercase tracking-wider text-slate-400 font-bold">
+                    Advanced Institutional Suite
                   </div>
 
                   <button
@@ -309,7 +343,7 @@ export default function Navbar() {
                     <BookOpen size={14} className="text-cyan-500" />
                     <div>
                       <div className="font-semibold">General Ledger (GAAP)</div>
-                      <div className="text-[10px] text-slate-400">Double-entry debit & credit balance</div>
+                      <div className="text-[10px] text-slate-400">Debit-credit atomic balance</div>
                     </div>
                   </button>
 
@@ -320,7 +354,7 @@ export default function Navbar() {
                     <GraduationCap size={14} className="text-purple-500" />
                     <div>
                       <div className="font-semibold">Academic CPA Labs</div>
-                      <div className="text-[10px] text-slate-400">Break-even simulations & variance</div>
+                      <div className="text-[10px] text-slate-400">Break-even simulations</div>
                     </div>
                   </button>
 
@@ -331,7 +365,7 @@ export default function Navbar() {
                     <Receipt size={14} className="text-emerald-500" />
                     <div>
                       <div className="font-semibold">Daily Bazaar & Rashan</div>
-                      <div className="text-[10px] text-slate-400">Commodity prices & kameti tracker</div>
+                      <div className="text-[10px] text-slate-400">Commodity prices & kameti</div>
                     </div>
                   </button>
 
@@ -342,7 +376,7 @@ export default function Navbar() {
                     <Users size={14} className="text-amber-500" />
                     <div>
                       <div className="font-semibold">Split Ledger & Roommate IOUs</div>
-                      <div className="text-[10px] text-slate-400">Dormitory bill dividing & settlements</div>
+                      <div className="text-[10px] text-slate-400">Dorm bill dividing & settlements</div>
                     </div>
                   </button>
 
@@ -353,7 +387,7 @@ export default function Navbar() {
                     <CreditCard size={14} className="text-rose-500" />
                     <div>
                       <div className="font-semibold">Subscriptions Sentinel</div>
-                      <div className="text-[10px] text-slate-400">Detect zombie trial renewals</div>
+                      <div className="text-[10px] text-slate-400">Cancel zombie auto-renewals</div>
                     </div>
                   </button>
 
@@ -366,7 +400,7 @@ export default function Navbar() {
                     <Settings size={14} className="text-slate-400" />
                     <div>
                       <div className="font-semibold">Settings & Encrypted Vault</div>
-                      <div className="text-[10px] text-slate-400">AES-GCM-256 backup & statements</div>
+                      <div className="text-[10px] text-slate-400">AES-GCM-256 backup</div>
                     </div>
                   </button>
                 </motion.div>
@@ -375,29 +409,29 @@ export default function Navbar() {
           </div>
         </nav>
 
-        {/* ─── 3. Right Action Cluster (Search, Persona, Currency, Theme) ─── */}
-        <div className="flex items-center gap-1.5 shrink-0">
-          {/* Quick Search Button (⌘K) */}
+        {/* ─── 3. Right Action Cluster ─── */}
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {/* Quick Search Pill (⌘K) */}
           <button
             onClick={() => setCommandPaletteOpen(true)}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all text-xs cursor-pointer"
+            className="flex items-center gap-1.5 px-2 py-1.5 rounded-xl border border-slate-200/80 dark:border-white/10 hover:border-slate-300 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all text-xs cursor-pointer bg-slate-50/50 dark:bg-white/[0.02]"
             title="Search & Command Palette (⌘K)"
           >
-            <Search size={14} />
-            <kbd className="hidden lg:inline text-[10px] font-mono px-1 py-0.5 rounded bg-slate-100 dark:bg-white/10 text-slate-400">
+            <Search size={13} />
+            <kbd className="hidden lg:inline text-[9px] font-mono px-1 py-0.2 rounded bg-slate-200/60 dark:bg-white/10 text-slate-500 dark:text-slate-400">
               ⌘K
             </kbd>
           </button>
 
-          {/* 👤 Student Persona Switcher (Clean Dropdown) */}
+          {/* 👤 Student Persona Switcher Pill */}
           <div className="relative">
             <button
               onClick={() => setPersonaMenuOpen(!personaMenuOpen)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200/90 dark:border-white/10 hover:border-amber-400 bg-white/60 dark:bg-white/[0.04] transition-all text-xs font-semibold cursor-pointer"
-              title="Switch Learning Persona"
+              className="flex items-center gap-1.5 px-2 py-1.5 rounded-xl border border-slate-200/80 dark:border-white/10 hover:border-amber-400/80 bg-white/80 dark:bg-white/[0.04] transition-all text-xs font-semibold cursor-pointer shadow-2xs"
+              title="Active Learning Persona"
             >
               <span className="text-sm leading-none">{currentPersonaObj.emoji}</span>
-              <span className="hidden sm:inline text-slate-800 dark:text-slate-200">
+              <span className="hidden sm:inline text-slate-800 dark:text-slate-200 font-bold text-[11px]">
                 {currentPersonaObj.shortLabel}
               </span>
               <ChevronDown size={11} className="text-slate-400" />
@@ -411,9 +445,9 @@ export default function Navbar() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 8, scale: 0.96 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-2xl p-1.5 z-50 space-y-1"
+                  className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-2xl p-1.5 z-50 space-y-1 backdrop-blur-xl"
                 >
-                  <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
+                  <div className="px-3 py-1.5 text-[9px] font-mono uppercase tracking-wider text-slate-400 font-bold">
                     Select Student Persona
                   </div>
 
@@ -429,7 +463,7 @@ export default function Navbar() {
                             : 'hover:bg-slate-100 dark:hover:bg-white/[0.06] text-slate-700 dark:text-slate-300'
                         }`}
                       >
-                        <div className="flex items-center gap-2.5">
+                        <div className="flex items-center gap-2">
                           <span className="text-base">{p.emoji}</span>
                           <div>
                             <div className="font-bold leading-tight">{p.label}</div>
@@ -446,12 +480,12 @@ export default function Navbar() {
           </div>
 
           {/* Currency Pill Switcher */}
-          <div className="hidden sm:flex items-center bg-slate-100 dark:bg-white/[0.05] p-0.5 rounded-xl text-xs font-mono font-bold">
+          <div className="hidden sm:flex items-center bg-slate-100/80 dark:bg-white/[0.04] p-0.5 rounded-lg text-xs font-mono font-bold border border-slate-200/60 dark:border-white/[0.06]">
             {(['USD', 'PKR', 'EUR', 'GBP'] as CurrencyCode[]).map((cur) => (
               <button
                 key={cur}
                 onClick={() => setBaseCurrency(cur)}
-                className={`px-2 py-0.5 rounded-lg transition-all cursor-pointer text-[11px] ${
+                className={`px-1.5 py-0.5 rounded-md transition-all cursor-pointer text-[10px] ${
                   baseCurrency === cur
                     ? 'bg-white dark:bg-slate-800 text-slate-950 dark:text-white shadow-xs font-black'
                     : 'text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -465,7 +499,7 @@ export default function Navbar() {
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+            className="p-1.5 sm:p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-white/10"
             title="Toggle Dark / Light Mode"
           >
             {theme === 'dark' ? <Sun size={15} className="text-amber-400" /> : <Moon size={15} />}
@@ -476,63 +510,54 @@ export default function Navbar() {
             <VoiceTriggerButton />
           </div>
 
-          {/* Feedback & About Shortcut */}
-          <button
-            onClick={() => navigateTo('feedback-contact')}
-            className="hidden sm:flex p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
-            title="Feedback & About Us (SRS 1.6.10)"
-          >
-            <MessageSquare size={15} />
-          </button>
-
           {/* Mobile Hamburger Toggle (md:hidden) */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden p-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
             aria-label="Toggle Navigation Menu"
           >
-            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
-      </div>
+      </header>
 
-      {/* ─── 4. Professional Mobile & Tablet Slide-Down Sheet (md:hidden) ─── */}
+      {/* ─── 4. Dynamic Island Mobile / Tablet Drawer (md:hidden) ─── */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: 'easeInOut' }}
-            className="md:hidden border-t border-slate-200/90 dark:border-white/[0.08] bg-white/95 dark:bg-[#070A13]/95 backdrop-blur-2xl px-4 py-5 space-y-5 max-h-[85vh] overflow-y-auto"
+            initial={{ opacity: 0, y: -10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className="pointer-events-auto md:hidden max-w-7xl mx-auto mt-2 rounded-2xl bg-white/95 dark:bg-[#070A13]/95 backdrop-blur-2xl border border-slate-200/90 dark:border-white/[0.08] shadow-2xl p-4 space-y-4 max-h-[82vh] overflow-y-auto"
           >
             {/* Featured 50/30/20 Rule Banner in Mobile */}
             <div
               onClick={() => navigateTo('50-30-20')}
-              className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-amber-400/10 to-transparent border border-amber-500/30 flex items-center justify-between cursor-pointer"
+              className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-amber-400/10 to-transparent border border-amber-500/40 flex items-center justify-between cursor-pointer"
             >
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-600 text-slate-950 flex items-center justify-center font-bold shadow-md shadow-amber-500/25">
                   <PieChart size={18} />
                 </div>
                 <div>
-                  <div className="font-extrabold text-sm text-slate-900 dark:text-white flex items-center gap-1.5">
-                    <span>50/30/20 Rule & Calculator</span>
+                  <div className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <span>50/30/20 Budget Rule</span>
                     <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-amber-500 text-slate-950 font-bold">
                       CORE
                     </span>
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                    Divide your monthly allowance into Needs, Wants & Savings
+                    Divide allowance into 50% Needs, 30% Wants, 20% Savings
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Section 1: Core Educational Modules */}
-            <div className="space-y-2">
+            {/* Core Modules Grid */}
+            <div className="space-y-1.5">
               <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold px-1">
-                Core Budgeting Modules
+                Student Learning Modules
               </span>
               <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
                 <button
@@ -543,7 +568,7 @@ export default function Navbar() {
                       : 'border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-slate-700 dark:text-slate-300'
                   }`}
                 >
-                  <Home size={15} className="text-cyan-500" />
+                  <Home size={14} className="text-cyan-500" />
                   <span>Home</span>
                 </button>
 
@@ -555,7 +580,7 @@ export default function Navbar() {
                       : 'border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-slate-700 dark:text-slate-300'
                   }`}
                 >
-                  <BookOpen size={15} className="text-cyan-500" />
+                  <BookOpen size={14} className="text-cyan-500" />
                   <span>Basics & Quiz</span>
                 </button>
 
@@ -567,7 +592,7 @@ export default function Navbar() {
                       : 'border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-slate-700 dark:text-slate-300'
                   }`}
                 >
-                  <ShieldCheck size={15} className="text-emerald-500" />
+                  <ShieldCheck size={14} className="text-emerald-500" />
                   <span>Needs vs Wants</span>
                 </button>
 
@@ -579,7 +604,7 @@ export default function Navbar() {
                       : 'border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-slate-700 dark:text-slate-300'
                   }`}
                 >
-                  <Target size={15} className="text-indigo-500" />
+                  <Target size={14} className="text-indigo-500" />
                   <span>Savings Goals</span>
                 </button>
 
@@ -591,7 +616,7 @@ export default function Navbar() {
                       : 'border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-slate-700 dark:text-slate-300'
                   }`}
                 >
-                  <Receipt size={15} className="text-rose-500" />
+                  <Receipt size={14} className="text-rose-500" />
                   <span>Expense Planner</span>
                 </button>
 
@@ -603,7 +628,7 @@ export default function Navbar() {
                       : 'border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-slate-700 dark:text-slate-300'
                   }`}
                 >
-                  <AlertTriangle size={15} className="text-yellow-500" />
+                  <AlertTriangle size={14} className="text-yellow-500" />
                   <span>Money Mistakes</span>
                 </button>
 
@@ -615,7 +640,7 @@ export default function Navbar() {
                       : 'border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-slate-700 dark:text-slate-300'
                   }`}
                 >
-                  <Image size={15} className="text-purple-500" />
+                  <Image size={14} className="text-purple-500" />
                   <span>Infographics</span>
                 </button>
 
@@ -627,16 +652,16 @@ export default function Navbar() {
                       : 'border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-slate-700 dark:text-slate-300'
                   }`}
                 >
-                  <Bot size={15} className="text-cyan-500" />
+                  <Bot size={14} className="text-cyan-500" />
                   <span>AI BudgetBee</span>
                 </button>
               </div>
             </div>
 
-            {/* Section 2: Advanced Power Tools */}
-            <div className="space-y-2">
+            {/* Advanced Suite Grid */}
+            <div className="space-y-1.5">
               <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold px-1">
-                Advanced Tools & Accounting
+                Advanced Tools & Ledger
               </span>
               <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
                 <button
@@ -665,7 +690,7 @@ export default function Navbar() {
                   className="p-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-left flex items-center gap-2 text-slate-700 dark:text-slate-300"
                 >
                   <Users size={14} className="text-amber-500" />
-                  <span>Bill Split & IOUs</span>
+                  <span>Bill Split</span>
                 </button>
                 <button
                   onClick={() => navigateTo('subscriptions')}
@@ -684,11 +709,11 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Quick Preferences Toolbar */}
+            {/* Quick Links Footer */}
             <div className="pt-2 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-xs font-semibold">
               <button
                 onClick={() => navigateTo('feedback-contact')}
-                className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-amber-500"
+                className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-amber-500 cursor-pointer"
               >
                 <MessageSquare size={14} />
                 <span>Feedback & About</span>
@@ -698,7 +723,7 @@ export default function Navbar() {
                   setSiteMapModalOpen(true);
                   setMobileMenuOpen(false);
                 }}
-                className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-amber-500"
+                className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-amber-500 cursor-pointer"
               >
                 <Compass size={14} />
                 <span>Visual Sitemap</span>
@@ -707,6 +732,6 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </div>
   );
 }
