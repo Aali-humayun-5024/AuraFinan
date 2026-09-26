@@ -73,6 +73,7 @@ export default function SavingsGoalsModule() {
   const [current, setCurrent] = useState('');
   const [contribution, setContribution] = useState('');
   const [category, setCategory] = useState('General');
+  const [customCategory, setCustomCategory] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // Handlers
@@ -102,13 +103,15 @@ export default function SavingsGoalsModule() {
       return;
     }
 
+    const finalCategory = category === 'Other' && customCategory.trim() ? customCategory.trim() : category;
+
     const newGoal: SavingsGoal = {
       id: `goal-${Date.now()}`,
       name: name.trim(),
       targetAmount: numTarget,
       currentSavings: numCurrent,
       monthlyContribution: numMonthly,
-      category,
+      category: finalCategory,
     };
 
     setGoals((prev) => [newGoal, ...prev]);
@@ -116,6 +119,8 @@ export default function SavingsGoalsModule() {
     setTarget('');
     setCurrent('');
     setContribution('');
+    setCategory('General');
+    setCustomCategory('');
     setIsAdding(false);
   };
 
@@ -245,8 +250,25 @@ export default function SavingsGoalsModule() {
                   <option value="Certifications">Certifications</option>
                   <option value="Travel & Break">Travel & Break</option>
                   <option value="General">General</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
+
+              {/* Custom Category Input if Other is selected */}
+              {category === 'Other' && (
+                <div className="space-y-1 sm:col-span-2">
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    Custom Category Name
+                  </label>
+                  <input
+                    type="text"
+                    value={customCategory}
+                    onChange={(e) => setCustomCategory(e.target.value)}
+                    placeholder="e.g. Wedding, Motorbike, Gifts, Gaming..."
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-white/[0.04] text-xs font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 outline-hidden"
+                  />
+                </div>
+              )}
             </div>
 
             <div className="flex justify-end gap-2 pt-2">
