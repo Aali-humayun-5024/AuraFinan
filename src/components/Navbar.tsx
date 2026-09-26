@@ -202,70 +202,72 @@ export default function Navbar() {
 
   return (
     <div className="sticky top-0 z-40 w-full px-2 sm:px-4 py-2 pointer-events-none transition-all duration-200">
-      {/* ─── Floating Glass Capsule Header (Apple Sequoia / Linear Style) ─── */}
-      <header className="pointer-events-auto max-w-7xl mx-auto h-14 sm:h-15 px-3 sm:px-4 rounded-2xl bg-white/85 dark:bg-[#070A13]/85 backdrop-blur-2xl border border-slate-200/80 dark:border-white/[0.08] shadow-lg shadow-black/[0.03] dark:shadow-black/40 flex items-center justify-between gap-2 sm:gap-3 transition-all duration-300">
+      {/* ─── Floating Glass Capsule Header (Apple Sequoia / Linear Style - 58px Toolbar) ─── */}
+      <header className="pointer-events-auto max-w-7xl mx-auto h-[58px] px-3 sm:px-4 rounded-2xl bg-white/90 dark:bg-[#070A13]/90 backdrop-blur-2xl border border-slate-200/80 dark:border-white/[0.08] shadow-lg shadow-black/[0.03] dark:shadow-black/40 flex items-center justify-between gap-2 lg:gap-3 transition-all duration-300">
         
         {/* ─── 1. Brand Logo Lockup ─── */}
         <div
           onClick={() => navigateTo('dashboard')}
-          className="flex items-center gap-2 cursor-pointer select-none shrink-0 group py-1"
-          title="BudgetBasics — NextGen BudgetBee"
+          className="flex items-center gap-2 cursor-pointer select-none shrink-0 group"
+          title="BudgetBasics — Personal Finance & Student Budgeting"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              navigateTo('dashboard');
+            }
+          }}
         >
-          <div className="relative w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 flex items-center justify-center text-slate-950 font-black text-base shadow-md shadow-amber-500/25 group-hover:scale-105 transition-transform">
+          <div className="relative w-[34px] h-[34px] rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 flex items-center justify-center text-slate-950 font-black text-base shadow-sm shadow-amber-500/20 group-hover:scale-105 transition-transform shrink-0">
             🐝
             <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#070A13]" />
           </div>
-          <div className="flex flex-col text-left">
-            <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-xs sm:text-sm tracking-tight text-slate-900 dark:text-white leading-none">
-                BudgetBasics
-              </span>
-              <span className="hidden sm:inline-flex text-[9px] font-mono font-bold px-1 py-0.2 rounded-md bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30">
-                v1.0
-              </span>
-            </div>
-            <span className="text-[9px] font-semibold text-slate-400 tracking-wider uppercase leading-tight mt-0.5 hidden xs:inline">
-              BudgetBee
+          <div className="flex items-center gap-1.5">
+            <span className="font-bold text-sm tracking-tight text-slate-900 dark:text-white whitespace-nowrap leading-none">
+              BudgetBasics
+            </span>
+            <span className="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded-[5px] bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30 whitespace-nowrap leading-none">
+              v1.0
             </span>
           </div>
         </div>
 
-        {/* ─── 2. Adaptive Desktop Dock (md:flex) ─── */}
+        {/* ─── 2. Adaptive Desktop Navigation Dock (md:flex) ─── */}
         <nav
           aria-label="Main Navigation Dock"
           onMouseLeave={() => setHoveredNav(null)}
-          className="hidden md:flex items-center gap-0.5 sm:gap-1 bg-slate-100/70 dark:bg-white/[0.03] p-1 rounded-xl border border-slate-200/60 dark:border-white/[0.06] text-xs font-semibold relative"
+          className="hidden md:flex items-center gap-0.5 xl:gap-1 bg-slate-100/80 dark:bg-white/[0.03] p-1 rounded-xl border border-slate-200/70 dark:border-white/[0.06] shrink min-w-0"
         >
           {NAV_MODULES.map((item) => {
             const Icon = item.icon;
             const isActive = activeView === item.id;
             const isFeatured = item.isFeatured;
 
-            // Responsive text visibility based on item priority: prevents bursting/wrapping on all screens
-            const textClass =
+            // Responsive label tiering: guarantees no overflow across 768px -> 1920px
+            const textVisibilityClass =
               item.tier === 'core'
-                ? 'hidden sm:inline'
+                ? 'inline'
                 : item.tier === 'secondary'
                 ? 'hidden xl:inline'
                 : 'hidden 2xl:inline';
 
             if (isFeatured) {
-              // 🌟 50/30/20 Rule: Radiant Gold Highlight Pill (Prominently Outside)
+              // 🌟 50/30/20 Rule: Flagship Calculator Highlight Tab
               return (
                 <button
                   key={item.id}
                   onClick={() => navigateTo(item.id)}
                   onMouseEnter={() => setHoveredNav(item.id)}
                   title={item.fullTitle}
-                  className={`relative px-2 sm:px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 font-black cursor-pointer shrink-0 ${
+                  className={`h-[34px] px-2.5 rounded-lg transition-all flex items-center justify-center gap-1.5 whitespace-nowrap cursor-pointer shrink-0 font-bold text-xs ${
                     isActive
-                      ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/30'
-                      : 'bg-amber-500/15 hover:bg-amber-500/25 text-amber-700 dark:text-amber-300 border border-amber-500/35 hover:scale-[1.02]'
+                      ? 'bg-amber-100/90 dark:bg-amber-500/20 text-amber-950 dark:text-amber-200 border border-amber-300 dark:border-amber-500/40 shadow-xs'
+                      : 'text-amber-800 dark:text-amber-300/90 hover:bg-amber-50 dark:hover:bg-amber-500/10 border border-amber-200/60 dark:border-amber-500/20 font-semibold'
                   }`}
                 >
-                  <Icon size={14} className="animate-pulse shrink-0 text-amber-500 dark:text-amber-300" />
-                  <span className="tracking-tight text-[11px] sm:text-xs">{item.shortLabel}</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping hidden lg:inline" />
+                  <Icon size={14} className="shrink-0 text-amber-600 dark:text-amber-400" />
+                  <span className="tracking-tight">{item.shortLabel}</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 hidden sm:inline" />
                 </button>
               );
             }
@@ -276,10 +278,10 @@ export default function Navbar() {
                 onClick={() => navigateTo(item.id)}
                 onMouseEnter={() => setHoveredNav(item.id)}
                 title={item.fullTitle}
-                className={`relative px-1.5 sm:px-2 py-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shrink-0 z-10 text-[11px] sm:text-xs ${
+                className={`relative h-[34px] px-2 xl:px-2.5 rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0 z-10 text-xs whitespace-nowrap font-medium ${
                   isActive
-                    ? 'text-slate-950 dark:text-white font-bold'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                    ? 'text-slate-950 dark:text-white font-semibold'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/[0.06]'
                 }`}
               >
                 {/* Floating Active Pill Indicator */}
@@ -296,26 +298,31 @@ export default function Navbar() {
                   className={`shrink-0 transition-colors ${
                     isActive
                       ? 'text-amber-500 dark:text-amber-400'
-                      : 'text-slate-400 group-hover:text-slate-600'
+                      : 'text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200'
                   }`}
                 />
-                <span className={textClass}>{item.shortLabel}</span>
+                <span className={textVisibilityClass}>{item.shortLabel}</span>
               </button>
             );
           })}
 
           {/* 📂 "More ▾" Dropdown Hub */}
-          <div className="relative">
+          <div className="relative shrink-0">
             <button
               onClick={() => setMoreToolsOpen(!moreToolsOpen)}
-              className="px-2 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white transition-all flex items-center gap-1 cursor-pointer shrink-0 text-[11px] sm:text-xs"
-              title="Advanced Features & Accounting Tools"
+              className={`h-[34px] px-2 xl:px-2.5 rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer shrink-0 text-xs font-medium whitespace-nowrap ${
+                moreToolsOpen
+                  ? 'bg-slate-200/70 dark:bg-white/[0.08] text-slate-950 dark:text-white'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/[0.06]'
+              }`}
+              title="Advanced Features & Tools"
+              aria-expanded={moreToolsOpen}
             >
-              <Layers size={13} className="text-slate-400" />
+              <Layers size={14} className="shrink-0 text-slate-400" />
               <span className="hidden xl:inline">More</span>
               <ChevronDown
-                size={11}
-                className={`transition-transform duration-200 ${moreToolsOpen ? 'rotate-180' : ''}`}
+                size={12}
+                className={`shrink-0 transition-transform duration-200 ${moreToolsOpen ? 'rotate-180' : ''}`}
               />
             </button>
 
@@ -337,7 +344,7 @@ export default function Navbar() {
                     onClick={() => navigateTo('general-ledger')}
                     className="w-full text-left px-3 py-2 rounded-xl text-xs flex items-center gap-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/[0.06] cursor-pointer"
                   >
-                    <BookOpen size={14} className="text-cyan-500" />
+                    <BookOpen size={14} className="text-cyan-500 shrink-0" />
                     <div>
                       <div className="font-semibold">Accounting Simulator (Ledger)</div>
                       <div className="text-[10px] text-slate-400">Commerce lab: Double-entry $Dr = $Cr</div>
@@ -348,7 +355,7 @@ export default function Navbar() {
                     onClick={() => navigateTo('daily-bazaar')}
                     className="w-full text-left px-3 py-2 rounded-xl text-xs flex items-center gap-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/[0.06] cursor-pointer"
                   >
-                    <Receipt size={14} className="text-emerald-500" />
+                    <Receipt size={14} className="text-emerald-500 shrink-0" />
                     <div>
                       <div className="font-semibold">Daily Bazaar & Rashan</div>
                       <div className="text-[10px] text-slate-400">Commodity prices & kameti</div>
@@ -359,7 +366,7 @@ export default function Navbar() {
                     onClick={() => navigateTo('split-ledger')}
                     className="w-full text-left px-3 py-2 rounded-xl text-xs flex items-center gap-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/[0.06] cursor-pointer"
                   >
-                    <Users size={14} className="text-amber-500" />
+                    <Users size={14} className="text-amber-500 shrink-0" />
                     <div>
                       <div className="font-semibold">Split Ledger & Roommate IOUs</div>
                       <div className="text-[10px] text-slate-400">Dorm bill dividing & settlements</div>
@@ -370,7 +377,7 @@ export default function Navbar() {
                     onClick={() => navigateTo('subscriptions')}
                     className="w-full text-left px-3 py-2 rounded-xl text-xs flex items-center gap-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/[0.06] cursor-pointer"
                   >
-                    <CreditCard size={14} className="text-rose-500" />
+                    <CreditCard size={14} className="text-rose-500 shrink-0" />
                     <div>
                       <div className="font-semibold">Subscriptions Sentinel</div>
                       <div className="text-[10px] text-slate-400">Cancel zombie auto-renewals</div>
@@ -383,7 +390,7 @@ export default function Navbar() {
                     onClick={() => navigateTo('settings')}
                     className="w-full text-left px-3 py-2 rounded-xl text-xs flex items-center gap-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/[0.06] cursor-pointer"
                   >
-                    <Settings size={14} className="text-slate-400" />
+                    <Settings size={14} className="text-slate-400 shrink-0" />
                     <div>
                       <div className="font-semibold">Settings & Encrypted Vault</div>
                       <div className="text-[10px] text-slate-400">AES-GCM-256 backup</div>
@@ -397,30 +404,35 @@ export default function Navbar() {
 
         {/* ─── 3. Right Action Cluster ─── */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {/* Quick Search Pill (⌘K) */}
+          {/* Quick Search Button (⌘K) */}
           <button
             onClick={() => setCommandPaletteOpen(true)}
-            className="flex items-center gap-1.5 px-2 py-1.5 rounded-xl border border-slate-200/80 dark:border-white/10 hover:border-slate-300 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all text-xs cursor-pointer bg-slate-50/50 dark:bg-white/[0.02]"
+            className="h-[34px] px-2.5 rounded-lg border border-slate-200/80 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 bg-slate-50/70 dark:bg-white/[0.03] hover:bg-slate-100/70 dark:hover:bg-white/[0.06] text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all inline-flex items-center gap-2 cursor-pointer shrink-0 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
             title="Search & Command Palette (⌘K)"
+            aria-label="Search and Command Palette"
           >
-            <Search size={13} />
-            <kbd className="hidden lg:inline text-[9px] font-mono px-1 py-0.2 rounded bg-slate-200/60 dark:bg-white/10 text-slate-500 dark:text-slate-400">
+            <Search size={14} className="shrink-0 text-slate-400" />
+            <kbd className="hidden sm:inline-flex items-center justify-center text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-slate-200/70 dark:bg-white/10 text-slate-600 dark:text-slate-300 border border-slate-300/40 dark:border-white/10 leading-none">
               ⌘K
             </kbd>
           </button>
 
-          {/* 👤 Student Persona Switcher Pill */}
-          <div className="relative">
+          {/* 👤 Learning Persona Switcher Dropdown */}
+          <div className="relative shrink-0">
             <button
               onClick={() => setPersonaMenuOpen(!personaMenuOpen)}
-              className="flex items-center gap-1.5 px-2 py-1.5 rounded-xl border border-slate-200/80 dark:border-white/10 hover:border-amber-400/80 bg-white/80 dark:bg-white/[0.04] transition-all text-xs font-semibold cursor-pointer shadow-2xs"
-              title="Active Learning Persona"
+              className={`h-[34px] px-2.5 rounded-lg border border-slate-200/80 dark:border-white/10 hover:border-amber-400/60 bg-white/90 dark:bg-white/[0.04] hover:bg-slate-50 dark:hover:bg-white/[0.07] transition-all inline-flex items-center gap-1.5 cursor-pointer shadow-2xs focus:outline-none focus:ring-2 focus:ring-amber-500/40 ${
+                personaMenuOpen ? 'border-amber-500/50 ring-2 ring-amber-500/20' : ''
+              }`}
+              title={`Active Persona: ${currentPersonaObj.label}`}
+              aria-expanded={personaMenuOpen}
+              aria-label="Select Learning Persona"
             >
-              <span className="text-sm leading-none">{currentPersonaObj.emoji}</span>
-              <span className="hidden sm:inline text-slate-800 dark:text-slate-200 font-bold text-[11px]">
+              <span className="text-sm leading-none shrink-0">{currentPersonaObj.emoji}</span>
+              <span className="hidden sm:inline text-slate-800 dark:text-slate-200 font-semibold text-xs whitespace-nowrap">
                 {currentPersonaObj.shortLabel}
               </span>
-              <ChevronDown size={11} className="text-slate-400" />
+              <ChevronDown size={12} className="text-slate-400 shrink-0" />
             </button>
 
             {/* Persona Switch Menu */}
@@ -434,7 +446,7 @@ export default function Navbar() {
                   className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-2xl p-1.5 z-50 space-y-1 backdrop-blur-xl"
                 >
                   <div className="px-3 py-1.5 text-[9px] font-mono uppercase tracking-wider text-slate-400 font-bold">
-                    Select Student Persona
+                    Select Learning Persona
                   </div>
 
                   {PERSONA_OPTIONS.map((p) => {
@@ -450,7 +462,7 @@ export default function Navbar() {
                         }`}
                       >
                         <div className="flex items-center gap-2">
-                          <span className="text-base">{p.emoji}</span>
+                          <span className="text-base shrink-0">{p.emoji}</span>
                           <div>
                             <div className="font-bold leading-tight">{p.label}</div>
                             <div className="text-[10px] text-slate-400 leading-tight">{p.desc}</div>
@@ -465,39 +477,62 @@ export default function Navbar() {
             </AnimatePresence>
           </div>
 
-          {/* Currency Pill Switcher */}
-          <div className="hidden sm:flex items-center bg-slate-100/80 dark:bg-white/[0.04] p-0.5 rounded-lg text-xs font-mono font-bold border border-slate-200/60 dark:border-white/[0.06]">
-            {(['USD', 'PKR', 'EUR', 'GBP'] as CurrencyCode[]).map((cur) => (
-              <button
-                key={cur}
-                onClick={() => setBaseCurrency(cur)}
-                className={`px-1.5 py-0.5 rounded-md transition-all cursor-pointer text-[10px] ${
-                  baseCurrency === cur
-                    ? 'bg-white dark:bg-slate-800 text-slate-950 dark:text-white shadow-xs font-black'
-                    : 'text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
-              >
-                {cur === 'USD' ? '$' : cur === 'PKR' ? '₨' : cur === 'EUR' ? '€' : '£'}
-              </button>
-            ))}
+          {/* 💱 Unified Currency Segmented Selector */}
+          <div
+            role="radiogroup"
+            aria-label="Currency Selector"
+            className="hidden sm:inline-flex items-center h-[34px] p-0.5 rounded-lg bg-slate-100/90 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/10 shrink-0"
+          >
+            {(['USD', 'PKR', 'EUR', 'GBP'] as CurrencyCode[]).map((cur) => {
+              const isCurActive = baseCurrency === cur;
+              const curSymbol = cur === 'USD' ? '$' : cur === 'PKR' ? '₨' : cur === 'EUR' ? '€' : '£';
+              return (
+                <button
+                  key={cur}
+                  role="radio"
+                  aria-checked={isCurActive}
+                  onClick={() => {
+                    setBaseCurrency(cur);
+                    playClickSound();
+                  }}
+                  className={`h-[28px] px-2 rounded-md font-mono text-xs font-bold transition-all cursor-pointer inline-flex items-center justify-center focus:outline-none ${
+                    isCurActive
+                      ? 'bg-white dark:bg-slate-800 text-slate-950 dark:text-white shadow-xs border border-slate-200/60 dark:border-white/10 font-extrabold'
+                      : 'text-slate-400 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 border border-transparent'
+                  }`}
+                  title={`Set currency to ${cur} (${curSymbol})`}
+                >
+                  {curSymbol}
+                </button>
+              );
+            })}
           </div>
 
-          {/* Theme Toggle Button */}
+          {/* 🌓 Theme Toggle Button (Square 34px × 34px) */}
           <button
-            onClick={toggleTheme}
-            className="p-1.5 sm:p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-white/10 shrink-0"
-            title="Toggle Dark / Light Mode"
+            onClick={() => {
+              toggleTheme();
+              playClickSound();
+            }}
+            className="w-[34px] h-[34px] rounded-lg border border-slate-200/80 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 bg-slate-50/70 dark:bg-white/[0.03] hover:bg-slate-100 dark:hover:bg-white/[0.06] text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all inline-flex items-center justify-center cursor-pointer shrink-0 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
+            title="Toggle Dark / Light Theme"
+            aria-label="Toggle theme"
           >
-            {theme === 'dark' ? <Sun size={15} className="text-amber-400" /> : <Moon size={15} />}
+            {theme === 'dark' ? (
+              <Sun size={15} className="text-amber-400 shrink-0" />
+            ) : (
+              <Moon size={15} className="shrink-0" />
+            )}
           </button>
 
-          {/* Mobile Hamburger Toggle (md:hidden) */}
+          {/* 📱 Mobile Hamburger Toggle (Square 34px × 34px, md:hidden) */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+            className="md:hidden w-[34px] h-[34px] rounded-lg border border-slate-200/80 dark:border-white/10 bg-slate-50/70 dark:bg-white/[0.03] hover:bg-slate-100 dark:hover:bg-white/[0.06] text-slate-700 dark:text-slate-300 transition-colors inline-flex items-center justify-center cursor-pointer shrink-0 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
             aria-label="Toggle Navigation Menu"
+            aria-expanded={mobileMenuOpen}
           >
-            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+            {mobileMenuOpen ? <X size={16} /> : <Menu size={16} />}
           </button>
         </div>
       </header>
@@ -512,6 +547,44 @@ export default function Navbar() {
             transition={{ duration: 0.2, ease: 'easeOut' }}
             className="pointer-events-auto md:hidden max-w-7xl mx-auto mt-2 rounded-2xl bg-white/95 dark:bg-[#070A13]/95 backdrop-blur-2xl border border-slate-200/90 dark:border-white/[0.08] shadow-2xl p-4 space-y-4 max-h-[82vh] overflow-y-auto"
           >
+            {/* Quick Search on Mobile */}
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setCommandPaletteOpen(true);
+              }}
+              className="w-full flex items-center justify-between p-2.5 rounded-xl border border-slate-200/90 dark:border-white/10 bg-slate-50/70 dark:bg-white/[0.03] text-xs text-slate-600 dark:text-slate-400 hover:border-amber-400 transition-all cursor-pointer"
+            >
+              <span className="flex items-center gap-2">
+                <Search size={14} className="text-slate-400" />
+                <span className="font-medium">Quick Search or Command...</span>
+              </span>
+              <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-200/70 dark:bg-white/10 text-slate-500">⌘K</kbd>
+            </button>
+
+            {/* Mobile Currency Bar */}
+            <div className="flex sm:hidden items-center justify-between p-2.5 rounded-xl border border-slate-200/90 dark:border-white/10 bg-slate-50/70 dark:bg-white/[0.03]">
+              <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">Base Currency</span>
+              <div className="flex items-center gap-1">
+                {(['USD', 'PKR', 'EUR', 'GBP'] as CurrencyCode[]).map((cur) => (
+                  <button
+                    key={cur}
+                    onClick={() => {
+                      setBaseCurrency(cur);
+                      playClickSound();
+                    }}
+                    className={`h-7 px-2.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+                      baseCurrency === cur
+                        ? 'bg-amber-500 text-slate-950 font-black shadow-xs'
+                        : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    {cur === 'USD' ? '$' : cur === 'PKR' ? '₨' : cur === 'EUR' ? '€' : '£'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Featured 50/30/20 Rule Banner in Mobile */}
             <div
               onClick={() => navigateTo('50-30-20')}
