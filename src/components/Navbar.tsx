@@ -1,9 +1,8 @@
-// BudgetBasics — Master Top Navigation Bar
-// Replaces previous sidebar with a full-width, publication-grade responsive navigation header.
-// Exposes the 50/30/20 Rule prominently outside on the navbar, with quick links to all SRS modules
-// and an expandable "More Tools" dropdown for advanced systems.
+// BudgetBasics — Master Top Navigation Bar (Linear / Apple Pro Design)
+// Fully Responsive: Adaptive Icon + Short-Form Text, Auto-Collapsing Breakpoints,
+// Floating Pill Hover/Active Highlights, and Native-Style Mobile Sheet.
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   PieChart,
@@ -19,8 +18,6 @@ import {
   ChevronDown,
   Sun,
   Moon,
-  Volume2,
-  VolumeX,
   Compass,
   MessageSquare,
   Sparkles,
@@ -35,6 +32,7 @@ import {
   Menu,
   X,
   Check,
+  Command,
 } from 'lucide-react';
 import { useAppStore, type CurrencyCode } from '../store/useAppStore';
 import { useTranslation } from '../i18n/useTranslation';
@@ -47,6 +45,7 @@ const PERSONA_OPTIONS = [
   {
     id: 'student' as const,
     label: 'College Student',
+    shortLabel: 'Student',
     icon: GraduationCap,
     desc: 'Pocket allowance, canteen, hostel & books',
     emoji: '🎓',
@@ -54,6 +53,7 @@ const PERSONA_OPTIONS = [
   {
     id: 'freelancer' as const,
     label: 'Tech Freelancer',
+    shortLabel: 'Freelancer',
     icon: Briefcase,
     desc: 'Multi-currency, remote contracts, software',
     emoji: '💼',
@@ -61,6 +61,7 @@ const PERSONA_OPTIONS = [
   {
     id: 'household' as const,
     label: 'Family Household',
+    shortLabel: 'Family',
     icon: Home,
     desc: 'Monthly rashan, utility bills & family savings',
     emoji: '🏠',
@@ -68,9 +69,78 @@ const PERSONA_OPTIONS = [
   {
     id: 'clean' as const,
     label: 'Clean Slate',
+    shortLabel: 'Clean',
     icon: UserPlus,
     desc: 'Start fresh with zero mock transactions',
     emoji: '✨',
+  },
+];
+
+// Short-form punchy navigation items with crisp icons
+const PRIMARY_NAV = [
+  {
+    id: 'dashboard',
+    shortLabel: 'Home',
+    fullTitle: 'Home Dashboard',
+    icon: Home,
+    desktopText: 'block', // Always show text on desktop
+  },
+  {
+    id: '50-30-20',
+    shortLabel: '50/30/20',
+    fullTitle: '50/30/20 Budget Rule & Calculator',
+    icon: PieChart,
+    isFeatured: true,
+    desktopText: 'block',
+  },
+  {
+    id: 'budgeting-basics',
+    shortLabel: 'Basics',
+    fullTitle: 'Budgeting Basics 101 & Quiz',
+    icon: BookOpen,
+    desktopText: 'hidden lg:inline',
+  },
+  {
+    id: 'needs-vs-wants',
+    shortLabel: 'Needs/Wants',
+    fullTitle: 'Needs vs Wants Decision Game',
+    icon: ShieldCheck,
+    desktopText: 'hidden xl:inline',
+  },
+  {
+    id: 'savings-goals',
+    shortLabel: 'Goals',
+    fullTitle: 'Savings Goals & Timeline Estimator',
+    icon: Target,
+    desktopText: 'hidden xl:inline',
+  },
+  {
+    id: 'expense-planner',
+    shortLabel: 'Planner',
+    fullTitle: 'Student Expense Planner',
+    icon: Receipt,
+    desktopText: 'hidden 2xl:inline',
+  },
+  {
+    id: 'money-mistakes',
+    shortLabel: 'Mistakes',
+    fullTitle: 'Common Money Mistakes to Avoid',
+    icon: AlertTriangle,
+    desktopText: 'hidden 2xl:inline',
+  },
+  {
+    id: 'infographics',
+    shortLabel: 'Gallery',
+    fullTitle: 'Visual Learning Gallery',
+    icon: Image,
+    desktopText: 'hidden 2xl:inline',
+  },
+  {
+    id: 'ai-chatbot',
+    shortLabel: 'AI Bot',
+    fullTitle: 'AI Budget Assistant (BudgetBee)',
+    icon: Bot,
+    desktopText: 'hidden 2xl:inline',
   },
 ];
 
@@ -84,28 +154,35 @@ export default function Navbar() {
     setBaseCurrency,
     theme,
     toggleTheme,
-    soundEnabled,
-    toggleSound,
     setCommandPaletteOpen,
     setSiteMapModalOpen,
   } = useAppStore();
 
-  const { t } = useTranslation();
-
   const [moreToolsOpen, setMoreToolsOpen] = useState(false);
   const [personaMenuOpen, setPersonaMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [personaLoading, setPersonaLoading] = useState(false);
+
+  // Close menus on Escape or Outside Click
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMoreToolsOpen(false);
+        setPersonaMenuOpen(false);
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const handlePersonaChange = async (pId: 'student' | 'freelancer' | 'household' | 'clean') => {
-    setPersonaLoading(true);
     await seedPersona(pId);
     setActivePersona(pId);
     if (pId === 'household') {
       setBaseCurrency('PKR');
     }
-    setPersonaLoading(false);
     setPersonaMenuOpen(false);
+    playClickSound();
 
     if (pId !== 'clean') {
       confetti({
@@ -126,174 +203,110 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/95 dark:bg-[#060913]/90 backdrop-blur-2xl border-b border-slate-200/90 dark:border-white/[0.08] shadow-xs">
-      <div className="w-full px-3 sm:px-6 h-16 flex items-center justify-between gap-2 lg:gap-4">
+    <header className="sticky top-0 z-40 w-full bg-white/85 dark:bg-[#070A13]/85 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/[0.08] shadow-xs transition-colors duration-200">
+      <div className="w-full px-3 sm:px-5 lg:px-6 h-15 flex items-center justify-between gap-2">
         {/* ─── 1. Brand Logo Lockup ─── */}
         <div
           onClick={() => navigateTo('dashboard')}
-          className="flex items-center gap-2.5 cursor-pointer select-none shrink-0"
+          className="flex items-center gap-2 cursor-pointer select-none shrink-0 group py-1"
+          title="BudgetBasics — NextGen BudgetBee"
         >
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 flex items-center justify-center text-slate-950 font-black text-xl shadow-md shadow-amber-500/25">
+          <div className="w-8.5 h-8.5 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 flex items-center justify-center text-slate-950 font-black text-lg shadow-md shadow-amber-500/25 group-hover:scale-105 transition-transform">
             🐝
           </div>
           <div className="flex flex-col">
             <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-base tracking-tight text-slate-900 dark:text-white leading-none">
+              <span className="font-extrabold text-sm sm:text-base tracking-tight text-slate-900 dark:text-white leading-none">
                 BudgetBasics
               </span>
-              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-md bg-amber-500/15 text-amber-700 dark:text-amber-300 font-bold border border-amber-500/30">
-                SRS v1.0
+              <span className="hidden sm:inline-flex text-[9px] font-mono px-1.5 py-0.2 rounded-md bg-amber-500/15 text-amber-700 dark:text-amber-300 font-bold border border-amber-500/30">
+                v1.0
               </span>
             </div>
-            <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 tracking-wider uppercase mt-0.5">
-              NextGen BudgetBee
+            <span className="text-[9px] font-semibold text-slate-400 dark:text-slate-400 tracking-wider uppercase leading-tight mt-0.5 hidden xs:inline">
+              BudgetBee
             </span>
           </div>
         </div>
 
-        {/* ─── 2. Desktop Navigation Links (SRS Modules + 50-30-20 OUTSIDE) ─── */}
-        <nav className="hidden xl:flex items-center gap-1 text-xs font-semibold">
-          {/* Home */}
-          <button
-            onClick={() => navigateTo('dashboard')}
-            className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeView === 'dashboard'
-                ? 'bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/[0.04]'
-            }`}
-          >
-            <Home size={14} /> Home
-          </button>
+        {/* ─── 2. Adaptive Desktop Dock (md:flex) ─── */}
+        <nav
+          aria-label="Main Navigation"
+          className="hidden md:flex items-center gap-1 bg-slate-100/70 dark:bg-white/[0.04] p-1 rounded-2xl border border-slate-200/70 dark:border-white/[0.06] text-xs font-semibold"
+        >
+          {PRIMARY_NAV.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeView === item.id;
+            const isFeatured = item.isFeatured;
 
-          {/* 🌟 50-30-20 RULE — PROMINENTLY OUTSIDE ON NAVBAR AS REQUESTED */}
-          <button
-            onClick={() => navigateTo('50-30-20')}
-            className={`px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 border font-bold cursor-pointer shadow-xs ${
-              activeView === '50-30-20'
-                ? 'bg-amber-500 border-amber-500 text-slate-950 shadow-amber-500/20'
-                : 'bg-amber-500/10 hover:bg-amber-500/20 border-amber-500/30 text-amber-700 dark:text-amber-300'
-            }`}
-          >
-            <PieChart size={15} className="animate-pulse" />
-            <span>50-30-20 Rule</span>
-            <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-800 dark:text-amber-200 uppercase font-mono">
-              Core
-            </span>
-          </button>
+            if (isFeatured) {
+              // 🌟 50/30/20 Rule: Prominent pill button with amber glow
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => navigateTo(item.id)}
+                  title={item.fullTitle}
+                  className={`relative px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 font-bold cursor-pointer shrink-0 ${
+                    isActive
+                      ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/25'
+                      : 'bg-amber-500/15 hover:bg-amber-500/25 text-amber-700 dark:text-amber-300 border border-amber-500/30'
+                  }`}
+                >
+                  <Icon size={14} className="animate-pulse shrink-0" />
+                  <span className="tracking-tight">{item.shortLabel}</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping hidden lg:inline" />
+                </button>
+              );
+            }
 
-          {/* Budgeting Basics */}
-          <button
-            onClick={() => navigateTo('budgeting-basics')}
-            className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeView === 'budgeting-basics'
-                ? 'bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/[0.04]'
-            }`}
-          >
-            <BookOpen size={14} /> Basics
-          </button>
+            return (
+              <button
+                key={item.id}
+                onClick={() => navigateTo(item.id)}
+                title={item.fullTitle}
+                className={`relative px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${
+                  isActive
+                    ? 'bg-white dark:bg-slate-800 text-slate-950 dark:text-white font-bold shadow-xs border border-slate-200/90 dark:border-white/10'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/[0.06]'
+                }`}
+              >
+                <Icon size={14} className={isActive ? 'text-amber-500' : 'text-slate-400'} />
+                <span className={item.desktopText}>{item.shortLabel}</span>
+              </button>
+            );
+          })}
 
-          {/* Needs vs Wants */}
-          <button
-            onClick={() => navigateTo('needs-vs-wants')}
-            className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeView === 'needs-vs-wants'
-                ? 'bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/[0.04]'
-            }`}
-          >
-            <ShieldCheck size={14} /> Needs vs Wants
-          </button>
-
-          {/* Savings Goals */}
-          <button
-            onClick={() => navigateTo('savings-goals')}
-            className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeView === 'savings-goals'
-                ? 'bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/[0.04]'
-            }`}
-          >
-            <Target size={14} /> Goals
-          </button>
-
-          {/* Expense Planner */}
-          <button
-            onClick={() => navigateTo('expense-planner')}
-            className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeView === 'expense-planner'
-                ? 'bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/[0.04]'
-            }`}
-          >
-            <Receipt size={14} /> Expense Planner
-          </button>
-
-          {/* Money Mistakes */}
-          <button
-            onClick={() => navigateTo('money-mistakes')}
-            className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeView === 'money-mistakes'
-                ? 'bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/[0.04]'
-            }`}
-          >
-            <AlertTriangle size={14} /> Mistakes
-          </button>
-
-          {/* Infographics */}
-          <button
-            onClick={() => navigateTo('infographics')}
-            className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeView === 'infographics'
-                ? 'bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/[0.04]'
-            }`}
-          >
-            <Image size={14} /> Infographics
-          </button>
-
-          {/* AI Chatbot */}
-          <button
-            onClick={() => navigateTo('ai-chatbot')}
-            className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeView === 'ai-chatbot'
-                ? 'bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/[0.04]'
-            }`}
-          >
-            <Bot size={14} /> AI Chatbot
-          </button>
-
-          {/* 📂 MORE TOOLS DROPDOWN (Advanced modules per SRS scope) */}
+          {/* 📂 "More ▾" Dropdown for Institutional/Advanced Features */}
           <div className="relative">
             <button
               onClick={() => setMoreToolsOpen(!moreToolsOpen)}
-              className="px-3 py-1.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/[0.04] transition-all flex items-center gap-1 cursor-pointer"
+              className="px-2.5 py-1.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/[0.06] transition-all flex items-center gap-1 cursor-pointer shrink-0"
+              title="Advanced Features & Tools"
             >
-              <Layers size={14} />
-              <span>More Tools</span>
-              <ChevronDown size={13} className={`transition-transform ${moreToolsOpen ? 'rotate-180' : ''}`} />
+              <Layers size={14} className="text-slate-400" />
+              <span className="hidden xl:inline">More</span>
+              <ChevronDown size={12} className={`transition-transform duration-200 ${moreToolsOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {/* Dropdown Menu */}
             <AnimatePresence>
               {moreToolsOpen && (
                 <motion.div
-                  initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                  className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-xl p-2 z-50 space-y-1"
+                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-2xl p-1.5 z-50 space-y-0.5"
                 >
-                  <div className="px-3 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
-                    Advanced Accounting & Wealth
+                  <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
+                    Advanced Wealth Suite
                   </div>
 
                   <button
                     onClick={() => navigateTo('general-ledger')}
                     className="w-full text-left px-3 py-2 rounded-xl text-xs flex items-center gap-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/[0.06] cursor-pointer"
                   >
-                    <BookOpen size={15} className="text-cyan-500" />
+                    <BookOpen size={14} className="text-cyan-500" />
                     <div>
                       <div className="font-semibold">General Ledger (GAAP)</div>
                       <div className="text-[10px] text-slate-400">Double-entry debit & credit balance</div>
@@ -304,7 +317,7 @@ export default function Navbar() {
                     onClick={() => navigateTo('academic-suite')}
                     className="w-full text-left px-3 py-2 rounded-xl text-xs flex items-center gap-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/[0.06] cursor-pointer"
                   >
-                    <GraduationCap size={15} className="text-purple-500" />
+                    <GraduationCap size={14} className="text-purple-500" />
                     <div>
                       <div className="font-semibold">Academic CPA Labs</div>
                       <div className="text-[10px] text-slate-400">Break-even simulations & variance</div>
@@ -315,10 +328,10 @@ export default function Navbar() {
                     onClick={() => navigateTo('daily-bazaar')}
                     className="w-full text-left px-3 py-2 rounded-xl text-xs flex items-center gap-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/[0.06] cursor-pointer"
                   >
-                    <Receipt size={15} className="text-emerald-500" />
+                    <Receipt size={14} className="text-emerald-500" />
                     <div>
                       <div className="font-semibold">Daily Bazaar & Rashan</div>
-                      <div className="text-[10px] text-slate-400">South Asian commodities & kameti</div>
+                      <div className="text-[10px] text-slate-400">Commodity prices & kameti tracker</div>
                     </div>
                   </button>
 
@@ -326,7 +339,7 @@ export default function Navbar() {
                     onClick={() => navigateTo('split-ledger')}
                     className="w-full text-left px-3 py-2 rounded-xl text-xs flex items-center gap-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/[0.06] cursor-pointer"
                   >
-                    <Users size={15} className="text-amber-500" />
+                    <Users size={14} className="text-amber-500" />
                     <div>
                       <div className="font-semibold">Split Ledger & Roommate IOUs</div>
                       <div className="text-[10px] text-slate-400">Dormitory bill dividing & settlements</div>
@@ -337,18 +350,20 @@ export default function Navbar() {
                     onClick={() => navigateTo('subscriptions')}
                     className="w-full text-left px-3 py-2 rounded-xl text-xs flex items-center gap-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/[0.06] cursor-pointer"
                   >
-                    <CreditCard size={15} className="text-rose-500" />
+                    <CreditCard size={14} className="text-rose-500" />
                     <div>
                       <div className="font-semibold">Subscriptions Sentinel</div>
                       <div className="text-[10px] text-slate-400">Detect zombie trial renewals</div>
                     </div>
                   </button>
 
+                  <div className="border-t border-slate-100 dark:border-white/5 my-1" />
+
                   <button
                     onClick={() => navigateTo('settings')}
                     className="w-full text-left px-3 py-2 rounded-xl text-xs flex items-center gap-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/[0.06] cursor-pointer"
                   >
-                    <Settings size={15} className="text-slate-400" />
+                    <Settings size={14} className="text-slate-400" />
                     <div>
                       <div className="font-semibold">Settings & Encrypted Vault</div>
                       <div className="text-[10px] text-slate-400">AES-GCM-256 backup & statements</div>
@@ -360,65 +375,68 @@ export default function Navbar() {
           </div>
         </nav>
 
-        {/* ─── 3. Right Action Utilities (Profile, Search, Currency, Theme) ─── */}
-        <div className="flex items-center gap-2 shrink-0">
-          {/* Global Search Button */}
+        {/* ─── 3. Right Action Cluster (Search, Persona, Currency, Theme) ─── */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          {/* Quick Search Button (⌘K) */}
           <button
-            onClick={() => navigateTo('search-resources')}
-            className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
-            title="Search Learning Resources"
+            onClick={() => setCommandPaletteOpen(true)}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all text-xs cursor-pointer"
+            title="Search & Command Palette (⌘K)"
           >
-            <Search size={16} />
+            <Search size={14} />
+            <kbd className="hidden lg:inline text-[10px] font-mono px-1 py-0.5 rounded bg-slate-100 dark:bg-white/10 text-slate-400">
+              ⌘K
+            </kbd>
           </button>
 
-          {/* 👤 EASY STUDENT PERSONA SWITCHER (SRS & User Request) */}
+          {/* 👤 Student Persona Switcher (Clean Dropdown) */}
           <div className="relative">
             <button
               onClick={() => setPersonaMenuOpen(!personaMenuOpen)}
-              className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-white/10 hover:border-amber-400 bg-slate-50 dark:bg-white/[0.04] transition-all text-xs font-semibold cursor-pointer"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200/90 dark:border-white/10 hover:border-amber-400 bg-white/60 dark:bg-white/[0.04] transition-all text-xs font-semibold cursor-pointer"
+              title="Switch Learning Persona"
             >
-              <span className="text-sm">{currentPersonaObj.emoji}</span>
+              <span className="text-sm leading-none">{currentPersonaObj.emoji}</span>
               <span className="hidden sm:inline text-slate-800 dark:text-slate-200">
-                {currentPersonaObj.label}
+                {currentPersonaObj.shortLabel}
               </span>
-              <ChevronDown size={13} className="text-slate-400" />
+              <ChevronDown size={11} className="text-slate-400" />
             </button>
 
-            {/* Persona Switch Dropdown */}
+            {/* Persona Switch Menu */}
             <AnimatePresence>
               {personaMenuOpen && (
                 <motion.div
-                  initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                  className="absolute right-0 mt-2 w-72 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-xl p-2 z-50 space-y-1"
+                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-2xl p-1.5 z-50 space-y-1"
                 >
                   <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
-                    Select Your Learning Persona
+                    Select Student Persona
                   </div>
 
                   {PERSONA_OPTIONS.map((p) => {
                     const isSelected = activePersona === p.id;
-                    const Icon = p.icon;
-
                     return (
                       <button
                         key={p.id}
                         onClick={() => handlePersonaChange(p.id)}
-                        className={`w-full text-left px-3 py-2.5 rounded-xl text-xs flex items-center justify-between transition-all cursor-pointer ${
+                        className={`w-full text-left px-3 py-2 rounded-xl text-xs flex items-center justify-between transition-all cursor-pointer ${
                           isSelected
                             ? 'bg-amber-500/15 border border-amber-500/30 text-amber-900 dark:text-amber-200 font-bold'
                             : 'hover:bg-slate-100 dark:hover:bg-white/[0.06] text-slate-700 dark:text-slate-300'
                         }`}
                       >
                         <div className="flex items-center gap-2.5">
-                          <span className="text-lg">{p.emoji}</span>
+                          <span className="text-base">{p.emoji}</span>
                           <div>
-                            <div className="font-bold">{p.label}</div>
-                            <div className="text-[10px] text-slate-400">{p.desc}</div>
+                            <div className="font-bold leading-tight">{p.label}</div>
+                            <div className="text-[10px] text-slate-400 leading-tight">{p.desc}</div>
                           </div>
                         </div>
-                        {isSelected && <Check size={15} className="text-amber-500 shrink-0" />}
+                        {isSelected && <Check size={14} className="text-amber-500 shrink-0" />}
                       </button>
                     );
                   })}
@@ -427,16 +445,16 @@ export default function Navbar() {
             </AnimatePresence>
           </div>
 
-          {/* Currency Switcher */}
-          <div className="hidden sm:flex items-center bg-slate-100 dark:bg-white/[0.05] p-1 rounded-xl text-xs font-mono font-bold">
+          {/* Currency Pill Switcher */}
+          <div className="hidden sm:flex items-center bg-slate-100 dark:bg-white/[0.05] p-0.5 rounded-xl text-xs font-mono font-bold">
             {(['USD', 'PKR', 'EUR', 'GBP'] as CurrencyCode[]).map((cur) => (
               <button
                 key={cur}
                 onClick={() => setBaseCurrency(cur)}
-                className={`px-2 py-0.5 rounded-lg transition-all cursor-pointer ${
+                className={`px-2 py-0.5 rounded-lg transition-all cursor-pointer text-[11px] ${
                   baseCurrency === cur
-                    ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold'
-                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-white dark:bg-slate-800 text-slate-950 dark:text-white shadow-xs font-black'
+                    : 'text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 {cur === 'USD' ? '$' : cur === 'PKR' ? '₨' : cur === 'EUR' ? '€' : '£'}
@@ -444,108 +462,246 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Theme Toggle */}
+          {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
             title="Toggle Dark / Light Mode"
           >
-            {theme === 'dark' ? <Sun size={16} className="text-amber-400" /> : <Moon size={16} />}
+            {theme === 'dark' ? <Sun size={15} className="text-amber-400" /> : <Moon size={15} />}
           </button>
 
-          {/* Voice Assistant Trigger */}
+          {/* Voice Assistant Mic */}
           <div className="hidden sm:block">
             <VoiceTriggerButton />
           </div>
 
-          {/* Feedback & Contact Link */}
+          {/* Feedback & About Shortcut */}
           <button
             onClick={() => navigateTo('feedback-contact')}
-            className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
-            title="Feedback & About Us"
+            className="hidden sm:flex p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+            title="Feedback & About Us (SRS 1.6.10)"
           >
-            <MessageSquare size={16} />
+            <MessageSquare size={15} />
           </button>
 
-          {/* Mobile Menu Hamburger */}
+          {/* Mobile Hamburger Toggle (md:hidden) */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="xl:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+            className="md:hidden p-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+            aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
 
-      {/* ─── Mobile / Tablet Dropdown Menu ─── */}
+      {/* ─── 4. Professional Mobile & Tablet Slide-Down Sheet (md:hidden) ─── */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="xl:hidden border-t border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950 p-4 space-y-3"
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            className="md:hidden border-t border-slate-200/90 dark:border-white/[0.08] bg-white/95 dark:bg-[#070A13]/95 backdrop-blur-2xl px-4 py-5 space-y-5 max-h-[85vh] overflow-y-auto"
           >
-            <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
-              <button
-                onClick={() => navigateTo('dashboard')}
-                className="p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 text-left flex items-center gap-2"
-              >
-                <Home size={15} /> Home
-              </button>
-              <button
-                onClick={() => navigateTo('50-30-20')}
-                className="p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-800 dark:text-amber-200 text-left flex items-center gap-2 font-bold"
-              >
-                <PieChart size={15} /> 50-30-20 Rule
-              </button>
-              <button
-                onClick={() => navigateTo('budgeting-basics')}
-                className="p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 text-left flex items-center gap-2"
-              >
-                <BookOpen size={15} /> Budgeting Basics
-              </button>
-              <button
-                onClick={() => navigateTo('needs-vs-wants')}
-                className="p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 text-left flex items-center gap-2"
-              >
-                <ShieldCheck size={15} /> Needs vs Wants
-              </button>
-              <button
-                onClick={() => navigateTo('savings-goals')}
-                className="p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 text-left flex items-center gap-2"
-              >
-                <Target size={15} /> Savings Goals
-              </button>
-              <button
-                onClick={() => navigateTo('expense-planner')}
-                className="p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 text-left flex items-center gap-2"
-              >
-                <Receipt size={15} /> Expense Planner
-              </button>
-              <button
-                onClick={() => navigateTo('money-mistakes')}
-                className="p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 text-left flex items-center gap-2"
-              >
-                <AlertTriangle size={15} /> Money Mistakes
-              </button>
-              <button
-                onClick={() => navigateTo('infographics')}
-                className="p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 text-left flex items-center gap-2"
-              >
-                <Image size={15} /> Infographics
-              </button>
-              <button
-                onClick={() => navigateTo('ai-chatbot')}
-                className="p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 text-left flex items-center gap-2"
-              >
-                <Bot size={15} /> AI Chatbot
-              </button>
+            {/* Featured 50/30/20 Rule Banner in Mobile */}
+            <div
+              onClick={() => navigateTo('50-30-20')}
+              className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-amber-400/10 to-transparent border border-amber-500/30 flex items-center justify-between cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold">
+                  <PieChart size={18} />
+                </div>
+                <div>
+                  <div className="font-extrabold text-sm text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <span>50/30/20 Rule & Calculator</span>
+                    <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-amber-500 text-slate-950 font-bold">
+                      CORE
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                    Divide your monthly allowance into Needs, Wants & Savings
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Section 1: Core Educational Modules */}
+            <div className="space-y-2">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold px-1">
+                Core Budgeting Modules
+              </span>
+              <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
+                <button
+                  onClick={() => navigateTo('dashboard')}
+                  className={`p-2.5 rounded-xl border text-left flex items-center gap-2 transition-all ${
+                    activeView === 'dashboard'
+                      ? 'bg-amber-500/15 border-amber-500/30 text-amber-900 dark:text-amber-200 font-bold'
+                      : 'border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-slate-700 dark:text-slate-300'
+                  }`}
+                >
+                  <Home size={15} className="text-cyan-500" />
+                  <span>Home</span>
+                </button>
+
+                <button
+                  onClick={() => navigateTo('budgeting-basics')}
+                  className={`p-2.5 rounded-xl border text-left flex items-center gap-2 transition-all ${
+                    activeView === 'budgeting-basics'
+                      ? 'bg-amber-500/15 border-amber-500/30 text-amber-900 dark:text-amber-200 font-bold'
+                      : 'border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-slate-700 dark:text-slate-300'
+                  }`}
+                >
+                  <BookOpen size={15} className="text-cyan-500" />
+                  <span>Basics & Quiz</span>
+                </button>
+
+                <button
+                  onClick={() => navigateTo('needs-vs-wants')}
+                  className={`p-2.5 rounded-xl border text-left flex items-center gap-2 transition-all ${
+                    activeView === 'needs-vs-wants'
+                      ? 'bg-amber-500/15 border-amber-500/30 text-amber-900 dark:text-amber-200 font-bold'
+                      : 'border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-slate-700 dark:text-slate-300'
+                  }`}
+                >
+                  <ShieldCheck size={15} className="text-emerald-500" />
+                  <span>Needs vs Wants</span>
+                </button>
+
+                <button
+                  onClick={() => navigateTo('savings-goals')}
+                  className={`p-2.5 rounded-xl border text-left flex items-center gap-2 transition-all ${
+                    activeView === 'savings-goals'
+                      ? 'bg-amber-500/15 border-amber-500/30 text-amber-900 dark:text-amber-200 font-bold'
+                      : 'border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-slate-700 dark:text-slate-300'
+                  }`}
+                >
+                  <Target size={15} className="text-indigo-500" />
+                  <span>Savings Goals</span>
+                </button>
+
+                <button
+                  onClick={() => navigateTo('expense-planner')}
+                  className={`p-2.5 rounded-xl border text-left flex items-center gap-2 transition-all ${
+                    activeView === 'expense-planner'
+                      ? 'bg-amber-500/15 border-amber-500/30 text-amber-900 dark:text-amber-200 font-bold'
+                      : 'border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-slate-700 dark:text-slate-300'
+                  }`}
+                >
+                  <Receipt size={15} className="text-rose-500" />
+                  <span>Expense Planner</span>
+                </button>
+
+                <button
+                  onClick={() => navigateTo('money-mistakes')}
+                  className={`p-2.5 rounded-xl border text-left flex items-center gap-2 transition-all ${
+                    activeView === 'money-mistakes'
+                      ? 'bg-amber-500/15 border-amber-500/30 text-amber-900 dark:text-amber-200 font-bold'
+                      : 'border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-slate-700 dark:text-slate-300'
+                  }`}
+                >
+                  <AlertTriangle size={15} className="text-yellow-500" />
+                  <span>Money Mistakes</span>
+                </button>
+
+                <button
+                  onClick={() => navigateTo('infographics')}
+                  className={`p-2.5 rounded-xl border text-left flex items-center gap-2 transition-all ${
+                    activeView === 'infographics'
+                      ? 'bg-amber-500/15 border-amber-500/30 text-amber-900 dark:text-amber-200 font-bold'
+                      : 'border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-slate-700 dark:text-slate-300'
+                  }`}
+                >
+                  <Image size={15} className="text-purple-500" />
+                  <span>Infographics</span>
+                </button>
+
+                <button
+                  onClick={() => navigateTo('ai-chatbot')}
+                  className={`p-2.5 rounded-xl border text-left flex items-center gap-2 transition-all ${
+                    activeView === 'ai-chatbot'
+                      ? 'bg-amber-500/15 border-amber-500/30 text-amber-900 dark:text-amber-200 font-bold'
+                      : 'border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-slate-700 dark:text-slate-300'
+                  }`}
+                >
+                  <Bot size={15} className="text-cyan-500" />
+                  <span>AI BudgetBee</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Section 2: Advanced Power Tools */}
+            <div className="space-y-2">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold px-1">
+                Advanced Tools & Accounting
+              </span>
+              <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
+                <button
+                  onClick={() => navigateTo('general-ledger')}
+                  className="p-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-left flex items-center gap-2 text-slate-700 dark:text-slate-300"
+                >
+                  <BookOpen size={14} className="text-blue-500" />
+                  <span>General Ledger</span>
+                </button>
+                <button
+                  onClick={() => navigateTo('academic-suite')}
+                  className="p-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-left flex items-center gap-2 text-slate-700 dark:text-slate-300"
+                >
+                  <GraduationCap size={14} className="text-purple-500" />
+                  <span>CPA Labs</span>
+                </button>
+                <button
+                  onClick={() => navigateTo('daily-bazaar')}
+                  className="p-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-left flex items-center gap-2 text-slate-700 dark:text-slate-300"
+                >
+                  <Receipt size={14} className="text-emerald-500" />
+                  <span>Daily Bazaar</span>
+                </button>
+                <button
+                  onClick={() => navigateTo('split-ledger')}
+                  className="p-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-left flex items-center gap-2 text-slate-700 dark:text-slate-300"
+                >
+                  <Users size={14} className="text-amber-500" />
+                  <span>Bill Split & IOUs</span>
+                </button>
+                <button
+                  onClick={() => navigateTo('subscriptions')}
+                  className="p-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-left flex items-center gap-2 text-slate-700 dark:text-slate-300"
+                >
+                  <CreditCard size={14} className="text-rose-500" />
+                  <span>Subscriptions</span>
+                </button>
+                <button
+                  onClick={() => navigateTo('settings')}
+                  className="p-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-left flex items-center gap-2 text-slate-700 dark:text-slate-300"
+                >
+                  <Settings size={14} className="text-slate-400" />
+                  <span>Settings & Vault</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Quick Preferences Toolbar */}
+            <div className="pt-2 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-xs font-semibold">
               <button
                 onClick={() => navigateTo('feedback-contact')}
-                className="p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 text-left flex items-center gap-2"
+                className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-amber-500"
               >
-                <MessageSquare size={15} /> Feedback / About
+                <MessageSquare size={14} />
+                <span>Feedback & About</span>
+              </button>
+              <button
+                onClick={() => {
+                  setSiteMapModalOpen(true);
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-amber-500"
+              >
+                <Compass size={14} />
+                <span>Visual Sitemap</span>
               </button>
             </div>
           </motion.div>
