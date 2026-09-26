@@ -73,7 +73,7 @@ export default function FiftyThirtyTwentyModule() {
       {/* Module Header & Breadcrumb */}
       <div className="border-b border-slate-200 dark:border-white/10 pb-5">
         <div className="flex items-center gap-2 text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-1">
-          <Sparkles size={14} /> Core SRS Requirement 1.6.3
+          <Sparkles size={14} /> 50/30/20 Budgeting Framework
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
           <span>The 50/30/20 Budgeting Rule</span>
@@ -402,7 +402,7 @@ export default function FiftyThirtyTwentyModule() {
           <Info size={18} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
           <div className="space-y-1">
             <strong className="font-bold text-amber-800 dark:text-amber-300">
-              SRS Compliance Notice — Educational Note:
+              Educational Guideline:
             </strong>
             <p className="leading-relaxed">
               This 50/30/20 calculation is provided as an interactive estimate and educational guideline for learning purposes only. Individual student financial circumstances vary based on location, hostel costs, and tuition obligations. The split may be tailored as needed.

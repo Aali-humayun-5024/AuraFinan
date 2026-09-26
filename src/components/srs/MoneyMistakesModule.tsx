@@ -125,7 +125,7 @@ export default function MoneyMistakesModule() {
       {/* Header */}
       <div className="border-b border-slate-200 dark:border-white/10 pb-5">
         <div className="flex items-center gap-2 text-xs font-semibold text-rose-600 dark:text-rose-400 uppercase tracking-wider mb-1">
-          <AlertTriangle size={14} /> SRS Requirement 1.6.6
+          <AlertTriangle size={14} /> Financial Pitfalls & Solutions
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           Common Student Money Mistakes & Solutions

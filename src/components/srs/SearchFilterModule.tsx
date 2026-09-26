@@ -129,7 +129,7 @@ export default function SearchFilterModule() {
       {/* Header */}
       <div className="border-b border-slate-200 dark:border-white/10 pb-5">
         <div className="flex items-center gap-2 text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-1">
-          <Search size={14} /> SRS Requirement 1.6.9
+          <Search size={14} /> Resource Discovery
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           Search, Sort, and Filter Learning Resources

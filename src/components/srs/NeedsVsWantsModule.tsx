@@ -141,7 +141,7 @@ export default function NeedsVsWantsModule() {
       {/* Module Header */}
       <div className="border-b border-slate-200 dark:border-white/10 pb-5">
         <div className="flex items-center gap-2 text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-1">
-          <ShieldCheck size={14} /> SRS Requirement 1.6.2
+          <ShieldCheck size={14} /> Classification Framework
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           Needs vs. Wants Framework

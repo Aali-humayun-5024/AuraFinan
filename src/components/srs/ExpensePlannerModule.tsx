@@ -130,7 +130,7 @@ export default function ExpensePlannerModule() {
       {/* Header */}
       <div className="border-b border-slate-200 dark:border-white/10 pb-5">
         <div className="flex items-center gap-2 text-xs font-semibold text-cyan-600 dark:text-cyan-400 uppercase tracking-wider mb-1">
-          <Receipt size={14} /> SRS Requirement 1.6.5
+          <Receipt size={14} /> Daily Ledger Tracker
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           Student Expense Planner Demonstration

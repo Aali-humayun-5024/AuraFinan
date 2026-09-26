@@ -109,7 +109,7 @@ export default function AboutFeedbackContactModule() {
       {/* Header */}
       <div className="border-b border-slate-200 dark:border-white/10 pb-5">
         <div className="flex items-center gap-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-1">
-          <Info size={14} /> SRS Requirement 1.6.10
+          <Info size={14} /> Community & Contact
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           About Us, Feedback & Student Inquiries
@@ -166,7 +166,7 @@ export default function AboutFeedbackContactModule() {
                   BudgetBasics — NextGen BudgetBee
                 </h2>
                 <p className="text-xs font-mono font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
-                  TechWiz 7 Championship · Web Innovation Unleashed
+                  Personal Finance & Budgeting Platform
                 </p>
               </div>
             </div>

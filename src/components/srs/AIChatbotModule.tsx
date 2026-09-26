@@ -139,7 +139,7 @@ export default function AIChatbotModule() {
       {/* Header */}
       <div className="border-b border-slate-200 dark:border-white/10 pb-5">
         <div className="flex items-center gap-2 text-xs font-semibold text-cyan-600 dark:text-cyan-400 uppercase tracking-wider mb-1">
-          <Bot size={14} /> SRS Requirement 1.6.8
+          <Bot size={14} /> AI Financial Assistant
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
           <span>AI Budget Assistant (BudgetBee)</span>

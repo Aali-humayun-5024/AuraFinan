@@ -202,13 +202,13 @@ export default function Navbar() {
 
   return (
     <div className="sticky top-0 z-40 w-full px-2 sm:px-4 py-2 pointer-events-none transition-all duration-200">
-      {/* ─── Floating Glass Capsule Header (Apple Sequoia / Linear Style - 58px Toolbar) ─── */}
-      <header className="pointer-events-auto max-w-7xl mx-auto h-[58px] px-3 sm:px-4 rounded-2xl bg-white/90 dark:bg-[#070A13]/90 backdrop-blur-2xl border border-slate-200/80 dark:border-white/[0.08] shadow-lg shadow-black/[0.03] dark:shadow-black/40 flex items-center justify-between gap-2 lg:gap-3 transition-all duration-300">
+      {/* ─── Floating Glass Capsule Header (Apple Sequoia / Linear Style - 56px Toolbar) ─── */}
+      <header className="pointer-events-auto max-w-[1400px] w-full mx-auto h-[56px] px-2.5 sm:px-3.5 rounded-2xl bg-white/95 dark:bg-[#070A13]/95 backdrop-blur-2xl border border-slate-200/80 dark:border-white/[0.08] shadow-lg shadow-black/[0.03] dark:shadow-black/40 flex items-center justify-between gap-1.5 sm:gap-2 lg:gap-3 transition-all duration-300">
         
         {/* ─── 1. Brand Logo Lockup ─── */}
         <div
           onClick={() => navigateTo('dashboard')}
-          className="flex items-center gap-2 cursor-pointer select-none shrink-0 group"
+          className="flex items-center gap-1.5 sm:gap-2 cursor-pointer select-none shrink-0 group"
           title="BudgetBasics — Personal Finance & Student Budgeting"
           role="button"
           tabIndex={0}
@@ -218,15 +218,15 @@ export default function Navbar() {
             }
           }}
         >
-          <div className="relative w-[34px] h-[34px] rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 flex items-center justify-center text-slate-950 font-black text-base shadow-sm shadow-amber-500/20 group-hover:scale-105 transition-transform shrink-0">
+          <div className="relative w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 flex items-center justify-center text-slate-950 font-black text-sm shadow-sm shadow-amber-500/20 group-hover:scale-105 transition-transform shrink-0">
             🐝
             <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#070A13]" />
           </div>
-          <div className="flex items-center gap-1.5">
-            <span className="font-bold text-sm tracking-tight text-slate-900 dark:text-white whitespace-nowrap leading-none">
+          <div className="flex items-center gap-1">
+            <span className="font-bold text-xs sm:text-sm tracking-tight text-slate-900 dark:text-white whitespace-nowrap leading-none">
               BudgetBasics
             </span>
-            <span className="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded-[5px] bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30 whitespace-nowrap leading-none">
+            <span className="text-[9px] font-mono font-semibold px-1 py-0.2 rounded-[4px] bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30 whitespace-nowrap leading-none">
               v1.0
             </span>
           </div>
@@ -236,14 +236,14 @@ export default function Navbar() {
         <nav
           aria-label="Main Navigation Dock"
           onMouseLeave={() => setHoveredNav(null)}
-          className="hidden md:flex items-center gap-0.5 xl:gap-1 bg-slate-100/80 dark:bg-white/[0.03] p-1 rounded-xl border border-slate-200/70 dark:border-white/[0.06] shrink min-w-0"
+          className="hidden md:flex items-center gap-0.5 bg-slate-100/80 dark:bg-white/[0.03] p-0.5 sm:p-1 rounded-xl border border-slate-200/70 dark:border-white/[0.06] shrink-0"
         >
           {NAV_MODULES.map((item) => {
             const Icon = item.icon;
             const isActive = activeView === item.id;
             const isFeatured = item.isFeatured;
 
-            // Responsive label tiering: guarantees no overflow across 768px -> 1920px
+            // Responsive label tiering: guarantees zero overflow on any display
             const textVisibilityClass =
               item.tier === 'core'
                 ? 'inline'
@@ -259,7 +259,7 @@ export default function Navbar() {
                   onClick={() => navigateTo(item.id)}
                   onMouseEnter={() => setHoveredNav(item.id)}
                   title={item.fullTitle}
-                  className={`h-[34px] px-2.5 rounded-lg transition-all flex items-center justify-center gap-1.5 whitespace-nowrap cursor-pointer shrink-0 font-bold text-xs ${
+                  className={`h-8 px-2 xl:px-2.5 rounded-lg transition-all flex items-center justify-center gap-1 whitespace-nowrap cursor-pointer shrink-0 font-bold text-[11px] xl:text-xs ${
                     isActive
                       ? 'bg-amber-100/90 dark:bg-amber-500/20 text-amber-950 dark:text-amber-200 border border-amber-300 dark:border-amber-500/40 shadow-xs'
                       : 'text-amber-800 dark:text-amber-300/90 hover:bg-amber-50 dark:hover:bg-amber-500/10 border border-amber-200/60 dark:border-amber-500/20 font-semibold'
@@ -278,7 +278,7 @@ export default function Navbar() {
                 onClick={() => navigateTo(item.id)}
                 onMouseEnter={() => setHoveredNav(item.id)}
                 title={item.fullTitle}
-                className={`relative h-[34px] px-2 xl:px-2.5 rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0 z-10 text-xs whitespace-nowrap font-medium ${
+                className={`relative h-8 px-1.5 xl:px-2 rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer shrink-0 z-10 text-[11px] xl:text-xs whitespace-nowrap font-medium ${
                   isActive
                     ? 'text-slate-950 dark:text-white font-semibold'
                     : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/[0.06]'
@@ -310,7 +310,7 @@ export default function Navbar() {
           <div className="relative shrink-0">
             <button
               onClick={() => setMoreToolsOpen(!moreToolsOpen)}
-              className={`h-[34px] px-2 xl:px-2.5 rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer shrink-0 text-xs font-medium whitespace-nowrap ${
+              className={`h-8 px-1.5 xl:px-2 rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer shrink-0 text-[11px] xl:text-xs font-medium whitespace-nowrap ${
                 moreToolsOpen
                   ? 'bg-slate-200/70 dark:bg-white/[0.08] text-slate-950 dark:text-white'
                   : 'text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/[0.06]'
@@ -321,7 +321,7 @@ export default function Navbar() {
               <Layers size={14} className="shrink-0 text-slate-400" />
               <span className="hidden xl:inline">More</span>
               <ChevronDown
-                size={12}
+                size={11}
                 className={`shrink-0 transition-transform duration-200 ${moreToolsOpen ? 'rotate-180' : ''}`}
               />
             </button>
@@ -403,16 +403,16 @@ export default function Navbar() {
         </nav>
 
         {/* ─── 3. Right Action Cluster ─── */}
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
           {/* Quick Search Button (⌘K) */}
           <button
             onClick={() => setCommandPaletteOpen(true)}
-            className="h-[34px] px-2.5 rounded-lg border border-slate-200/80 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 bg-slate-50/70 dark:bg-white/[0.03] hover:bg-slate-100/70 dark:hover:bg-white/[0.06] text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all inline-flex items-center gap-2 cursor-pointer shrink-0 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
+            className="h-8 px-2 sm:px-2.5 rounded-lg border border-slate-200/80 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 bg-slate-50/70 dark:bg-white/[0.03] hover:bg-slate-100/70 dark:hover:bg-white/[0.06] text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all inline-flex items-center gap-1.5 cursor-pointer shrink-0 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
             title="Search & Command Palette (⌘K)"
             aria-label="Search and Command Palette"
           >
             <Search size={14} className="shrink-0 text-slate-400" />
-            <kbd className="hidden sm:inline-flex items-center justify-center text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-slate-200/70 dark:bg-white/10 text-slate-600 dark:text-slate-300 border border-slate-300/40 dark:border-white/10 leading-none">
+            <kbd className="hidden lg:inline-flex items-center justify-center text-[10px] font-mono font-medium px-1 py-0.2 rounded bg-slate-200/70 dark:bg-white/10 text-slate-600 dark:text-slate-300 border border-slate-300/40 dark:border-white/10 leading-none">
               ⌘K
             </kbd>
           </button>
@@ -421,7 +421,7 @@ export default function Navbar() {
           <div className="relative shrink-0">
             <button
               onClick={() => setPersonaMenuOpen(!personaMenuOpen)}
-              className={`h-[34px] px-2.5 rounded-lg border border-slate-200/80 dark:border-white/10 hover:border-amber-400/60 bg-white/90 dark:bg-white/[0.04] hover:bg-slate-50 dark:hover:bg-white/[0.07] transition-all inline-flex items-center gap-1.5 cursor-pointer shadow-2xs focus:outline-none focus:ring-2 focus:ring-amber-500/40 ${
+              className={`h-8 px-2 rounded-lg border border-slate-200/80 dark:border-white/10 hover:border-amber-400/60 bg-white/90 dark:bg-white/[0.04] hover:bg-slate-50 dark:hover:bg-white/[0.07] transition-all inline-flex items-center gap-1 cursor-pointer shadow-2xs focus:outline-none focus:ring-2 focus:ring-amber-500/40 ${
                 personaMenuOpen ? 'border-amber-500/50 ring-2 ring-amber-500/20' : ''
               }`}
               title={`Active Persona: ${currentPersonaObj.label}`}
@@ -432,7 +432,7 @@ export default function Navbar() {
               <span className="hidden sm:inline text-slate-800 dark:text-slate-200 font-semibold text-xs whitespace-nowrap">
                 {currentPersonaObj.shortLabel}
               </span>
-              <ChevronDown size={12} className="text-slate-400 shrink-0" />
+              <ChevronDown size={11} className="text-slate-400 shrink-0" />
             </button>
 
             {/* Persona Switch Menu */}
@@ -481,7 +481,7 @@ export default function Navbar() {
           <div
             role="radiogroup"
             aria-label="Currency Selector"
-            className="hidden sm:inline-flex items-center h-[34px] p-0.5 rounded-lg bg-slate-100/90 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/10 shrink-0"
+            className="hidden sm:inline-flex items-center h-8 p-0.5 rounded-lg bg-slate-100/90 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/10 shrink-0"
           >
             {(['USD', 'PKR', 'EUR', 'GBP'] as CurrencyCode[]).map((cur) => {
               const isCurActive = baseCurrency === cur;
@@ -495,7 +495,7 @@ export default function Navbar() {
                     setBaseCurrency(cur);
                     playClickSound();
                   }}
-                  className={`h-[28px] px-2 rounded-md font-mono text-xs font-bold transition-all cursor-pointer inline-flex items-center justify-center focus:outline-none ${
+                  className={`h-6 px-1.5 sm:px-2 rounded-md font-mono text-[11px] font-bold transition-all cursor-pointer inline-flex items-center justify-center focus:outline-none ${
                     isCurActive
                       ? 'bg-white dark:bg-slate-800 text-slate-950 dark:text-white shadow-xs border border-slate-200/60 dark:border-white/10 font-extrabold'
                       : 'text-slate-400 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 border border-transparent'
@@ -508,13 +508,13 @@ export default function Navbar() {
             })}
           </div>
 
-          {/* 🌓 Theme Toggle Button (Square 34px × 34px) */}
+          {/* 🌓 Theme Toggle Button (Square 32px × 32px) */}
           <button
             onClick={() => {
               toggleTheme();
               playClickSound();
             }}
-            className="w-[34px] h-[34px] rounded-lg border border-slate-200/80 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 bg-slate-50/70 dark:bg-white/[0.03] hover:bg-slate-100 dark:hover:bg-white/[0.06] text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all inline-flex items-center justify-center cursor-pointer shrink-0 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
+            className="w-8 h-8 rounded-lg border border-slate-200/80 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 bg-slate-50/70 dark:bg-white/[0.03] hover:bg-slate-100 dark:hover:bg-white/[0.06] text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all inline-flex items-center justify-center cursor-pointer shrink-0 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
             title="Toggle Dark / Light Theme"
             aria-label="Toggle theme"
           >
@@ -525,10 +525,10 @@ export default function Navbar() {
             )}
           </button>
 
-          {/* 📱 Mobile Hamburger Toggle (Square 34px × 34px, md:hidden) */}
+          {/* 📱 Mobile Hamburger Toggle (Square 32px × 32px, md:hidden) */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden w-[34px] h-[34px] rounded-lg border border-slate-200/80 dark:border-white/10 bg-slate-50/70 dark:bg-white/[0.03] hover:bg-slate-100 dark:hover:bg-white/[0.06] text-slate-700 dark:text-slate-300 transition-colors inline-flex items-center justify-center cursor-pointer shrink-0 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
+            className="md:hidden w-8 h-8 rounded-lg border border-slate-200/80 dark:border-white/10 bg-slate-50/70 dark:bg-white/[0.03] hover:bg-slate-100 dark:hover:bg-white/[0.06] text-slate-700 dark:text-slate-300 transition-colors inline-flex items-center justify-center cursor-pointer shrink-0 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
             aria-label="Toggle Navigation Menu"
             aria-expanded={mobileMenuOpen}
           >
@@ -545,7 +545,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.98 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="pointer-events-auto md:hidden max-w-7xl mx-auto mt-2 rounded-2xl bg-white/95 dark:bg-[#070A13]/95 backdrop-blur-2xl border border-slate-200/90 dark:border-white/[0.08] shadow-2xl p-4 space-y-4 max-h-[82vh] overflow-y-auto"
+            className="pointer-events-auto md:hidden max-w-[1400px] mx-auto mt-2 rounded-2xl bg-white/95 dark:bg-[#070A13]/95 backdrop-blur-2xl border border-slate-200/90 dark:border-white/[0.08] shadow-2xl p-4 space-y-4 max-h-[82vh] overflow-y-auto"
           >
             {/* Quick Search on Mobile */}
             <button

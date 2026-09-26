@@ -147,7 +147,7 @@ export default function SavingsGoalsModule() {
       {/* Header */}
       <div className="border-b border-slate-200 dark:border-white/10 pb-5">
         <div className="flex items-center gap-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-1">
-          <Target size={14} /> SRS Requirement 1.6.4
+          <Target size={14} /> Goal Planning & Timeline
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>

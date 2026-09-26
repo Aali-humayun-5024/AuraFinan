@@ -95,7 +95,7 @@ export default function InfographicsGalleryModule() {
       {/* Header */}
       <div className="border-b border-slate-200 dark:border-white/10 pb-5">
         <div className="flex items-center gap-2 text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-1">
-          <Image size={14} /> SRS Requirement 1.6.7
+          <Image size={14} /> Visual Learning Aids
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>

@@ -166,10 +166,7 @@ export default function SRSWelcomeHero() {
         <div className="relative z-10 max-w-4xl space-y-3">
           <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-800 dark:text-amber-300 font-bold text-xs uppercase tracking-wider border border-amber-500/30">
-              🐝 Theme: NextGen BudgetBee
-            </span>
-            <span className="text-xs font-mono font-semibold text-slate-500 dark:text-slate-400">
-              Web Innovation Unleashed · TechWiz 7
+              🐝 NextGen BudgetBee
             </span>
           </div>
 
@@ -181,20 +178,8 @@ export default function SRSWelcomeHero() {
             Welcome to <strong>BudgetBasics</strong>! Designed specifically for high school learners, college students, and beginners in personal finance. Easily divide your monthly allowance using the <strong>50/30/20 rule</strong>, distinguish essential needs from lifestyle wants, track your savings milestones, and prevent common money mistakes—with zero login friction.
           </p>
 
-          {/* Quick Stats Summary */}
+          {/* Quick Actions & Sitemap Link */}
           <div className="flex flex-wrap items-center gap-4 pt-2 text-xs font-semibold text-slate-600 dark:text-slate-300">
-            <div className="flex items-center gap-1.5">
-              <CheckCircle2 size={15} className="text-emerald-500" />
-              <span>100% Client-Side Private (SPA)</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <CheckCircle2 size={15} className="text-emerald-500" />
-              <span>Full SRS Requirement Coverage</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <CheckCircle2 size={15} className="text-emerald-500" />
-              <span>Interactive Calculators & Visual Trees</span>
-            </div>
             <button
               onClick={() => setSiteMapModalOpen(true)}
               className="text-amber-600 dark:text-amber-400 font-bold hover:underline flex items-center gap-1 cursor-pointer"
@@ -296,7 +281,7 @@ export default function SRSWelcomeHero() {
             <Sparkles size={18} className="text-amber-500" />
             Core Educational Modules & Calculators
           </h2>
-          <span className="text-xs font-semibold text-slate-400">10 Core Modules (A to Z SRS Requirements)</span>
+          <span className="text-xs font-semibold text-slate-400">10 Core Modules</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3.5">
