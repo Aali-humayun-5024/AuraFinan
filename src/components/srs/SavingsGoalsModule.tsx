@@ -59,6 +59,20 @@ const DEFAULT_GOALS: SavingsGoal[] = [
   },
 ];
 
+export function formatTimeline(totalMonths: number): string {
+  if (totalMonths <= 0) return '0 months';
+  if (totalMonths < 12) {
+    return `${totalMonths} ${totalMonths === 1 ? 'month' : 'months'}`;
+  }
+  const years = Math.floor(totalMonths / 12);
+  const months = totalMonths % 12;
+
+  if (months === 0) {
+    return `${years} ${years === 1 ? 'year' : 'years'}`;
+  }
+  return `${years} ${years === 1 ? 'year' : 'years'} & ${months} ${months === 1 ? 'month' : 'months'}`;
+}
+
 export default function SavingsGoalsModule() {
   const { baseCurrency } = useAppStore();
   const symbol = baseCurrency === 'PKR' ? '₨' : baseCurrency === 'EUR' ? '€' : baseCurrency === 'GBP' ? '£' : '$';
@@ -362,7 +376,7 @@ export default function SavingsGoalsModule() {
                       <strong className="text-emerald-600 dark:text-emerald-400">Goal Reached! 🎉</strong>
                     ) : (
                       <>
-                        Est. <strong className="font-mono font-bold text-slate-900 dark:text-white">{monthsLeft}</strong> months left
+                        Est. <strong className="font-mono font-bold text-slate-900 dark:text-white">{formatTimeline(monthsLeft)}</strong> left
                       </>
                     )}
                   </span>
@@ -380,6 +394,8 @@ export default function SavingsGoalsModule() {
                     ? 'Incredible dedication! You have successfully funded this goal.'
                     : monthsLeft <= 3
                     ? 'Almost there! Just a couple more deposits to victory.'
+                    : monthsLeft >= 60
+                    ? 'Tip: Large goal! Consider raising your monthly deposit or adding side-income to reach it sooner.'
                     : 'Tip: Skip one fast-food meal a week to shorten this timeline by 2 whole months!'}
                 </span>
               </div>
