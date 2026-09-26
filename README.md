@@ -29,8 +29,8 @@ AuraFinance OS is a zero-backend, client-side autonomous wealth simulator and pe
 
 1. **Clone Repository:**
    ```bash
-   git clone https://github.com/your-username/aurafinance-os.git
-   cd aurafinance-os
+   git clone https://github.com/Aali-humayun-5024/AuraFinan.git
+   cd AuraFinan
    ```
 
 2. **Install Dependencies:**
