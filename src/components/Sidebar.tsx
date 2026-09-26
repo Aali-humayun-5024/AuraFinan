@@ -66,7 +66,7 @@ export default function Sidebar() {
       initial={false}
       animate={{ width: sidebarOpen ? 280 : 72 }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-      className="hidden lg:flex h-full flex-col border-r border-slate-200/90 dark:border-white/[0.08] bg-white/70 dark:bg-[#070A12]/70 backdrop-blur-3xl relative z-20 shrink-0"
+      className="hidden lg:flex h-full flex-col border-r border-slate-200/90 dark:border-white/[0.08] bg-white/95 dark:bg-[#070A12]/90 backdrop-blur-3xl relative z-20 shrink-0 shadow-xs"
     >
       {/* ─── The 3D Tactile Brand Logo Lockup (Master Spec 4.A) ─── */}
       <div className="flex items-center px-5 h-16 border-b border-slate-200/90 dark:border-white/[0.08] shrink-0">
@@ -109,8 +109,8 @@ export default function Sidebar() {
               onClick={() => setActiveView(item.id)}
               className={`h-10 w-full rounded-xl px-3 py-2 mb-1 flex items-center gap-3 transition-colors duration-150 cursor-pointer ${
                 isActive
-                  ? 'bg-cyan-500/10 dark:bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 font-semibold border border-cyan-500/20'
-                  : 'hover:bg-slate-100/80 dark:hover:bg-white/[0.04] text-slate-700 dark:text-slate-300'
+                  ? 'bg-cyan-50 dark:bg-cyan-500/15 text-cyan-800 dark:text-cyan-300 font-bold border border-cyan-200 dark:border-cyan-500/20'
+                  : 'hover:bg-slate-100/90 dark:hover:bg-white/[0.04] text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
               }`}
             >
               <Icon size={18} className="shrink-0" />

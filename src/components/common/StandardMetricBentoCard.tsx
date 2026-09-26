@@ -34,7 +34,7 @@ export const StandardMetricBentoCard: React.FC<MetricCardProps> = ({
       onClick={onClick}
       className={`group relative p-6 rounded-3xl transition-all duration-300 ease-out cursor-default
       /* Surface & Transparency */
-      bg-white/85 dark:bg-[#0D121E]/70 backdrop-blur-2xl
+      bg-white dark:bg-[#0D121E]/70 backdrop-blur-2xl
       /* Sub-pixel Crystalline Borders */
       border border-slate-200/90 dark:border-white/[0.08]
       /* Multi-layered Soft Shadows */

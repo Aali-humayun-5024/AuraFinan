@@ -289,7 +289,7 @@ export default function DashboardView() {
       {/* ─────────────────────────────────────────────────────────────
           1. 3D HERO SECTION: "THE WEALTH PRISM" + RADIAL KARMA GAUGE + MILESTONE COIN
           ───────────────────────────────────────────────────────────── */}
-      <div className="glass-card flashlight-card p-5 md:p-6 bg-gradient-to-r from-purple-950/25 via-aura-card to-emerald-950/20 border border-aura-accent/30">
+      <div className="glass-card flashlight-card p-5 md:p-6 bg-gradient-to-r from-purple-50/50 via-white to-emerald-50/40 dark:from-purple-950/25 dark:via-aura-card dark:to-emerald-950/20 border border-slate-200/90 dark:border-aura-accent/30 shadow-sm dark:shadow-none">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           {/* Left: The Wealth Prism 3D WebGL Canvas or Radial Karma Gauge */}
           <div className="flex-1">
@@ -347,7 +347,7 @@ export default function DashboardView() {
       {/* ─────────────────────────────────────────────────────────────
           2. LIVE COMMODITY RADAR TICKER & CITY SELECTOR
           ───────────────────────────────────────────────────────────── */}
-      <div className="glass-card p-3 md:p-4 bg-gradient-to-r from-purple-950/20 via-aura-card to-emerald-950/15 border border-aura-accent/25">
+      <div className="glass-card p-3 md:p-4 bg-gradient-to-r from-purple-50/50 via-white to-emerald-50/40 dark:from-purple-950/20 dark:via-aura-card dark:to-emerald-950/15 border border-slate-200/90 dark:border-aura-accent/25 shadow-sm dark:shadow-none">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-2.5">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -501,14 +501,14 @@ export default function DashboardView() {
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="p-6 rounded-3xl bg-gradient-to-br from-aura-card via-purple-950/30 to-emerald-950/20 border-2 border-dashed border-aura-accent/40 text-center"
+          className="p-6 rounded-3xl bg-gradient-to-br from-white via-purple-50/60 to-emerald-50/40 dark:from-aura-card dark:via-purple-950/30 dark:to-emerald-950/20 border-2 border-dashed border-purple-300/80 dark:border-aura-accent/40 text-center shadow-sm dark:shadow-none"
         >
           <div className="max-w-2xl mx-auto space-y-4">
             <span className="text-4xl animate-bounce inline-block">✨</span>
-            <h2 className="text-2xl font-black text-aura-text">
+            <h2 className="text-2xl font-black text-slate-900 dark:text-slate-100">
               Welcome! Let's Bring Your Finances & Rashan To Life
             </h2>
-            <p className="text-sm text-aura-text-secondary leading-relaxed">
+            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
               Your database is clean. Click any one-click preset below to load authentic data with
               real PKR currency, daily grocery items, bills, and savings kametis!
             </p>
@@ -518,7 +518,7 @@ export default function DashboardView() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleQuickSeed('household')}
-                className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-sm shadow-xl shadow-emerald-600/30 flex items-center gap-2"
+                className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-sm shadow-xl shadow-emerald-600/30 flex items-center gap-2 cursor-pointer"
               >
                 <span>🏠 Pakistani Household & Rashan (₨ PKR)</span>
               </motion.button>
@@ -527,7 +527,7 @@ export default function DashboardView() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleQuickSeed('freelancer')}
-                className="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/15 text-aura-text font-semibold text-sm border border-aura-border flex items-center gap-2"
+                className="px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200/80 dark:bg-white/10 dark:hover:bg-white/15 text-slate-800 dark:text-slate-100 font-semibold text-sm border border-slate-200 dark:border-aura-border flex items-center gap-2 cursor-pointer"
               >
                 <span>💼 Tech Freelancer ($ USD)</span>
               </motion.button>
@@ -536,7 +536,7 @@ export default function DashboardView() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleQuickSeed('student')}
-                className="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/15 text-aura-text font-semibold text-sm border border-aura-border flex items-center gap-2"
+                className="px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200/80 dark:bg-white/10 dark:hover:bg-white/15 text-slate-800 dark:text-slate-100 font-semibold text-sm border border-slate-200 dark:border-aura-border flex items-center gap-2 cursor-pointer"
               >
                 <span>🎓 High School Student ($)</span>
               </motion.button>
@@ -548,19 +548,19 @@ export default function DashboardView() {
       {/* ─────────────────────────────────────────────────────────────
           4. 1-TAP "ROZMARRA QUICK LOG" BAR (DAILY ESSENTIALS TAP)
           ───────────────────────────────────────────────────────────── */}
-      <div className="glass-card flashlight-card p-4">
+      <div className="glass-card flashlight-card p-4 bg-white dark:bg-aura-card border border-slate-200/90 dark:border-aura-border shadow-xs dark:shadow-none">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <Zap size={16} className="text-amber-400" />
-            <h3 className="text-xs md:text-sm font-bold text-aura-text">
+            <Zap size={16} className="text-amber-500" />
+            <h3 className="text-xs md:text-sm font-bold text-slate-900 dark:text-slate-100">
               Rozmarra 1-Tap Quick Log (روزمرہ فوری خرچہ)
             </h3>
-            <span className="text-[11px] text-aura-text-muted hidden md:inline">
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 hidden md:inline">
               Tap any item to immediately log today's purchase with audio chime
             </span>
           </div>
-          <span className="text-[11px] text-aura-text-secondary">
-            Logs to: <strong className="text-aura-accent">{activeProfileId === 'all' ? 'Household' : activeProfileId}</strong>
+          <span className="text-[11px] text-slate-600 dark:text-slate-400">
+            Logs to: <strong className="text-cyan-700 dark:text-cyan-400">{activeProfileId === 'all' ? 'Household' : activeProfileId}</strong>
           </span>
         </div>
 
@@ -581,7 +581,7 @@ export default function DashboardView() {
               whileTap={{ scale: 0.96 }}
               disabled={quickLogLoading}
               onClick={() => handleQuickLog(item.title, item.amount, item.cat, item.icon)}
-              className="px-3 py-2 rounded-xl bg-white/[0.03] hover:bg-aura-accent/20 hover:border-aura-accent/40 border border-aura-border text-left shrink-0 transition-all group"
+              className="px-3 py-2 rounded-xl bg-slate-50/90 hover:bg-slate-100 border border-slate-200/80 hover:border-slate-300 dark:bg-white/[0.03] dark:hover:bg-aura-accent/20 dark:border-aura-border text-left shrink-0 transition-all group cursor-pointer shadow-xs dark:shadow-none"
             >
               <div className="flex items-center gap-2">
                 <span className="text-xl group-hover:scale-125 transition-transform">{item.icon}</span>

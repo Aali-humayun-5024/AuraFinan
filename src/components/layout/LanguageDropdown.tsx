@@ -24,12 +24,12 @@ export const LanguageDropdown: React.FC = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 rounded-xl bg-white/[0.05] dark:bg-white/[0.05] border border-aura-border hover:border-aura-accent/40 text-xs font-semibold text-aura-text transition-all active:scale-95 cursor-pointer shadow-sm shrink-0"
+        className="flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 rounded-xl bg-slate-100/90 hover:bg-slate-200/80 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-slate-200/90 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-white/[0.18] text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-xs transition-all active:scale-95 cursor-pointer shrink-0"
         title="Change Platform Language / زبان منتخب کریں"
       >
-        <Globe className="text-aura-cyan shrink-0" size={13} />
-        <span className="truncate max-w-[60px] xl:max-w-[110px]">{activeLang?.nativeName || 'Language'}</span>
-        <ChevronDown size={11} className={`text-aura-text-muted transition-transform duration-200 shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
+        <Globe className="text-cyan-600 dark:text-cyan-400 shrink-0" size={13} />
+        <span className="truncate max-w-[45px] xl:max-w-[75px] 2xl:max-w-[110px]">{activeLang?.nativeName || 'EN'}</span>
+        <ChevronDown size={11} className={`text-slate-400 transition-transform duration-200 shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       <AnimatePresence>

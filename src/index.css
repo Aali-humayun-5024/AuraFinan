@@ -5,46 +5,49 @@
    Obsidian Nebula (Dark) & Opal Ceramic (Light)
    ═══════════════════════════════════════════════════ */
 
+/* Enforce Class & Data-Attribute Driven Dark Mode in Tailwind v4 (disables OS media query takeover) */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, .dark, .dark *));
+
 @theme {
-  --color-aura-bg: #070A11;
-  --color-aura-surface: #0B0F19;
-  --color-aura-card: rgba(15, 23, 42, 0.65);
-  --color-aura-card-hover: rgba(24, 32, 54, 0.85);
-  --color-aura-border: rgba(255, 255, 255, 0.08);
-  --color-aura-border-bright: rgba(255, 255, 255, 0.16);
+  --color-aura-bg: var(--color-aura-bg);
+  --color-aura-surface: var(--color-aura-surface);
+  --color-aura-card: var(--color-aura-card);
+  --color-aura-card-hover: var(--color-aura-card-hover);
+  --color-aura-border: var(--color-aura-border);
+  --color-aura-border-bright: var(--color-aura-border-bright);
 
-  --color-aura-text: #F1F5F9;
-  --color-aura-text-secondary: #94A3B8;
-  --color-aura-text-muted: #64748B;
+  --color-aura-text: var(--color-aura-text);
+  --color-aura-text-secondary: var(--color-aura-text-secondary);
+  --color-aura-text-muted: var(--color-aura-text-muted);
 
-  --color-aura-accent: #7c5cfc;
-  --color-aura-accent-bright: #9b7fff;
-  --color-aura-accent-glow: rgba(124, 92, 252, 0.25);
+  --color-aura-accent: var(--color-aura-accent);
+  --color-aura-accent-bright: var(--color-aura-accent-bright);
+  --color-aura-accent-glow: var(--color-aura-accent-glow);
 
-  --color-aura-green: #10b981;
-  --color-aura-green-soft: rgba(16, 185, 129, 0.15);
-  --color-aura-red: #ef4444;
-  --color-aura-red-soft: rgba(239, 68, 68, 0.15);
-  --color-aura-amber: #f59e0b;
-  --color-aura-amber-soft: rgba(245, 158, 11, 0.15);
-  --color-aura-cyan: #06b6d4;
-  --color-aura-cyan-soft: rgba(6, 182, 212, 0.15);
-  --color-aura-pink: #ec4899;
-  --color-aura-pink-soft: rgba(236, 72, 153, 0.15);
+  --color-aura-green: var(--color-aura-green);
+  --color-aura-green-soft: var(--color-aura-green-soft);
+  --color-aura-red: var(--color-aura-red);
+  --color-aura-red-soft: var(--color-aura-red-soft);
+  --color-aura-amber: var(--color-aura-amber);
+  --color-aura-amber-soft: var(--color-aura-amber-soft);
+  --color-aura-cyan: var(--color-aura-cyan);
+  --color-aura-cyan-soft: var(--color-aura-cyan-soft);
+  --color-aura-pink: var(--color-aura-pink);
+  --color-aura-pink-soft: var(--color-aura-pink-soft);
 
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
-/* ─── CSS Variables for Theme Switching (Default: Opal Ceramic Light) ─── */
+/* ─── CSS Variables for Theme Switching (Default: Opal Ceramic Pristine Light) ─── */
 :root, [data-theme="light"], .theme-light {
   --color-aura-bg: #F8FAFC;
-  --color-aura-surface: #F1F5F9;
-  --color-aura-card: rgba(255, 255, 255, 0.85);
-  --color-aura-card-hover: rgba(255, 255, 255, 0.98);
-  --color-aura-border: rgba(226, 232, 240, 0.90);
-  --color-aura-border-bright: rgba(203, 213, 225, 0.90);
-  --color-aura-text: #090D1A;
+  --color-aura-surface: #FFFFFF;
+  --color-aura-card: #FFFFFF;
+  --color-aura-card-hover: #FFFFFF;
+  --color-aura-border: #E2E8F0;
+  --color-aura-border-bright: #CBD5E1;
+  --color-aura-text: #0F172A;
   --color-aura-text-secondary: #475569;
   --color-aura-text-muted: #64748B;
 
