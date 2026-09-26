@@ -1,0 +1,679 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════
+   AuraFinance OS — Dual-Theme Retina Design System
+   Obsidian Nebula (Dark) & Opal Ceramic (Light)
+   ═══════════════════════════════════════════════════ */
+
+@theme {
+  --color-aura-bg: #070A11;
+  --color-aura-surface: #0B0F19;
+  --color-aura-card: rgba(15, 23, 42, 0.65);
+  --color-aura-card-hover: rgba(24, 32, 54, 0.85);
+  --color-aura-border: rgba(255, 255, 255, 0.08);
+  --color-aura-border-bright: rgba(255, 255, 255, 0.16);
+
+  --color-aura-text: #F1F5F9;
+  --color-aura-text-secondary: #94A3B8;
+  --color-aura-text-muted: #64748B;
+
+  --color-aura-accent: #7c5cfc;
+  --color-aura-accent-bright: #9b7fff;
+  --color-aura-accent-glow: rgba(124, 92, 252, 0.25);
+
+  --color-aura-green: #10b981;
+  --color-aura-green-soft: rgba(16, 185, 129, 0.15);
+  --color-aura-red: #ef4444;
+  --color-aura-red-soft: rgba(239, 68, 68, 0.15);
+  --color-aura-amber: #f59e0b;
+  --color-aura-amber-soft: rgba(245, 158, 11, 0.15);
+  --color-aura-cyan: #06b6d4;
+  --color-aura-cyan-soft: rgba(6, 182, 212, 0.15);
+  --color-aura-pink: #ec4899;
+  --color-aura-pink-soft: rgba(236, 72, 153, 0.15);
+
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* ─── CSS Variables for Theme Switching (Default: Opal Ceramic Light) ─── */
+:root, [data-theme="light"], .theme-light {
+  --color-aura-bg: #F8FAFC;
+  --color-aura-surface: #F1F5F9;
+  --color-aura-card: rgba(255, 255, 255, 0.85);
+  --color-aura-card-hover: rgba(255, 255, 255, 0.98);
+  --color-aura-border: rgba(226, 232, 240, 0.90);
+  --color-aura-border-bright: rgba(203, 213, 225, 0.90);
+  --color-aura-text: #090D1A;
+  --color-aura-text-secondary: #475569;
+  --color-aura-text-muted: #64748B;
+
+  --color-aura-accent: #6D28D9;
+  --color-aura-accent-bright: #7c3aed;
+  --color-aura-accent-glow: rgba(109, 40, 217, 0.16);
+
+  --color-aura-green: #047857;
+  --color-aura-green-soft: rgba(4, 120, 87, 0.12);
+  --color-aura-red: #BE123C;
+  --color-aura-red-soft: rgba(190, 18, 60, 0.12);
+  --color-aura-amber: #B45309;
+  --color-aura-amber-soft: rgba(180, 83, 9, 0.12);
+  --color-aura-cyan: #0369A1;
+  --color-aura-cyan-soft: rgba(3, 105, 161, 0.12);
+  --color-aura-pink: #BE185D;
+  --color-aura-pink-soft: rgba(190, 24, 93, 0.12);
+}
+
+[data-theme="dark"], .theme-dark {
+  --color-aura-bg: #050811;
+  --color-aura-surface: #090D1A;
+  --color-aura-card: rgba(13, 18, 30, 0.70);
+  --color-aura-card-hover: rgba(20, 27, 45, 0.85);
+  --color-aura-border: rgba(255, 255, 255, 0.08);
+  --color-aura-border-bright: rgba(255, 255, 255, 0.18);
+  --color-aura-text: #F8FAFC;
+  --color-aura-text-secondary: #94A3B8;
+  --color-aura-text-muted: #64748B;
+
+  --color-aura-accent: #A855F7;
+  --color-aura-accent-bright: #c084fc;
+  --color-aura-accent-glow: rgba(168, 85, 247, 0.25);
+
+  --color-aura-green: #10B981;
+  --color-aura-green-soft: rgba(16, 185, 129, 0.15);
+  --color-aura-red: #F43F5E;
+  --color-aura-red-soft: rgba(244, 63, 94, 0.15);
+  --color-aura-amber: #F59E0B;
+  --color-aura-amber-soft: rgba(245, 158, 11, 0.15);
+  --color-aura-cyan: #06B6D4;
+  --color-aura-cyan-soft: rgba(6, 182, 212, 0.15);
+  --color-aura-pink: #ec4899;
+  --color-aura-pink-soft: rgba(236, 72, 153, 0.15);
+}
+
+/* ─── Base ─── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(109, 40, 217, 0.3) transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-aura-bg);
+  color: var(--color-aura-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ─── Glass Card & Bento Specifications ─── */
+.glass-card,
+.bento-plate {
+  background: var(--color-aura-card);
+  border: 1px solid var(--color-aura-border);
+  border-radius: 24px;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 10px 30px -5px rgba(15, 23, 42, 0.04);
+}
+
+.glass-card:hover,
+.bento-plate:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 12px 40px -6px rgba(15, 23, 42, 0.08);
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .glass-card,
+.theme-dark .glass-card,
+.dark .glass-card,
+[data-theme="dark"] .bento-plate,
+.theme-dark .bento-plate,
+.dark .bento-plate {
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.40);
+}
+
+[data-theme="dark"] .glass-card:hover,
+.theme-dark .glass-card:hover,
+.dark .glass-card:hover,
+[data-theme="dark"] .bento-plate:hover,
+.theme-dark .bento-plate:hover,
+.dark .bento-plate:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.60);
+  transform: translateY(-1px);
+}
+
+/* ─── Dropdown & Floating Popover Glass ─── */
+.floating-glass,
+.popover-elevation {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(226, 232, 240, 0.90);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.06);
+  border-radius: 16px;
+}
+
+[data-theme="dark"] .floating-glass,
+.theme-dark .floating-glass,
+.dark .floating-glass,
+[data-theme="dark"] .popover-elevation,
+.theme-dark .popover-elevation,
+.dark .popover-elevation {
+  background: rgba(9, 13, 26, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.75), 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* ─── Semantic FinTech Accent Chips ─── */
+.chip-positive {
+  background-color: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+[data-theme="dark"] .chip-positive,
+.theme-dark .chip-positive,
+.dark .chip-positive {
+  background-color: rgba(16, 185, 129, 0.10);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.20);
+}
+
+.chip-negative {
+  background-color: #fff1f2;
+  color: #9f1239;
+  border: 1px solid #fecdd3;
+}
+[data-theme="dark"] .chip-negative,
+.theme-dark .chip-negative,
+.dark .chip-negative {
+  background-color: rgba(244, 63, 94, 0.10);
+  color: #fb7185;
+  border: 1px solid rgba(244, 63, 94, 0.20);
+}
+
+.chip-ai {
+  background-color: #f5f3ff;
+  color: #5b21b6;
+  border: 1px solid #ddd6fe;
+}
+[data-theme="dark"] .chip-ai,
+.theme-dark .chip-ai,
+.dark .chip-ai {
+  background-color: rgba(168, 85, 247, 0.10);
+  color: #d8b4fe;
+  border: 1px solid rgba(168, 85, 247, 0.20);
+}
+
+.chip-projection {
+  background-color: #f0f9ff;
+  color: #075985;
+  border: 1px solid #bae6fd;
+}
+[data-theme="dark"] .chip-projection,
+.theme-dark .chip-projection,
+.dark .chip-projection {
+  background-color: rgba(6, 182, 212, 0.10);
+  color: #67e8f9;
+  border: 1px solid rgba(6, 182, 212, 0.20);
+}
+
+.chip-warning {
+  background-color: #fffbeb;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+[data-theme="dark"] .chip-warning,
+.theme-dark .chip-warning,
+.dark .chip-warning {
+  background-color: rgba(245, 158, 11, 0.10);
+  color: #fcd34d;
+  border: 1px solid rgba(245, 158, 11, 0.20);
+}
+
+/* Strict Tabular Numerals Enforcement */
+.tabular-nums,
+table td,
+table th,
+[data-tabular="true"] {
+  font-feature-settings: "tnum" 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Flashlight Bento Hover Effect ─── */
+.flashlight-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.flashlight-card::before {
+  content: '';
+  position: absolute;
+  top: var(--mouse-y, -1000px);
+  left: var(--mouse-x, -1000px);
+  width: 450px;
+  height: 450px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, var(--color-aura-accent-glow), transparent 70%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.flashlight-card:hover::before {
+  opacity: 1;
+}
+
+/* ─── Glow Effects ─── */
+.glow-accent {
+  box-shadow: 0 0 30px var(--color-aura-accent-glow),
+              0 0 60px rgba(109, 40, 217, 0.1);
+}
+
+.glow-green {
+  box-shadow: 0 0 20px rgba(5, 150, 105, 0.2);
+}
+
+.glow-red {
+  box-shadow: 0 0 20px rgba(225, 29, 72, 0.2);
+}
+
+/* ─── Animated Mesh Gradient Background ─── */
+.aura-bg-gradient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 50%, rgba(226, 232, 240, 0.4) 100%);
+}
+
+.aura-bg-gradient::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background:
+    radial-gradient(ellipse at 15% 30%, rgba(109, 40, 217, 0.04) 0%, transparent 60%),
+    radial-gradient(ellipse at 85% 15%, rgba(2, 132, 199, 0.04) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 85%, rgba(5, 150, 105, 0.04) 0%, transparent 60%);
+  animation: aura-drift 22s ease-in-out infinite;
+}
+
+[data-theme="dark"] .aura-bg-gradient,
+.theme-dark .aura-bg-gradient,
+.dark .aura-bg-gradient {
+  background: #050811;
+}
+
+[data-theme="dark"] .aura-bg-gradient::before,
+.theme-dark .aura-bg-gradient::before,
+.dark .aura-bg-gradient::before {
+  background:
+    radial-gradient(ellipse 80% 80% at 50% -20%, rgba(16, 185, 129, 0.06), rgba(255, 255, 255, 0) 70%),
+    radial-gradient(ellipse at 20% 50%, rgba(124, 92, 252, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(6, 182, 212, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 40% 80%, rgba(236, 72, 153, 0.04) 0%, transparent 50%);
+}
+
+@keyframes aura-drift {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(2%, -2%) rotate(1deg); }
+  66% { transform: translate(-1%, 1%) rotate(-0.5deg); }
+}
+
+/* ─── Sidebar ─── */
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  color: var(--color-aura-text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-nav-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--color-aura-accent-glow), transparent);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  border-radius: 14px;
+}
+
+.sidebar-nav-item:hover {
+  color: var(--color-aura-text);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="light"] .sidebar-nav-item:hover {
+  background: rgba(15, 23, 42, 0.04);
+}
+
+.sidebar-nav-item.active {
+  color: var(--color-aura-text);
+  background: rgba(124, 92, 252, 0.14);
+  border: 1px solid rgba(124, 92, 252, 0.25);
+}
+
+.sidebar-nav-item.active::before {
+  opacity: 1;
+}
+
+/* ─── Metric Cards ─── */
+.metric-card {
+  background: var(--color-aura-card);
+  border: 1px solid var(--color-aura-border);
+  border-radius: 20px;
+  padding: 20px;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card:hover {
+  border-color: var(--color-aura-border-bright);
+  transform: translateY(-2px);
+}
+
+/* ─── Persona Chip ─── */
+.persona-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--color-aura-border);
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-aura-text-secondary);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.persona-chip:hover {
+  border-color: var(--color-aura-accent);
+  background: var(--color-aura-accent-glow);
+  color: var(--color-aura-text);
+}
+
+.persona-chip.active {
+  background: linear-gradient(135deg, rgba(124, 92, 252, 0.2), rgba(124, 92, 252, 0.1));
+  border-color: var(--color-aura-accent);
+  color: var(--color-aura-accent-bright);
+}
+
+/* ─── Command Palette (Desktop Modal / Mobile Bottom Sheet) ─── */
+.command-palette-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+}
+
+@media (min-width: 1024px) {
+  .command-palette-overlay {
+    align-items: flex-start;
+    padding-top: 15vh;
+  }
+}
+
+.command-palette {
+  width: 100%;
+  max-width: 100%;
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  background: var(--color-aura-card);
+  border: 1px solid var(--color-aura-border-bright);
+  overflow: hidden;
+  box-shadow: 0 -15px 40px -10px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(30px);
+  max-height: 88vh;
+  overflow-y: auto;
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+
+@media (min-width: 1024px) {
+  .command-palette {
+    max-width: 640px;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    max-height: none;
+    overflow-y: visible;
+    padding-bottom: 0;
+  }
+}
+
+/* ─── Recharts Tooltip ─── */
+.recharts-default-tooltip {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08) !important;
+  backdrop-filter: blur(16px) !important;
+  padding: 8px 12px !important;
+}
+
+.recharts-tooltip-label {
+  color: #0F172A !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+}
+
+.recharts-tooltip-item {
+  color: #475569 !important;
+  font-size: 11px !important;
+}
+
+[data-theme="dark"] .recharts-default-tooltip,
+.theme-dark .recharts-default-tooltip {
+  background: var(--color-aura-card) !important;
+  border: 1px solid var(--color-aura-border-bright) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .recharts-tooltip-label,
+.theme-dark .recharts-tooltip-label {
+  color: var(--color-aura-text) !important;
+}
+
+[data-theme="dark"] .recharts-tooltip-item,
+.theme-dark .recharts-tooltip-item {
+  color: var(--color-aura-text-secondary) !important;
+}
+
+/* ─── FinTech Numeric & Baseline Typographic System ─── */
+.tabular-nums, .font-mono {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "cv01" 1;
+}
+
+.fin-scalar {
+  display: inline-flex;
+  align-items: baseline;
+  text-align: left;
+}
+
+.fin-table-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Global Cultural Atmosphere & Regional Motifs ─── */
+[dir="rtl"] {
+  text-align: start;
+}
+
+:lang(ur), [lang="ur"] {
+  font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Noto Sans Arabic', system-ui, sans-serif;
+  line-height: 1.75;
+}
+
+:lang(ar), [lang="ar"] {
+  font-family: 'Noto Sans Arabic', 'Cairo', system-ui, sans-serif;
+}
+
+[dir="rtl"] .font-mono,
+[dir="rtl"] .fin-scalar,
+[dir="rtl"] .fin-table-num {
+  direction: ltr;
+  display: inline-block;
+}
+
+/* South Asia Motif: Subtle Mughal Filigree & Emerald/Saffron Glow */
+body.theme-south-asia {
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 90% 80%, rgba(245, 158, 11, 0.06) 0%, transparent 45%);
+}
+
+/* Middle East Motif: Desert Gold & Lapis Lazuli */
+body.theme-middle-east {
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(245, 158, 11, 0.09) 0%, transparent 45%),
+    radial-gradient(circle at 85% 75%, rgba(59, 130, 246, 0.07) 0%, transparent 45%);
+}
+
+/* East Asia Motif: Wabi-Sabi Ink & Cherry Blossom Sakura Rose */
+body.theme-east-asia {
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(236, 72, 153, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.06) 0%, transparent 40%);
+}
+
+/* Latin America Motif: Warm Terracotta & Solar Gold */
+body.theme-latam {
+  background-image: 
+    radial-gradient(circle at 20% 15%, rgba(234, 88, 12, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.06) 0%, transparent 45%);
+}
+
+/* Americas & Europe Motif: Obsidian Nebula & Clean Slate */
+body.theme-americas-europe {
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(124, 92, 252, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.06) 0%, transparent 45%);
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   HARDWARE ADAPTIVE SYSTEM & ZERO-LOAD GPU RENDERING PRUNING
+   Optimized for Dual-core Celeron / 2GB RAM / Integrated Intel HD 4000
+   ═════════════════════════════════════════════════════════════════ */
+
+/* Low-Hardware Overrides: Cuts GPU compositing overhead to absolute zero */
+.hardware-low * {
+  /* Disable heavy compositing layers */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+/* Replace expensive blur backgrounds with opaque solid fallbacks */
+.hardware-low .glass-card,
+.hardware-low .floating-glass {
+  background-color: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+.hardware-low.dark .glass-card,
+.hardware-low.dark .floating-glass,
+.hardware-low.theme-dark .glass-card,
+.hardware-low.theme-dark .floating-glass,
+.hardware-low[data-theme="dark"] .glass-card,
+.hardware-low[data-theme="dark"] .floating-glass,
+.hardware-low [data-theme="dark"] .glass-card,
+.hardware-low [data-theme="dark"] .floating-glass {
+  background-color: #0F172A !important;
+  border: 1px solid #1E293B !important;
+  box-shadow: none !important;
+}
+
+/* Prune animated mesh gradients and replace with flat, non-repainting solids */
+.hardware-low .aura-bg-gradient::before {
+  animation: none !important;
+  display: none !important;
+}
+
+.hardware-low .aura-bg-gradient {
+  background: #F8FAFC !important;
+  animation: none !important;
+}
+
+.hardware-low.dark .aura-bg-gradient,
+.hardware-low.theme-dark .aura-bg-gradient,
+.hardware-low[data-theme="dark"] .aura-bg-gradient,
+.hardware-low [data-theme="dark"] .aura-bg-gradient {
+  background: #050811 !important;
+}
+
+/* Prune flashlight mouse tracking hover layers */
+.hardware-low .flashlight-card::before {
+  display: none !important;
+}
+
+/* Disable glow filters */
+.hardware-low .glow-accent,
+.hardware-low .glow-green,
+.hardware-low .glow-red {
+  box-shadow: none !important;
+}
+
+/* Mid-tier Hardware Optimizations: Prune backdrop blur on integrated GPUs */
+.hardware-mid * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.hardware-mid .glass-card {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.hardware-mid.dark .glass-card,
+.hardware-mid.theme-dark .glass-card,
+.hardware-mid[data-theme="dark"] .glass-card,
+.hardware-mid [data-theme="dark"] .glass-card {
+  background-color: rgba(13, 18, 30, 0.94) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Force CSS hardware compositing only where strictly needed */
+.hardware-composite {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Tab Idle Engine: Freeze CSS animations when browser tab is inactive or hidden */
+.page-idle *,
+.page-idle .aura-bg-gradient::before {
+  animation-play-state: paused !important;
+}
+

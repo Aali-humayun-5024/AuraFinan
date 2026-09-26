@@ -1,0 +1,327 @@
+{
+  "metadata": {
+    "schemaVersion": "2.0.0",
+    "exportedAt": "2026-09-25T12:00:00.000Z",
+    "systemBuild": "AuraOS-2026.09-Retina",
+    "platformCurrency": "PKR",
+    "activeLanguage": "en",
+    "activePersona": "household",
+    "recordChecksumSHA256": "canonical-master-seed-2026-v2-sha256-verified"
+  },
+  "accounts": [
+    { "code": "1010", "name": "Cash on Hand", "category": "asset", "normalBalance": "debit", "currentBalance": 12500, "description": "Petty cash and liquid currency reserves" },
+    { "code": "1020", "name": "Bank Operating Account", "category": "asset", "normalBalance": "debit", "currentBalance": 48600, "description": "Primary commercial checking and treasury" },
+    { "code": "1030", "name": "Accounts Receivable", "category": "asset", "normalBalance": "debit", "currentBalance": 14200, "description": "Client invoices billed and awaiting settlement" },
+    { "code": "1040", "name": "Inventory / Stock", "category": "asset", "normalBalance": "debit", "currentBalance": 9800, "description": "Commercial goods held for sale and distribution" },
+    { "code": "1050", "name": "Prepaid Expenses", "category": "asset", "normalBalance": "debit", "currentBalance": 3200, "description": "Advance payments for insurance and cloud hosting" },
+    { "code": "1060", "name": "Precious Metals / Bullion", "category": "asset", "normalBalance": "debit", "currentBalance": 993.76, "description": "Physical gold, silver, and platinum bullion reserves" },
+    { "code": "2010", "name": "Accounts Payable", "category": "liability", "normalBalance": "credit", "currentBalance": 8400, "description": "Vendor bills and supplier trade liabilities" },
+    { "code": "2020", "name": "Short-Term Notes Payable", "category": "liability", "normalBalance": "credit", "currentBalance": 12000, "description": "Working capital bank facility due within 12 months" },
+    { "code": "2030", "name": "Sales Tax / VAT Payable", "category": "liability", "normalBalance": "credit", "currentBalance": 1950, "description": "Collected consumption tax payable to revenue authority" },
+    { "code": "3010", "name": "Owner's Capital", "category": "equity", "normalBalance": "credit", "currentBalance": 50000, "description": "Initial founder equity and paid-in capital" },
+    { "code": "3020", "name": "Retained Earnings", "category": "equity", "normalBalance": "credit", "currentBalance": 10450, "description": "Cumulative undistributed operating surpluses" },
+    { "code": "4010", "name": "Sales / Consulting Revenue", "category": "revenue", "normalBalance": "credit", "currentBalance": 18500, "description": "Gross revenue from services and software contracts" },
+    { "code": "4020", "name": "Interest Income", "category": "revenue", "normalBalance": "credit", "currentBalance": 450, "description": "Yield earned on treasury bank deposits" },
+    { "code": "5010", "name": "Cost of Goods Sold (COGS)", "category": "expense", "normalBalance": "debit", "currentBalance": 4200, "description": "Direct procurement and fulfillment costs" },
+    { "code": "5020", "name": "Food & Dining Expense", "category": "expense", "normalBalance": "debit", "currentBalance": 1350, "description": "Business hospitality and meal expenses" },
+    { "code": "5030", "name": "Office Supplies & SaaS", "category": "expense", "normalBalance": "debit", "currentBalance": 2400, "description": "Hardware, licenses, and productivity tools" },
+    { "code": "5040", "name": "Utilities & Living", "category": "expense", "normalBalance": "debit", "currentBalance": 3100, "description": "Electricity, fiber internet, and workspace lease" },
+    { "code": "5050", "name": "Travel & Transit", "category": "expense", "normalBalance": "debit", "currentBalance": 1850, "description": "Rideshare, flights, and logistics mobility" }
+  ],
+  "journalEntries": [
+    {
+      "entryNumber": "JE-2026-0001",
+      "date": "2026-09-01",
+      "narration": "Initial equity injection from founder via bank wire transfer",
+      "isBalanced": true,
+      "source": "manual",
+      "createdAt": "2026-09-01T09:00:00.000Z",
+      "lines": [
+        { "accountId": "1020", "accountName": "Bank Operating Account", "debit": 50000, "credit": 0 },
+        { "accountId": "3010", "accountName": "Owner's Capital", "debit": 0, "credit": 50000 }
+      ]
+    },
+    {
+      "entryNumber": "JE-2026-0002",
+      "date": "2026-09-05",
+      "narration": "Enterprise client software delivery retainer payment received",
+      "isBalanced": true,
+      "source": "manual",
+      "createdAt": "2026-09-05T11:30:00.000Z",
+      "lines": [
+        { "accountId": "1020", "accountName": "Bank Operating Account", "debit": 18500, "credit": 0 },
+        { "accountId": "4010", "accountName": "Sales / Consulting Revenue", "debit": 0, "credit": 18500 }
+      ]
+    },
+    {
+      "entryNumber": "JE-2026-0003",
+      "date": "2026-09-10",
+      "narration": "Commercial inventory acquisition on credit terms from supplier",
+      "isBalanced": true,
+      "source": "manual",
+      "createdAt": "2026-09-10T14:15:00.000Z",
+      "lines": [
+        { "accountId": "1040", "accountName": "Inventory / Stock", "debit": 9800, "credit": 0 },
+        { "accountId": "2010", "accountName": "Accounts Payable", "debit": 0, "credit": 9800 }
+      ]
+    },
+    {
+      "entryNumber": "JE-2026-0004",
+      "date": "2026-09-12",
+      "narration": "Annual cloud server hosting & security infrastructure prepaid in advance",
+      "isBalanced": true,
+      "source": "manual",
+      "createdAt": "2026-09-12T16:00:00.000Z",
+      "lines": [
+        { "accountId": "1050", "accountName": "Prepaid Expenses", "debit": 3200, "credit": 0 },
+        { "accountId": "1020", "accountName": "Bank Operating Account", "debit": 0, "credit": 3200 }
+      ]
+    },
+    {
+      "entryNumber": "JE-2026-0005",
+      "date": "2026-09-15",
+      "narration": "Acquisition of 1 Tola 24K Minted Gold Bar bullion asset reserve",
+      "isBalanced": true,
+      "source": "manual",
+      "createdAt": "2026-09-15T10:00:00.000Z",
+      "lines": [
+        { "accountId": "1060", "accountName": "Precious Metals / Bullion", "debit": 993.76, "credit": 0 },
+        { "accountId": "1020", "accountName": "Bank Operating Account", "debit": 0, "credit": 993.76 }
+      ]
+    }
+  ],
+  "cashFlowRecords": [
+    {
+      "date": "2026-09-01",
+      "amount": 50000,
+      "type": "inflow",
+      "category": "financing",
+      "subCategory": "capital_investment",
+      "description": "Founder initial equity injection",
+      "linkedJournalEntryNumber": "JE-2026-0001",
+      "reconciled": true
+    },
+    {
+      "date": "2026-09-05",
+      "amount": 18500,
+      "type": "inflow",
+      "category": "operating",
+      "subCategory": "operating_sales",
+      "description": "Enterprise software client retainer",
+      "linkedJournalEntryNumber": "JE-2026-0002",
+      "reconciled": true
+    },
+    {
+      "date": "2026-09-12",
+      "amount": 3200,
+      "type": "outflow",
+      "category": "operating",
+      "subCategory": "operating_expenses",
+      "description": "Cloud infrastructure hosting prepaid",
+      "linkedJournalEntryNumber": "JE-2026-0004",
+      "reconciled": true
+    }
+  ],
+  "ious": [
+    {
+      "title": "Weekend BBQ Dinner & Chai",
+      "totalBill": 6500,
+      "myShare": 3250,
+      "friendName": "Hamza Tariq",
+      "friendPhone": "+923001234567",
+      "friendShare": 3250,
+      "currency": "PKR",
+      "status": "pending",
+      "createdAt": "2026-09-18T20:30:00.000Z",
+      "direction": "they_owe_me",
+      "category": "Dining"
+    },
+    {
+      "title": "Monthly Mandi Rashan Procurement",
+      "totalBill": 14000,
+      "myShare": 7000,
+      "friendName": "Usman Malik",
+      "friendPhone": "+923219876543",
+      "friendShare": 7000,
+      "currency": "PKR",
+      "status": "pending",
+      "createdAt": "2026-09-20T11:00:00.000Z",
+      "direction": "they_owe_me",
+      "category": "Groceries"
+    },
+    {
+      "title": "Coworking Space Fiber Internet Share",
+      "totalBill": 4500,
+      "myShare": 2250,
+      "friendName": "Saad Khan",
+      "friendPhone": "+923335557788",
+      "friendShare": 2250,
+      "currency": "PKR",
+      "status": "pending",
+      "createdAt": "2026-09-22T09:00:00.000Z",
+      "direction": "i_owe_them",
+      "category": "Rent"
+    }
+  ],
+  "goals": [
+    {
+      "title": "Hajj & Umrah Pilgrimage Vault",
+      "targetAmount": 1500000,
+      "currentAmount": 650000,
+      "deadline": "2027-05-01",
+      "category": "Spiritual",
+      "icon": "🕋"
+    },
+    {
+      "title": "Emergency Buffer 6-Months Runway",
+      "targetAmount": 900000,
+      "currentAmount": 520000,
+      "deadline": "2026-12-31",
+      "category": "Emergency",
+      "icon": "🛡️"
+    },
+    {
+      "title": "Physical Gold Reserve (10 Tolas)",
+      "targetAmount": 2800000,
+      "currentAmount": 555000,
+      "deadline": "2027-08-14",
+      "category": "Commodities",
+      "icon": "🪙"
+    }
+  ],
+  "subscriptions": [
+    {
+      "name": "Cloud Vercel & Neon DB Pro",
+      "amount": 20,
+      "billingCycle": "monthly",
+      "nextBillingDate": "2026-10-01",
+      "category": "Technology & Cloud"
+    },
+    {
+      "name": "Fiber Internet 100Mbps StormFiber",
+      "amount": 4200,
+      "billingCycle": "monthly",
+      "nextBillingDate": "2026-10-05",
+      "category": "Utilities"
+    },
+    {
+      "name": "GitHub Copilot & Cursor Pro",
+      "amount": 20,
+      "billingCycle": "monthly",
+      "nextBillingDate": "2026-10-10",
+      "category": "Software & AI"
+    }
+  ],
+  "customPersonas": [
+    {
+      "name": "Pakistani Joint Family Household",
+      "userRole": "Household Financial Custodian",
+      "monthlyIncome": 350000,
+      "currency": "PKR",
+      "lifestyleTier": "balanced"
+    },
+    {
+      "name": "Remote Global Software Engineer",
+      "userRole": "Full-Stack Tech Freelancer",
+      "monthlyIncome": 6500,
+      "currency": "USD",
+      "lifestyleTier": "frugal"
+    }
+  ],
+  "commodities": [
+    {
+      "metal": "gold",
+      "purity": "24k",
+      "quantity": 1,
+      "unit": "tola",
+      "weightInGrams": 11.6638,
+      "purchaseDate": "2026-09-15",
+      "costBasisTotal": 993.76,
+      "costBasisCurrency": "USD",
+      "currentSpotPricePerGram": 85.2,
+      "currentValueBaseCurrency": 993.76,
+      "unrealizedGainLoss": 0,
+      "unrealizedGainLossPercentage": 0,
+      "linkedAccountId": "1060",
+      "notes": "Physical 24K Minted Gold Bar (1 Tola Fine)"
+    },
+    {
+      "metal": "silver",
+      "purity": "999",
+      "quantity": 100,
+      "unit": "grams",
+      "weightInGrams": 100,
+      "purchaseDate": "2026-08-20",
+      "costBasisTotal": 95,
+      "costBasisCurrency": "USD",
+      "currentSpotPricePerGram": 1.0127,
+      "currentValueBaseCurrency": 101.27,
+      "unrealizedGainLoss": 6.27,
+      "unrealizedGainLossPercentage": 6.6,
+      "linkedAccountId": "1060",
+      "notes": "Fine Silver Cast Ingot 100g (Purity 99.9%)"
+    }
+  ],
+  "transactions": [
+    {
+      "title": "Software Retainer Client Income",
+      "amount": 185000,
+      "originalCurrency": "PKR",
+      "amountInUSD": 664.28,
+      "type": "income",
+      "bucket": "savings",
+      "category": "Salary / Contracts",
+      "date": "2026-09-05",
+      "isRecurring": true,
+      "tags": ["client", "income", "freelance"],
+      "profileId": "household"
+    },
+    {
+      "title": "Monthly Mandi Grocery & Atta",
+      "amount": 38500,
+      "originalCurrency": "PKR",
+      "amountInUSD": 138.24,
+      "type": "expense",
+      "bucket": "needs",
+      "category": "Food & Dining",
+      "date": "2026-09-08",
+      "isRecurring": true,
+      "tags": ["rashan", "mandi", "groceries"],
+      "profileId": "household"
+    },
+    {
+      "title": "Electricity & Gas Utility Bill",
+      "amount": 26400,
+      "originalCurrency": "PKR",
+      "amountInUSD": 94.79,
+      "type": "expense",
+      "bucket": "needs",
+      "category": "Bills & Utilities",
+      "date": "2026-09-12",
+      "isRecurring": true,
+      "tags": ["wapda", "utilities"],
+      "profileId": "household"
+    },
+    {
+      "title": "Kameti Savings Deposit (Committee)",
+      "amount": 25000,
+      "originalCurrency": "PKR",
+      "amountInUSD": 89.76,
+      "type": "expense",
+      "bucket": "savings",
+      "category": "Investment",
+      "date": "2026-09-15",
+      "isRecurring": true,
+      "tags": ["kameti", "savings"],
+      "profileId": "household"
+    }
+  ],
+  "settings": {
+    "baseCurrency": "PKR",
+    "selectedLanguage": "en",
+    "activePersona": "household",
+    "monthlyIncomeTarget": 250000,
+    "aiPersona": "mentor",
+    "isEncrypted": false
+  }
+}
