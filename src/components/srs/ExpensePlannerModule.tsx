@@ -27,7 +27,7 @@ import { useAppStore } from '../../store/useAppStore';
 interface ExpenseEntry {
   id: string;
   date: string;
-  category: 'Food' | 'Transport' | 'Education' | 'Entertainment' | 'Shopping' | 'Utilities' | 'Miscellaneous';
+  category: string;
   description: string;
   amount: number;
 }
@@ -49,7 +49,8 @@ export default function ExpensePlannerModule() {
 
   // Form Fields
   const [date, setDate] = useState<string>(() => new Date().toISOString().split('T')[0]);
-  const [category, setCategory] = useState<ExpenseEntry['category']>('Food');
+  const [category, setCategory] = useState<string>('Food');
+  const [customCategory, setCustomCategory] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [amount, setAmount] = useState<string>('');
   const [formError, setFormError] = useState<string | null>(null);
@@ -58,7 +59,7 @@ export default function ExpensePlannerModule() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editDesc, setEditDesc] = useState<string>('');
   const [editAmt, setEditAmt] = useState<string>('');
-  const [editCat, setEditCat] = useState<ExpenseEntry['category']>('Food');
+  const [editCat, setEditCat] = useState<string>('Food');
 
   // Total Calculations
   const totalPlanned = expenses.reduce((sum, item) => sum + item.amount, 0);
@@ -80,10 +81,12 @@ export default function ExpensePlannerModule() {
       return;
     }
 
+    const finalCategory = category === 'Other' && customCategory.trim() ? customCategory.trim() : category;
+
     const newEntry: ExpenseEntry = {
       id: `exp-${Date.now()}`,
       date: date || new Date().toISOString().split('T')[0],
-      category,
+      category: finalCategory,
       description: description.trim(),
       amount: numAmt,
     };
@@ -91,6 +94,7 @@ export default function ExpensePlannerModule() {
     setExpenses((prev) => [newEntry, ...prev]);
     setDescription('');
     setAmount('');
+    setCustomCategory('');
   };
 
   // Remove Handler
@@ -218,7 +222,7 @@ export default function ExpensePlannerModule() {
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Category</label>
             <select
               value={category}
-              onChange={(e) => setCategory(e.target.value as ExpenseEntry['category'])}
+              onChange={(e) => setCategory(e.target.value)}
               className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-white/[0.04] text-xs font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500/20 outline-hidden"
             >
               <option value="Food">Food (Mess & Snacks)</option>
@@ -228,8 +232,25 @@ export default function ExpensePlannerModule() {
               <option value="Shopping">Shopping & Personal Care</option>
               <option value="Utilities">Utilities & Mobile Internet</option>
               <option value="Miscellaneous">Miscellaneous</option>
+              <option value="Other">Other</option>
             </select>
           </div>
+
+          {/* Custom Category Input if Other is selected */}
+          {category === 'Other' && (
+            <div className="space-y-1 sm:col-span-2">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                Custom Category Name
+              </label>
+              <input
+                type="text"
+                value={customCategory}
+                onChange={(e) => setCustomCategory(e.target.value)}
+                placeholder="e.g. Gym, Medicine, Gadgets, Laundry..."
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-white/[0.04] text-xs font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500/20 outline-hidden"
+              />
+            </div>
+          )}
 
           {/* Description */}
           <div className="space-y-1">
@@ -310,7 +331,7 @@ export default function ExpensePlannerModule() {
                         {isEditing ? (
                           <select
                             value={editCat}
-                            onChange={(e) => setEditCat(e.target.value as ExpenseEntry['category'])}
+                            onChange={(e) => setEditCat(e.target.value)}
                             className="px-2 py-1 rounded-md border text-xs bg-white dark:bg-slate-800"
                           >
                             <option value="Food">Food</option>
@@ -320,6 +341,7 @@ export default function ExpensePlannerModule() {
                             <option value="Shopping">Shopping</option>
                             <option value="Utilities">Utilities</option>
                             <option value="Miscellaneous">Miscellaneous</option>
+                            <option value="Other">Other</option>
                           </select>
                         ) : (
                           <span className="px-2 py-0.5 rounded-md font-semibold text-[11px] bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-slate-200">
