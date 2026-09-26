@@ -38,7 +38,7 @@ export default function GeneralLedgerView() {
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
             <span>Accounting Simulator & Double-Entry Ledger</span>
             <span className="text-xs px-2.5 py-1 rounded-full bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border border-cyan-500/30 font-mono font-bold">
-              CPA-Grade
+              Double-Entry Lab
             </span>
           </h1>
           <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 max-w-4xl leading-relaxed">

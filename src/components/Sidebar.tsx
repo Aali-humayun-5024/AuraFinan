@@ -12,9 +12,8 @@ import { useTranslation } from '../i18n/useTranslation';
 
 const NAV_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, shortcut: '⌘1' },
-  { id: 'general-ledger', label: 'General Ledger', icon: BookOpen, shortcut: '⌘2' },
+  { id: 'general-ledger', label: 'Accounting Simulator', icon: BookOpen, shortcut: '⌘2' },
   { id: 'cash-flow-engine', label: 'Cash Flow Engine', icon: Layers, shortcut: '⌘3' },
-  { id: 'academic-suite', label: 'Academic Suite', icon: GraduationCap },
   { id: 'daily-bazaar', label: 'Daily Bazaar & Rashan', icon: ShoppingCart },
   { id: 'bazaar-sentinel', label: 'Price Sentinel', icon: Scale },
   { id: 'split-ledger', label: 'Split & IOUs', icon: Users },
@@ -48,8 +47,6 @@ export default function Sidebar() {
         return t.navigation.generalLedger;
       case 'cash-flow-engine':
         return t.navigation.cashflow;
-      case 'academic-suite':
-        return t.navigation.academicSuite;
       case 'bazaar-sentinel':
         return t.navigation.bazaarSentinel;
       case 'split-ledger':

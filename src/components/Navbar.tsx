@@ -35,7 +35,6 @@ import {
 } from 'lucide-react';
 import { useAppStore, type CurrencyCode } from '../store/useAppStore';
 import { playClickSound } from '../services/soundService';
-import VoiceTriggerButton from './voice/VoiceTriggerButton';
 import confetti from 'canvas-confetti';
 import { seedPersona } from '../data/seedData';
 
@@ -242,13 +241,11 @@ export default function Navbar() {
             const isActive = activeView === item.id;
             const isFeatured = item.isFeatured;
 
-            // Responsive text visibility based on item priority
+            // Responsive text visibility based on item priority: prevents bursting/wrapping on all screens
             const textClass =
               item.tier === 'core'
-                ? 'inline'
+                ? 'hidden sm:inline'
                 : item.tier === 'secondary'
-                ? 'hidden lg:inline'
-                : item.tier === 'tertiary'
                 ? 'hidden xl:inline'
                 : 'hidden 2xl:inline';
 
@@ -260,7 +257,7 @@ export default function Navbar() {
                   onClick={() => navigateTo(item.id)}
                   onMouseEnter={() => setHoveredNav(item.id)}
                   title={item.fullTitle}
-                  className={`relative px-2.5 sm:px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 font-black cursor-pointer shrink-0 ${
+                  className={`relative px-2 sm:px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 font-black cursor-pointer shrink-0 ${
                     isActive
                       ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/30'
                       : 'bg-amber-500/15 hover:bg-amber-500/25 text-amber-700 dark:text-amber-300 border border-amber-500/35 hover:scale-[1.02]'
@@ -279,7 +276,7 @@ export default function Navbar() {
                 onClick={() => navigateTo(item.id)}
                 onMouseEnter={() => setHoveredNav(item.id)}
                 title={item.fullTitle}
-                className={`relative px-2 sm:px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shrink-0 z-10 text-[11px] sm:text-xs ${
+                className={`relative px-1.5 sm:px-2 py-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shrink-0 z-10 text-[11px] sm:text-xs ${
                   isActive
                     ? 'text-slate-950 dark:text-white font-bold'
                     : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
@@ -344,17 +341,6 @@ export default function Navbar() {
                     <div>
                       <div className="font-semibold">Accounting Simulator (Ledger)</div>
                       <div className="text-[10px] text-slate-400">Commerce lab: Double-entry $Dr = $Cr</div>
-                    </div>
-                  </button>
-
-                  <button
-                    onClick={() => navigateTo('academic-suite')}
-                    className="w-full text-left px-3 py-2 rounded-xl text-xs flex items-center gap-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/[0.06] cursor-pointer"
-                  >
-                    <GraduationCap size={14} className="text-purple-500" />
-                    <div>
-                      <div className="font-semibold">Academic CPA Labs</div>
-                      <div className="text-[10px] text-slate-400">Break-even simulations</div>
                     </div>
                   </button>
 
@@ -499,16 +485,11 @@ export default function Navbar() {
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className="p-1.5 sm:p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-white/10"
+            className="p-1.5 sm:p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-white/10 shrink-0"
             title="Toggle Dark / Light Mode"
           >
             {theme === 'dark' ? <Sun size={15} className="text-amber-400" /> : <Moon size={15} />}
           </button>
-
-          {/* Voice Assistant Mic */}
-          <div className="hidden sm:block">
-            <VoiceTriggerButton />
-          </div>
 
           {/* Mobile Hamburger Toggle (md:hidden) */}
           <button
@@ -670,13 +651,6 @@ export default function Navbar() {
                 >
                   <BookOpen size={14} className="text-blue-500" />
                   <span>Accounting Simulator</span>
-                </button>
-                <button
-                  onClick={() => navigateTo('academic-suite')}
-                  className="p-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-left flex items-center gap-2 text-slate-700 dark:text-slate-300"
-                >
-                  <GraduationCap size={14} className="text-purple-500" />
-                  <span>CPA Labs</span>
                 </button>
                 <button
                   onClick={() => navigateTo('daily-bazaar')}

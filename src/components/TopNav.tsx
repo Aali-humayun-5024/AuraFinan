@@ -25,7 +25,6 @@ import { seedPersona } from '../data/seedData';
 import { SUPPORTED_CURRENCIES } from '../services/fxService';
 import { playToggleSound, playClickSound } from '../services/soundService';
 import { playWakeChime } from '../services/soundEffects';
-import VoiceTriggerButton from './voice/VoiceTriggerButton';
 import { useTranslation } from '../i18n/useTranslation';
 import LanguageDropdown from './layout/LanguageDropdown';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
@@ -353,9 +352,6 @@ export default function TopNav() {
         >
           {soundEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
         </motion.button>
-
-        {/* Hey Aura Voice Assistant Trigger */}
-        <VoiceTriggerButton className="shrink-0" />
 
         {/* Notifications */}
         <motion.button

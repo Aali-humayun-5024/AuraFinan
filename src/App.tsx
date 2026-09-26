@@ -96,7 +96,7 @@ function ViewRouter() {
       case 'cash-flow-engine':
         return <CashFlowEngineView />;
       case 'academic-suite':
-        return <AcademicSuiteView />;
+        return <GeneralLedgerView />;
       case 'daily-bazaar':
         return <DailyBazaarView />;
       case 'bazaar-sentinel':

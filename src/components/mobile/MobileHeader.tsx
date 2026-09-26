@@ -17,7 +17,6 @@ import {
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import confetti from 'canvas-confetti';
 import { playWakeChime } from '../../services/soundEffects';
-import VoiceTriggerButton from '../voice/VoiceTriggerButton';
 
 const PERSONAS = [
   { id: 'household' as const, label: 'Household (Ghar)', emoji: '🏠' },
@@ -140,9 +139,8 @@ export default function MobileHeader() {
                 Wealth Tools
               </div>
               {[
-                { id: 'general-ledger', label: 'General Ledger (Double-Entry)', icon: BookOpen, color: 'text-indigo-400' },
+                { id: 'general-ledger', label: 'Accounting Simulator (Ledger)', icon: BookOpen, color: 'text-indigo-400' },
                 { id: 'cash-flow-engine', label: 'Cash Flow Engine (Waterfall)', icon: Layers, color: 'text-teal-400' },
-                { id: 'academic-suite', label: 'Academic Suite (CPA Labs)', icon: GraduationCap, color: 'text-amber-400' },
                 { id: 'split-ledger', label: 'Split with Friends (IOUs)', icon: Users, color: 'text-purple-400' },
                 { id: 'bazaar-sentinel', label: 'Price-Index Sentinel', icon: Scale, color: 'text-cyan-400' },
                 { id: 'daily-bazaar', label: 'Daily Bazaar & Mandi', icon: ShoppingCart, color: 'text-emerald-400' },
@@ -172,9 +170,6 @@ export default function MobileHeader() {
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
-
-        {/* Hey Aura Voice Assistant Trigger */}
-        <VoiceTriggerButton compact={true} />
 
         {/* Persona Dropdown */}
         <DropdownMenu.Root>

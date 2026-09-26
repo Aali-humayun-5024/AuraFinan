@@ -202,43 +202,6 @@ export const SITE_MAP_TOPOLOGY: SiteMapDomain[] = [
     ],
   },
   {
-    domainId: 'academic-suite',
-    title: 'Academic Suite & Case Labs',
-    description: 'Pedagogical finance simulators: Accounting, Costing, NPV/IRR & Tax',
-    icon: GraduationCap,
-    accentColor: 'from-purple-500 to-violet-500',
-    nodes: [
-      {
-        title: 'Financial Accounting Interactive Lab',
-        description: 'Interactive journal simulator with step-by-step T-Account visualization.',
-        viewId: 'academic-suite',
-        tag: 'Edu Lab',
-        icon: GraduationCap,
-      },
-      {
-        title: 'Cost & Management Variance Analyzer',
-        description: 'Standard vs actual cost divergence calculations and break-even margin curves.',
-        viewId: 'academic-suite',
-        tag: 'Management',
-        icon: Activity,
-      },
-      {
-        title: 'Corporate Finance (NPV, IRR & DCF)',
-        description: 'Discounted Cash Flow, Net Present Value, and Internal Rate of Return modeling engines.',
-        viewId: 'academic-suite',
-        tag: 'Valuation',
-        icon: TrendingUp,
-      },
-      {
-        title: 'Taxation & Regulatory Audit Sandbox',
-        description: 'Withholding tax brackets, GST estimation, and deduction calculators.',
-        viewId: 'academic-suite',
-        tag: 'Tax Desk',
-        icon: FileText,
-      },
-    ],
-  },
-  {
     domainId: 'commodities',
     title: 'Commodities & Real Assets',
     description: 'Gold, silver, platinum bullion valuations and localized daily bazaar indices',
