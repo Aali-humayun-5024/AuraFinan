@@ -215,12 +215,12 @@ export default function TrialBalanceView() {
                 </td>
                 <td className="px-4 py-3.5 text-right font-medium text-slate-700 dark:text-slate-200 tabular-nums border-b border-slate-100 dark:border-white/[0.04]">
                   {row.debitBalance > 0
-                    ? `$${row.debitBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`
+                    ? formatCurrency(row.debitBalance, baseCurrency)
                     : '—'}
                 </td>
                 <td className="px-4 py-3.5 text-right font-medium text-slate-700 dark:text-slate-200 tabular-nums border-b border-slate-100 dark:border-white/[0.04]">
                   {row.creditBalance > 0
-                    ? `$${row.creditBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`
+                    ? formatCurrency(row.creditBalance, baseCurrency)
                     : '—'}
                 </td>
               </tr>
@@ -239,7 +239,7 @@ export default function TrialBalanceView() {
                     : 'text-rose-700 dark:text-rose-400 bg-rose-500/10'
                 }`}
               >
-                ${ledgerBalances.totalDebits.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                {formatCurrency(ledgerBalances.totalDebits, baseCurrency)}
               </td>
               <td
                 className={`px-4 py-3.5 text-right font-bold tabular-nums transition-colors ${
@@ -248,7 +248,7 @@ export default function TrialBalanceView() {
                     : 'text-rose-700 dark:text-rose-400 bg-rose-500/10'
                 }`}
               >
-                ${ledgerBalances.totalCredits.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                {formatCurrency(ledgerBalances.totalCredits, baseCurrency)}
               </td>
             </tr>
           </tfoot>

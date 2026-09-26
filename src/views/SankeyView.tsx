@@ -7,6 +7,7 @@ import { formatCurrency, convertCurrency } from '../services/fxService';
 import { useMemo, useState } from 'react';
 import { TrendingUp, ArrowRight, Activity, Sparkles } from 'lucide-react';
 import LiveCashFlowStream from '../components/charts/LiveCashFlowStream';
+import { useCoherentFinancialState } from '../context/FinancialStateContext';
 
 interface FlowNode {
   label: string;
@@ -18,53 +19,52 @@ interface FlowNode {
 
 export default function SankeyView() {
   const { baseCurrency, fxRates } = useAppStore();
+  const { state: coherentState } = useCoherentFinancialState();
   const transactions = useLiveQuery(() => db.transactions.toArray()) || [];
   const [expandedBucket, setExpandedBucket] = useState<string | null>(null);
 
   const data = useMemo(() => {
-    const now = new Date();
-    const thisMonth = transactions.filter(t => {
-      const d = new Date(t.date);
-      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-    });
-
-    const totalIncome = thisMonth
-      .filter(t => t.type === 'income')
-      .reduce((s, t) => s + convertCurrency(t.amount, t.originalCurrency, baseCurrency, fxRates), 0);
-
     const buckets: Record<string, { total: number; items: Record<string, number> }> = {
       needs: { total: 0, items: {} },
       wants: { total: 0, items: {} },
       savings: { total: 0, items: {} },
     };
 
-    thisMonth.filter(t => t.type === 'expense').forEach(t => {
+    transactions.forEach(t => {
       const amt = convertCurrency(t.amount, t.originalCurrency, baseCurrency, fxRates);
-      buckets[t.bucket].total += amt;
-      buckets[t.bucket].items[t.category] = (buckets[t.bucket].items[t.category] || 0) + amt;
+      if (t.type === 'expense' && buckets[t.bucket]) {
+        buckets[t.bucket].total += amt;
+        buckets[t.bucket].items[t.category] = (buckets[t.bucket].items[t.category] || 0) + amt;
+      }
     });
 
-    return { totalIncome, buckets };
+    return { buckets };
   }, [transactions, baseCurrency, fxRates]);
+
+  // Master SSOT values from Coherent State
+  const masterIncome = coherentState?.liquidity?.totalInflows ?? 0;
+  const masterNeeds = coherentState?.buckets?.needsTotal ?? data.buckets.needs.total;
+  const masterWants = coherentState?.buckets?.wantsTotal ?? data.buckets.wants.total;
+  const masterSavings = coherentState?.buckets?.savingsTotal ?? data.buckets.savings.total;
 
   const flowNodes: FlowNode[] = [
     {
-      label: 'Needs',
-      value: data.buckets.needs.total,
+      label: 'Needs (Essentials)',
+      value: masterNeeds,
       color: '#3b82f6',
       emoji: '🏠',
       items: Object.entries(data.buckets.needs.items).map(([name, amount]) => ({ name, amount })).sort((a, b) => b.amount - a.amount),
     },
     {
-      label: 'Wants',
-      value: data.buckets.wants.total,
+      label: 'Wants (Discretionary)',
+      value: masterWants,
       color: '#ec4899',
       emoji: '🎮',
       items: Object.entries(data.buckets.wants.items).map(([name, amount]) => ({ name, amount })).sort((a, b) => b.amount - a.amount),
     },
     {
-      label: 'Future You',
-      value: data.buckets.savings.total,
+      label: 'Future You (Savings & Bullion)',
+      value: masterSavings,
       color: '#22c55e',
       emoji: '🚀',
       items: Object.entries(data.buckets.savings.items).map(([name, amount]) => ({ name, amount })).sort((a, b) => b.amount - a.amount),
@@ -116,7 +116,7 @@ export default function SankeyView() {
               <span className="text-3xl mb-1">💰</span>
               <span className="text-xs text-aura-text-muted font-semibold uppercase tracking-wider">Income</span>
               <span className="text-lg font-bold text-aura-green font-mono mt-1">
-                {formatCurrency(data.totalIncome, baseCurrency)}
+                {formatCurrency(masterIncome, baseCurrency)}
               </span>
             </div>
           </motion.div>
@@ -240,7 +240,7 @@ export default function SankeyView() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {flowNodes.map((node, i) => {
           const idealPct = i === 0 ? 50 : i === 1 ? 30 : 20;
-          const idealAmount = data.totalIncome * (idealPct / 100);
+          const idealAmount = masterIncome * (idealPct / 100);
           const diff = node.value - idealAmount;
 
           return (

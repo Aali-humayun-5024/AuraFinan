@@ -24,6 +24,7 @@ import type { RegionalBazaarStaple } from '../i18n/countries';
 import confetti from 'canvas-confetti';
 import FinancialMetric from '../components/common/FinancialMetric';
 import BazaarSentinelView from './BazaarSentinelView';
+import { createCoherentTransaction } from '../services/transactionLedgerSync';
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -160,19 +161,16 @@ export default function DailyBazaarView() {
   const handleQuickLogCommodity = async (item: CommodityItem, option: { title: string; amountPKR: number }) => {
     const today = new Date().toISOString().split('T')[0];
     const amountInBase = convertToBase(option.amountPKR, 'PKR');
-    const amountInUSD = Math.round((option.amountPKR / 278.5) * 100) / 100;
 
-    await db.transactions.add({
+    await createCoherentTransaction({
       title: `${item.icon} ${option.title} (${userCity})`,
       amount: Math.round(amountInBase * 100) / 100,
       originalCurrency: baseCurrency,
-      amountInUSD: amountInUSD,
       type: 'expense',
       bucket: 'needs',
-      category: 'Food & Dining',
+      category: 'Food & Groceries',
       merchant: `${userCity} ${bazaarTerms.groceryPantry}`,
       date: today,
-      isRecurring: false,
       tags: ['daily-bazaar', item.id, 'grocery', country.code.toLowerCase()],
       profileId: activeProfileId === 'all' ? 'household' : activeProfileId,
     });
@@ -184,7 +182,7 @@ export default function DailyBazaarView() {
       colors: ['#22c55e', '#7c5cfc', '#f59e0b'],
     });
 
-    showToast(`✅ Logged "${option.title}" to ${baseCurrency} Daily Expenses!`);
+    showToast(`✅ Logged "${option.title}" to ${baseCurrency} Daily Expenses & Reconciled 5020!`);
   };
 
   // Quick 1-tap purchase log into Dexie for Regional Cultural Staple
@@ -192,17 +190,15 @@ export default function DailyBazaarView() {
     const today = new Date().toISOString().split('T')[0];
     const amountInBase = convertToBase(staple.basePriceUSD, 'USD');
 
-    await db.transactions.add({
+    await createCoherentTransaction({
       title: `${staple.icon} ${staple.name} (${staple.unit})`,
       amount: Math.round(amountInBase * 100) / 100,
       originalCurrency: baseCurrency,
-      amountInUSD: staple.basePriceUSD,
       type: 'expense',
       bucket: 'needs',
-      category: 'Food & Dining',
+      category: 'Food & Groceries',
       merchant: `${country.capital} ${country.localBazaarName.split('(')[0].trim()}`,
       date: today,
-      isRecurring: false,
       tags: ['cultural-bazaar', country.code.toLowerCase(), staple.id, 'groceries'],
       profileId: activeProfileId === 'all' ? 'household' : activeProfileId,
     });

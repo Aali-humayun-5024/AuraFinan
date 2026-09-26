@@ -7,10 +7,10 @@ import { ledgerDb } from '../db/ledgerSchema';
 import { db } from '../db/database';
 import { useAppStore } from '../store/useAppStore';
 import { ReconciliationEngine } from '../services/reconciliationEngine';
-import { CoherentFinancialState } from '../types/reconciliation';
+import { UnifiedFinancialState } from '../types/reconciliation';
 
-interface FinancialStateContextValue {
-  state: CoherentFinancialState;
+export interface FinancialStateContextValue extends UnifiedFinancialState {
+  state: UnifiedFinancialState;
   isLoading: boolean;
 }
 
@@ -19,7 +19,7 @@ const FinancialStateContext = createContext<FinancialStateContextValue | null>(n
 export const FinancialStateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { baseCurrency, fxRates } = useAppStore();
 
-  // Unified Reactive IndexedDB Stream
+  // Unified Reactive IndexedDB Stream across all Dexie tables
   const accounts = useLiveQuery(() => ledgerDb.accounts.toArray()) || [];
   const entries = useLiveQuery(() => ledgerDb.journalEntries.toArray()) || [];
   const commodities = useLiveQuery(() => db.commodities?.toArray()) || [];
@@ -27,7 +27,7 @@ export const FinancialStateProvider: React.FC<{ children: React.ReactNode }> = (
   const transactions = useLiveQuery(() => db.transactions?.toArray()) || [];
 
   // Master Reactive Calculation Pipeline
-  const masterState = useMemo<CoherentFinancialState>(() => {
+  const masterState = useMemo<UnifiedFinancialState>(() => {
     return ReconciliationEngine.computeMasterState(
       accounts,
       entries,
@@ -39,10 +39,18 @@ export const FinancialStateProvider: React.FC<{ children: React.ReactNode }> = (
     );
   }, [accounts, entries, commodities, ious, transactions, baseCurrency, fxRates]);
 
-  const isLoading = accounts.length === 0 && entries.length === 0;
+  const isLoading = accounts.length === 0 && entries.length === 0 && transactions.length === 0;
+
+  const contextValue = useMemo<FinancialStateContextValue>(() => {
+    return {
+      ...masterState,
+      state: masterState,
+      isLoading,
+    };
+  }, [masterState, isLoading]);
 
   return (
-    <FinancialStateContext.Provider value={{ state: masterState, isLoading }}>
+    <FinancialStateContext.Provider value={contextValue}>
       {children}
     </FinancialStateContext.Provider>
   );
@@ -52,7 +60,11 @@ export function useCoherentFinancialState(): FinancialStateContextValue {
   const context = useContext(FinancialStateContext);
   if (!context) {
     const fallback = ReconciliationEngine.computeMasterState([], [], [], [], 'PKR');
-    return { state: fallback, isLoading: false };
+    return {
+      ...fallback,
+      state: fallback,
+      isLoading: false,
+    };
   }
   return context;
 }

@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import FinancialMetric from '../components/common/FinancialMetric';
 import confetti from 'canvas-confetti';
+import { useCoherentFinancialState } from '../context/FinancialStateContext';
 
 interface CancellationModalState {
   isOpen: boolean;
@@ -33,6 +34,7 @@ interface CancellationModalState {
 
 export default function SubscriptionsView() {
   const { baseCurrency, fxRates } = useAppStore();
+  const { state: coherentState } = useCoherentFinancialState();
   const subscriptions = useLiveQuery(() => db.subscriptions.toArray()) || [];
   const transactions = useLiveQuery(() => db.transactions.toArray()) || [];
 
@@ -54,10 +56,13 @@ export default function SubscriptionsView() {
   });
 
   const active = subscriptions.filter((s) => s.isActive);
-  const totalMonthly = active.reduce(
+  const computedMonthly = active.reduce(
     (s, sub) => s + convertCurrency(sub.amount, sub.currency, baseCurrency, fxRates),
     0
   );
+  // Synchronized with Ledger Account 5030 (Tech & SaaS / Subscriptions)
+  const ledger5030 = coherentState?.ledger?.accountBalances?.['5030'] ?? 0;
+  const totalMonthly = computedMonthly > 0 ? computedMonthly : (ledger5030 > 0 ? ledger5030 : 0);
   const totalAnnual = totalMonthly * 12;
 
   // ─── GHOST SUBSCRIPTION ASSASSIN DETECTION ENGINE ───
@@ -207,7 +212,7 @@ Authorized Account Holder`;
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="glass-card p-5 text-left">
           <p className="text-xs text-aura-text-muted uppercase font-semibold tracking-wider mb-2">Monthly Cost</p>
           <FinancialMetric
@@ -235,6 +240,16 @@ Authorized Account Holder`;
           <p className="text-2xl font-bold text-aura-accent font-mono tabular-nums leading-none mt-2">
             {active.length}
           </p>
+        </div>
+        <div className="glass-card p-5 text-left border-l-2 border-l-purple-500">
+          <p className="text-xs text-purple-400 uppercase font-semibold tracking-wider mb-2">5030 Tech & SaaS Ledger</p>
+          <FinancialMetric
+            value={ledger5030}
+            currency={baseCurrency}
+            size="xl"
+            color="text-purple-400 font-bold"
+            align="left"
+          />
         </div>
       </div>
 

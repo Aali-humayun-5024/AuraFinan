@@ -32,10 +32,13 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useTranslation } from '../../i18n/useTranslation';
+import { useCoherentFinancialState } from '../../context/FinancialStateContext';
+import { createCoherentTransaction } from '../../services/transactionLedgerSync';
 
 export default function CashFlowVisual() {
   const { t } = useTranslation();
   const { theme, baseCurrency } = useAppStore();
+  const { state: coherentState } = useCoherentFinancialState();
   const records = useLiveQuery(() => ledgerDb.cashFlowRecords.toArray()) || [];
   const accounts = useLiveQuery(() => ledgerDb.accounts.toArray()) || [];
 
@@ -60,15 +63,14 @@ export default function CashFlowVisual() {
   const [formAmount, setFormAmount] = useState<number | ''>(500);
   const [formDesc, setFormDesc] = useState('');
 
-  // 1. Calculate Starting Cash (from 1010 + 1020 initial baseline or records)
-  const startingCash = useMemo(() => {
-    const cashAcc = accounts.find((a) => a.code === '1010')?.currentBalance || 0;
-    const bankAcc = accounts.find((a) => a.code === '1020')?.currentBalance || 0;
-    return Math.max(10000, cashAcc + bankAcc);
-  }, [accounts]);
+  // 1. Calculate Reconciled Numbers from SSOT (guarantees identical cent-level match across all views)
+  const startingCash = coherentState.liquidity.openingBalance24h;
+  const totalInflows = coherentState.liquidity.totalInflows;
+  const totalOutflows = coherentState.liquidity.totalOutflows;
+  const netPosition = coherentState.liquidity.netPosition;
 
-  // 2. Aggregate Inflows and Outflows
-  const { totalInflows, totalOutflows, netPosition, waterfallData } = useMemo(() => {
+  // 2. Build Waterfall Sequence Reconciled with Ledger
+  const { waterfallData } = useMemo(() => {
     let inflows = 0;
     let outflows = 0;
 
@@ -159,13 +161,14 @@ export default function CashFlowVisual() {
 
     playClickSound();
 
-    await ledgerDb.cashFlowRecords.add({
-      date: new Date().toISOString().split('T')[0],
-      type: formType,
-      subCategory: formSubCategory as any,
+    await createCoherentTransaction({
+      title: formDesc.trim(),
       amount: amt,
-      currency: baseCurrency || 'USD',
-      description: formDesc.trim(),
+      type: formType === 'inflow' ? 'income' : 'expense',
+      bucket: formType === 'inflow' ? 'wants' : 'needs',
+      category: formSubCategory === 'operating_sales' ? 'Sales Revenue' : 'Operating Expense',
+      date: new Date().toISOString().split('T')[0],
+      originalCurrency: baseCurrency || 'USD',
     });
 
     playSuccessSound();

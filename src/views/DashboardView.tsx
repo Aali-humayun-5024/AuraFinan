@@ -35,6 +35,7 @@ import { useCommodities } from '../hooks/useCommodities';
 import StandardMetricBentoCard from '../components/common/StandardMetricBentoCard';
 import HeroLiquidityBanner from '../components/dashboard/HeroLiquidityBanner';
 import { useCoherentFinancialState } from '../context/FinancialStateContext';
+import { createCoherentTransaction } from '../services/transactionLedgerSync';
 
 import {
   TrendingUp, TrendingDown, Wallet, PiggyBank, ArrowUpRight,
@@ -213,25 +214,23 @@ export default function DashboardView() {
     return calculateMonthlyRashan(familySize, userCity);
   }, [familySize, userCity]);
 
-  // 1-Tap Quick Log handler
+  // 1-Tap Quick Log handler (Synchronized GAAP Dual-Write to 5020 Food & Groceries)
   const handleQuickLog = async (title: string, amountPKR: number, category: string, icon: string) => {
     playCoinSound();
     setQuickLogLoading(true);
     const today = new Date().toISOString().split('T')[0];
-    await db.transactions.add({
+    await createCoherentTransaction({
       title: `${icon} ${title}`,
       amount: amountPKR,
       originalCurrency: 'PKR',
-      amountInUSD: Math.round((amountPKR / 278.5) * 100) / 100,
       type: 'expense',
       bucket: 'needs',
-      category,
+      category: 'Food & Groceries',
       merchant: `${userCity} Local Market`,
       date: today,
-      isRecurring: false,
-      tags: ['daily-quick-log', 'bazaar'],
+      tags: ['daily-quick-log', 'bazaar', 'rashan'],
       profileId: activeProfileId === 'all' ? 'household' : activeProfileId,
-    });
+    }, fxRates);
 
     confetti({
       particleCount: 50,

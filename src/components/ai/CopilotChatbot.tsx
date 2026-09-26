@@ -134,7 +134,7 @@ export const CopilotChatbot: React.FC = () => {
     const wantsCeiling = Math.round(totalInflows * 0.3 * 100) / 100;
     const wantsSpent = coherentState?.buckets503020?.wantsTotal ?? 0;
     const wantsHeadroom = Math.max(0, wantsCeiling - wantsSpent);
-    const liquidCash = coherentState?.liquidity?.closingBalance ?? 0;
+    const liquidCash = coherentState?.liquidity?.liquidCash ?? coherentState?.liquidity?.closingBalance ?? 0;
     const netPosition = coherentState?.liquidity?.netPosition ?? 0;
     const monthlyOutflows = coherentState?.liquidity?.totalOutflows ?? 0;
 

@@ -32,6 +32,7 @@ import { formatCurrency } from '../../services/fxService';
 import { playClickSound, playSuccessSound, playCoinSound } from '../../services/soundService';
 import confetti from 'canvas-confetti';
 import { useTranslation } from '../../i18n/useTranslation';
+import { useCoherentFinancialState } from '../../context/FinancialStateContext';
 import type {
   CoreSubject,
   VarianceCalculation,
@@ -92,6 +93,7 @@ const ACCOUNTING_CHALLENGES: AccountingChallenge[] = [
 export default function AcademicDashboard() {
   const { t } = useTranslation();
   const { theme, baseCurrency } = useAppStore();
+  const { state: coherentState } = useCoherentFinancialState();
   const accounts = useLiveQuery(() => ledgerDb.accounts.toArray()) || [];
   const auditEntries = useLiveQuery(() => ledgerDb.auditTrail.orderBy('id').reverse().limit(15).toArray()) || [];
 
@@ -158,41 +160,54 @@ export default function AcademicDashboard() {
   };
 
   // ==========================================
-  // LAB 2: COST & MANAGEMENT LAB STATE
+  // LAB 2: COST & MANAGEMENT LAB STATE (SSOT CALIBRATED)
   // ==========================================
+  const actualExpenditureBaseline = coherentState.liquidity.totalOutflows;
+  const defaultBudgetVariance = Math.round(actualExpenditureBaseline > 0 ? actualExpenditureBaseline * 1.15 : 50000);
+  const [budgetVarianceSlider, setBudgetVarianceSlider] = useState<number | null>(null);
+  const activeBudgetVariance = budgetVarianceSlider !== null ? budgetVarianceSlider : defaultBudgetVariance;
+  const overallVarianceAmount = Math.abs(activeBudgetVariance - actualExpenditureBaseline);
+  const isOverallFavorable = actualExpenditureBaseline <= activeBudgetVariance;
+
+  const liveFixed = coherentState.sliderBaselines.academicBudgetFixedCosts || 45000;
+  const liveVariableUnit = Math.max(10, Math.round(coherentState.sliderBaselines.academicBudgetVariableCosts / 100) || 60);
+
   const [costCenters, setCostCenters] = useState<VarianceCalculation[]>([
-    { costCenter: 'Direct Cloud Compute & Storage', budgetedCost: 12000, actualCost: 10800, varianceAmount: 1200, nature: 'favorable' },
-    { costCenter: 'Engineering & DevOps Salaries', budgetedCost: 45000, actualCost: 47500, varianceAmount: 2500, nature: 'unfavorable' },
-    { costCenter: 'Marketing & Customer Acquisition', budgetedCost: 18000, actualCost: 15200, varianceAmount: 2800, nature: 'favorable' },
-    { costCenter: 'Office Workspace & Facilities', budgetedCost: 6500, actualCost: 7100, varianceAmount: 600, nature: 'unfavorable' },
+    { costCenter: 'Direct Cloud Compute & Storage (5030)', budgetedCost: 12000, actualCost: 10800, varianceAmount: 1200, nature: 'favorable' },
+    { costCenter: 'Living & Facilities Operations (5010)', budgetedCost: 45000, actualCost: 47500, varianceAmount: 2500, nature: 'unfavorable' },
+    { costCenter: 'Food & Essential Rashan (5020)', budgetedCost: 18000, actualCost: 15200, varianceAmount: 2800, nature: 'favorable' },
+    { costCenter: 'Utilities & Commercial Services (5040)', budgetedCost: 6500, actualCost: 7100, varianceAmount: 600, nature: 'unfavorable' },
   ]);
 
   // Break-Even Simulation State
-  const [fixedCosts, setFixedCosts] = useState<number>(45000);
+  const [fixedCosts, setFixedCosts] = useState<number | null>(null);
   const [salesPrice, setSalesPrice] = useState<number>(150);
-  const [variableCost, setVariableCost] = useState<number>(60);
+  const [variableCost, setVariableCost] = useState<number | null>(null);
   const [simUnitsSold, setSimUnitsSold] = useState<number>(600);
 
+  const activeFixedCosts = fixedCosts !== null ? fixedCosts : liveFixed;
+  const activeVariableCost = variableCost !== null ? variableCost : liveVariableUnit;
+
   const breakEvenSimulation: BreakEvenSimulation = useMemo(() => {
-    const unitCM = Math.max(salesPrice - variableCost, 0.01);
+    const unitCM = Math.max(salesPrice - activeVariableCost, 0.01);
     const cmRatio = salesPrice > 0 ? unitCM / salesPrice : 0;
-    const bepUnits = Math.ceil(fixedCosts / unitCM);
+    const bepUnits = Math.ceil(activeFixedCosts / unitCM);
     const bepRevenue = bepUnits * salesPrice;
 
     return {
-      fixedCosts,
+      fixedCosts: activeFixedCosts,
       salesPricePerUnit: salesPrice,
-      variableCostPerUnit: variableCost,
+      variableCostPerUnit: activeVariableCost,
       breakEvenUnits: bepUnits,
       breakEvenRevenue: bepRevenue,
       contributionMarginRatio: cmRatio,
     };
-  }, [fixedCosts, salesPrice, variableCost]);
+  }, [activeFixedCosts, salesPrice, activeVariableCost]);
 
   // Current Simulation Profit/Loss
   const simTotalRevenue = simUnitsSold * salesPrice;
-  const simTotalVariable = simUnitsSold * variableCost;
-  const simTotalCosts = fixedCosts + simTotalVariable;
+  const simTotalVariable = simUnitsSold * activeVariableCost;
+  const simTotalCosts = activeFixedCosts + simTotalVariable;
   const simNetProfit = simTotalRevenue - simTotalCosts;
 
   // ==========================================
@@ -554,17 +569,79 @@ export default function AcademicDashboard() {
           exit={{ opacity: 0 }}
           className="space-y-6"
         >
-          {/* Module 1: Variance Analysis Simulator */}
+          {/* Module 1: Dynamic Budget vs. Actual Variance Simulator */}
           <div className="bg-aura-card border border-aura-border rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
               <div>
                 <h3 className="text-base font-bold text-aura-text flex items-center gap-2">
                   <PieChart size={18} className="text-amber-500" />
                   Cost Center Variance Analysis (Budgeted vs. Actual)
                 </h3>
                 <p className="text-xs text-aura-text-muted mt-1">
-                  Expenses: Actual ≤ Budget generates Favorable (F) variance; Actual &gt; Budget generates Unfavorable (U).
+                  Evaluates real incurred expenditures against target budget. Actual ≤ Budget generates Favorable (F); Actual &gt; Budget generates Unfavorable (U).
                 </p>
+              </div>
+
+              {/* Dynamic F/U Nature Badge */}
+              <div className="flex items-center gap-2">
+                <span
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-wider ${
+                    isOverallFavorable
+                      ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                      : 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30'
+                  }`}
+                >
+                  {isOverallFavorable ? <CheckCircle2 size={14} /> : <AlertCircle size={14} />}
+                  <span>{isOverallFavorable ? 'F (Favorable Variance)' : 'U (Unfavorable Variance)'}</span>
+                </span>
+              </div>
+            </div>
+
+            {/* Interactive Master Budget vs Actual Slider */}
+            <div className="p-4 rounded-xl bg-aura-surface border border-aura-border mb-6 space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <span className="text-xs font-bold text-aura-text uppercase tracking-wider">
+                    Target Budget Baseline vs. Real Ledger Outflows
+                  </span>
+                  <p className="text-[11px] text-aura-text-muted">
+                    Actual Ledger Outflows (5000s):{' '}
+                    <strong className="text-aura-text font-mono font-bold">
+                      {formatCurrency(actualExpenditureBaseline, baseCurrency)}
+                    </strong>
+                  </p>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs text-aura-text-muted block">Budget Allocation:</span>
+                  <span className="text-sm font-mono font-bold text-aura-accent">
+                    {formatCurrency(activeBudgetVariance, baseCurrency)}
+                  </span>
+                </div>
+              </div>
+
+              <input
+                type="range"
+                min={Math.max(5000, Math.round(actualExpenditureBaseline * 0.2))}
+                max={Math.max(100000, Math.round(actualExpenditureBaseline * 2.2) || 100000)}
+                step={baseCurrency === 'PKR' ? 1000 : 50}
+                value={activeBudgetVariance}
+                onChange={(e) => setBudgetVarianceSlider(Number(e.target.value))}
+                className="w-full accent-aura-accent cursor-pointer"
+              />
+
+              <div className="flex items-center justify-between text-[11px] font-mono">
+                <span className="text-aura-text-muted">
+                  Variance:{' '}
+                  <strong className={isOverallFavorable ? 'text-emerald-500' : 'text-rose-500'}>
+                    {isOverallFavorable ? '-' : '+'}{formatCurrency(overallVarianceAmount, baseCurrency)}
+                  </strong>
+                </span>
+                <button
+                  onClick={() => setBudgetVarianceSlider(null)}
+                  className="text-aura-accent hover:underline text-[11px] cursor-pointer"
+                >
+                  Reset to +15% Standard Baseline
+                </button>
               </div>
             </div>
 
@@ -612,16 +689,29 @@ export default function AcademicDashboard() {
 
           {/* Module 2: Interactive Break-Even Point (BEP) Simulator */}
           <div className="bg-aura-card border border-aura-border rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
               <div>
                 <h3 className="text-base font-bold text-aura-text flex items-center gap-2">
                   <Sliders size={18} className="text-indigo-500" />
                   Interactive Break-Even Simulation (CVP Analysis)
                 </h3>
                 <p className="text-xs text-aura-text-muted mt-1">
-                  Adjust Fixed Overhead, Unit Price, and Variable Costs to model required commercial volume.
+                  Bound to real fixed overhead (Rent & Utilities 5010/5040) and variable cost history.
                 </p>
               </div>
+
+              <button
+                onClick={() => {
+                  playClickSound();
+                  setFixedCosts(liveFixed);
+                  setVariableCost(liveVariableUnit);
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-aura-surface hover:bg-aura-border text-xs font-semibold text-aura-accent border border-aura-border transition-all cursor-pointer self-start sm:self-auto"
+                title="Sync Fixed Overhead with live General Ledger 5010/5040 balances"
+              >
+                <RefreshCw size={13} />
+                <span>Sync with Real Ledger</span>
+              </button>
             </div>
 
             {/* Sliders Grid */}
@@ -631,15 +721,15 @@ export default function AcademicDashboard() {
                 <div className="flex justify-between text-xs">
                   <span className="font-semibold text-aura-text">Fixed Overhead ($)</span>
                   <span className="font-mono font-bold text-aura-accent">
-                    {formatCurrency(fixedCosts, baseCurrency)}
+                    {formatCurrency(activeFixedCosts, baseCurrency)}
                   </span>
                 </div>
                 <input
                   type="range"
-                  min="5000"
-                  max="100000"
-                  step="2500"
-                  value={fixedCosts}
+                  min="2000"
+                  max={Math.max(150000, Math.round(activeFixedCosts * 2.5) || 150000)}
+                  step={baseCurrency === 'PKR' ? 1000 : 50}
+                  value={activeFixedCosts}
                   onChange={(e) => setFixedCosts(Number(e.target.value))}
                   className="w-full accent-aura-accent cursor-pointer"
                 />
@@ -669,7 +759,7 @@ export default function AcademicDashboard() {
                 <div className="flex justify-between text-xs">
                   <span className="font-semibold text-aura-text">Variable Cost per Unit ($)</span>
                   <span className="font-mono font-bold text-rose-500">
-                    {formatCurrency(variableCost, baseCurrency)}
+                    {formatCurrency(activeVariableCost, baseCurrency)}
                   </span>
                 </div>
                 <input
@@ -677,7 +767,7 @@ export default function AcademicDashboard() {
                   min="5"
                   max={Math.max(salesPrice - 5, 10)}
                   step="5"
-                  value={variableCost}
+                  value={activeVariableCost}
                   onChange={(e) => setVariableCost(Number(e.target.value))}
                   className="w-full accent-rose-500 cursor-pointer"
                 />
@@ -704,7 +794,7 @@ export default function AcademicDashboard() {
               <div className="p-4 rounded-xl bg-aura-surface border border-aura-border">
                 <p className="text-[10px] text-aura-text-muted uppercase font-bold tracking-wider">Contribution Margin</p>
                 <p className="text-xl font-bold font-mono text-emerald-500 mt-1">
-                  {formatCurrency(salesPrice - variableCost, baseCurrency)}
+                  {formatCurrency(salesPrice - activeVariableCost, baseCurrency)}
                   <span className="text-xs font-normal text-aura-text-muted ml-1">
                     ({Math.round(breakEvenSimulation.contributionMarginRatio * 100)}%)
                   </span>
@@ -740,7 +830,7 @@ export default function AcademicDashboard() {
                 className="w-full accent-indigo-500 cursor-pointer"
               />
               <div className="flex justify-between text-[10px] text-aura-text-muted font-mono">
-                <span>0 units (Loss: -{formatCurrency(fixedCosts, baseCurrency)})</span>
+                <span>0 units (Loss: -{formatCurrency(activeFixedCosts, baseCurrency)})</span>
                 <span className="font-bold text-amber-500">BEP: {breakEvenSimulation.breakEvenUnits} units ($0 Net)</span>
                 <span>Max Target ({breakEvenSimulation.breakEvenUnits * 2} units)</span>
               </div>

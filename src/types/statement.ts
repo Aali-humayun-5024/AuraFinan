@@ -13,6 +13,8 @@ export interface StatementGenerationParams {
   vaultName: string;
   accountHolder: string;
   baseCurrency: string;
+  openingBalance?: number;
+  closingBalance?: number;
 }
 
 export interface StatementSummary {

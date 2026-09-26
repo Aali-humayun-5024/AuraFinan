@@ -3,7 +3,7 @@
 import { GeneralJournalEntry, AccountHeading } from '../types/accounting';
 import { CommodityHolding } from '../types/commodities';
 import { IOUTransaction, Transaction } from '../db/database';
-import { CoherentFinancialState } from '../types/reconciliation';
+import { UnifiedFinancialState } from '../types/reconciliation';
 import { ledgerDb } from '../db/ledgerSchema';
 import { db } from '../db/database';
 
@@ -19,7 +19,7 @@ export class ReconciliationEngine {
     baseCurrency: string,
     fxRates: Record<string, number> = {},
     rawTransactions: Transaction[] = []
-  ): CoherentFinancialState {
+  ): UnifiedFinancialState {
     const round2 = (n: number) => Math.round((n + Number.EPSILON) * 100) / 100;
 
     // Law 5: Cross-Currency Cross-Rate Transitivity Helper
@@ -31,7 +31,23 @@ export class ReconciliationEngine {
     };
 
     // 1. Initialize Account Ledgers
-    const accountMap: Record<string, number> = {};
+    const accountMap: Record<string, number> = {
+      '1010': 0, // Cash on Hand
+      '1020': 0, // Bank Operating Account
+      '1030': 0, // Accounts Receivable
+      '1040': 0, // Inventory & Assets
+      '1060': 0, // Bullion Reserve
+      '2010': 0, // Accounts Payable
+      '3010': 0, // Owner Equity
+      '3020': 0, // Retained Earnings
+      '4010': 0, // Sales / Consulting Revenue
+      '5010': 0, // Rent & Facilities
+      '5020': 0, // Food & Groceries
+      '5030': 0, // SaaS & Tech Subscriptions
+      '5040': 0, // Utilities & Services
+      '5050': 0, // Dining & Leisure
+    };
+
     accounts.forEach((acc) => {
       accountMap[acc.code] = Number(acc.currentBalance) || 0;
     });
@@ -45,9 +61,13 @@ export class ReconciliationEngine {
     let wantsSum = 0;
     let savingsSum = 0;
 
+    // Set of entry IDs to prevent double counting if correlated
+    const processedEntryIds = new Set<number>();
+
     // 2. Process All Real Balanced Journal Entries
     if (entries && entries.length > 0) {
       entries.forEach((entry) => {
+        if (entry.id) processedEntryIds.add(entry.id);
         (entry.lines || []).forEach((line) => {
           const debit = Number(line.debit) || 0;
           const credit = Number(line.credit) || 0;
@@ -74,16 +94,16 @@ export class ReconciliationEngine {
             totalOutflows = round2(totalOutflows + debit);
 
             // Enforce 50/30/20 Mapping
-            if (['5010', '5040'].includes(line.accountId)) {
-              needsSum = round2(needsSum + debit); // Rent, Groceries, Living Essentials
-            } else if (['5020', '5030', '5050'].includes(line.accountId)) {
-              wantsSum = round2(wantsSum + debit); // Dining out, tech gadgets, leisure
+            if (['5010', '5020', '5040'].includes(line.accountId)) {
+              needsSum = round2(needsSum + debit); // Rent, Groceries/Rashan, Living Essentials
+            } else if (['5030', '5050'].includes(line.accountId)) {
+              wantsSum = round2(wantsSum + debit); // Tech gadgets, dining out, leisure
             } else {
               needsSum = round2(needsSum + debit);
             }
           }
 
-          // Detect Savings Allocations (Debits to 1060 Bullion or 3020 Retained Earnings transfers)
+          // Detect Savings Allocations (Debits to 1060 Bullion or 3020 Retained Earnings)
           if (debit > 0 && (line.accountId === '1060' || line.accountId === '3020')) {
             savingsSum = round2(savingsSum + debit);
           }
@@ -91,18 +111,45 @@ export class ReconciliationEngine {
       });
     }
 
-    // Blend transactions if journal entries are newly initialized or sparse
-    if (totalInflows === 0 && rawTransactions && rawTransactions.length > 0) {
-      rawTransactions.forEach((t) => {
+    // Blend raw transactions if journal entries are newly initialized, or unlinked transactions exist
+    if (rawTransactions && rawTransactions.length > 0) {
+      // Find transactions that are not tied to journal entries
+      const unlinkedTransactions = rawTransactions.filter(
+        (t) => !(t as any).correlatedJournalEntryId && (totalInflows === 0 || !(t as any).syncedToLedger)
+      );
+
+      // If totalInflows is 0 from journal, use all raw transactions
+      const txToProcess = totalInflows === 0 ? rawTransactions : unlinkedTransactions;
+
+      txToProcess.forEach((t) => {
         const rawAmt = Number(t.amount) || 0;
         const amt = convertFx(rawAmt, t.originalCurrency || baseCurrency, baseCurrency);
         if (t.type === 'income') {
           totalInflows = round2(totalInflows + amt);
+          // Credit revenue, Debit Cash
+          accountMap['1010'] = round2((accountMap['1010'] || 0) + amt);
+          accountMap['4010'] = round2((accountMap['4010'] || 0) + amt);
+          totalDebits = round2(totalDebits + amt);
+          totalCredits = round2(totalCredits + amt);
         } else {
           totalOutflows = round2(totalOutflows + amt);
-          if (t.bucket === 'needs') needsSum = round2(needsSum + amt);
-          else if (t.bucket === 'wants') wantsSum = round2(wantsSum + amt);
-          else if (t.bucket === 'savings') savingsSum = round2(savingsSum + amt);
+          accountMap['1010'] = round2((accountMap['1010'] || 0) - amt);
+          totalDebits = round2(totalDebits + amt);
+          totalCredits = round2(totalCredits + amt);
+
+          if (t.bucket === 'needs') {
+            needsSum = round2(needsSum + amt);
+            accountMap['5020'] = round2((accountMap['5020'] || 0) + amt);
+          } else if (t.bucket === 'wants') {
+            wantsSum = round2(wantsSum + amt);
+            accountMap['5030'] = round2((accountMap['5030'] || 0) + amt);
+          } else if (t.bucket === 'savings') {
+            savingsSum = round2(savingsSum + amt);
+            accountMap['3020'] = round2((accountMap['3020'] || 0) + amt);
+          } else {
+            needsSum = round2(needsSum + amt);
+            accountMap['5010'] = round2((accountMap['5010'] || 0) + amt);
+          }
         }
       });
     }
@@ -112,6 +159,7 @@ export class ReconciliationEngine {
     let totalSilverValue = 0;
     let totalPlatinumValue = 0;
     let totalGrams = 0;
+    let goldGrams = 0;
 
     commodities.forEach((h) => {
       const grams = Number(h.weightInGrams) || 0;
@@ -121,9 +169,14 @@ export class ReconciliationEngine {
       const rawVal = grams * spotPrice;
       const val = convertFx(rawVal, holdingCurrency, baseCurrency);
 
-      if (h.metal === 'gold') totalGoldValue = round2(totalGoldValue + val);
-      else if (h.metal === 'silver') totalSilverValue = round2(totalSilverValue + val);
-      else totalPlatinumValue = round2(totalPlatinumValue + val);
+      if (h.metal === 'gold') {
+        totalGoldValue = round2(totalGoldValue + val);
+        goldGrams = round2(goldGrams + grams);
+      } else if (h.metal === 'silver') {
+        totalSilverValue = round2(totalSilverValue + val);
+      } else {
+        totalPlatinumValue = round2(totalPlatinumValue + val);
+      }
     });
 
     const totalPreciousMetals = round2(totalGoldValue + totalSilverValue + totalPlatinumValue);
@@ -149,6 +202,14 @@ export class ReconciliationEngine {
       }
     });
 
+    // Sync account 1030 (AR) with IOUs owed to me and 2010 (AP) with IOUs I owe
+    if (totalOwedToMe > 0 && (!accountMap['1030'] || accountMap['1030'] === 0)) {
+      accountMap['1030'] = totalOwedToMe;
+    }
+    if (totalIOweOthers > 0 && (!accountMap['2010'] || accountMap['2010'] === 0)) {
+      accountMap['2010'] = totalIOweOthers;
+    }
+
     // 5. Compute Mathematical Rounding-Safe Totals
     const netPosition = round2(totalInflows - totalOutflows);
     const variance = round2(Math.abs(totalDebits - totalCredits));
@@ -159,7 +220,7 @@ export class ReconciliationEngine {
     const liquidCash = round2(cashOnHand + bankOperating);
 
     // 6. Net Worth / Balance Sheet Identity
-    // Total Assets = Liquid Cash + Precious Metals + Accounts Receivable/IOUs + Inventory (1040)
+    // Total Assets = Liquid Cash + Bullion Reserve (1060) + Accounts Receivable/IOUs (1030) + Inventory (1040)
     const inventoryVal = accountMap['1040'] || 0;
     const totalAssets = round2(liquidCash + totalPreciousMetals + totalOwedToMe + inventoryVal);
 
@@ -168,8 +229,58 @@ export class ReconciliationEngine {
     const totalLiabilities = round2(payables + totalIOweOthers);
 
     const netWorthTotal = round2(totalAssets - totalLiabilities);
-
     const isSystemBalanced = variance === 0 && (totalDebits > 0 || entries.length === 0);
+
+    const targetWantsBudget = round2(totalInflows * 0.3);
+    const remainingWantsBudget = Math.max(0, round2(targetWantsBudget - wantsSum));
+    const isWantsBreached = totalInflows > 0 ? wantsSum > targetWantsBudget : false;
+
+    const bucketsData = {
+      needsTotal: round2(needsSum),
+      needsPercentage: totalInflows > 0 ? round2((needsSum / totalInflows) * 100) : 0,
+      wantsTotal: round2(wantsSum),
+      wantsPercentage: totalInflows > 0 ? round2((wantsSum / totalInflows) * 100) : 0,
+      savingsTotal: round2(savingsSum),
+      savingsPercentage: totalInflows > 0 ? round2((savingsSum / totalInflows) * 100) : 0,
+      remainingWantsBudget,
+      isWantsBreached,
+    };
+
+    const ledgerData = {
+      totalDebits: round2(totalDebits),
+      totalCredits: round2(totalCredits),
+      variance,
+      isBalanced: isSystemBalanced,
+      accountBalances: accountMap,
+    };
+
+    const commoditiesData = {
+      goldGrams: round2(goldGrams),
+      goldTolas: round2(goldGrams / 11.6638),
+      goldValuation: round2(totalGoldValue),
+      silverValuation: round2(totalSilverValue),
+      totalBullionValue: round2(totalPreciousMetals),
+      totalGoldValue: round2(totalGoldValue),
+      totalSilverValue: round2(totalSilverValue),
+      totalPlatinumValue: round2(totalPlatinumValue),
+      totalPreciousMetalsValue: round2(totalPreciousMetals),
+      holdingsWeightGrams: round2(totalGrams),
+    };
+
+    const iousData = {
+      owedToMe: round2(totalOwedToMe),
+      iOwe: round2(totalIOweOthers),
+      netIOUPosition: round2(totalOwedToMe - totalIOweOthers),
+      totalOwedToMe: round2(totalOwedToMe),
+      totalIOweOthers: round2(totalIOweOthers),
+    };
+
+    const sliderBaselines = {
+      timeMachineStartingPrincipal: liquidCash,
+      timeMachineDefaultMonthlyYield: Math.max(50, round2(savingsSum || totalInflows * 0.2)),
+      academicBudgetFixedCosts: round2(needsSum),
+      academicBudgetVariableCosts: round2(wantsSum),
+    };
 
     return {
       meta: {
@@ -179,40 +290,24 @@ export class ReconciliationEngine {
         checksumSHA256: `CHK-${Date.now().toString(16).toUpperCase()}`,
       },
       liquidity: {
-        openingBalance24h: round2(liquidCash - netPosition),
         totalInflows: round2(totalInflows),
         totalOutflows: round2(totalOutflows),
         netPosition,
+        liquidCash,
+        totalAssets,
+        totalLiabilities,
+        netWorth: netWorthTotal,
+        openingBalance24h: round2(liquidCash - netPosition),
         closingBalance: round2(liquidCash),
         currency: baseCurrency,
       },
-      buckets503020: {
-        needsTotal: round2(needsSum),
-        needsPercentage: totalInflows > 0 ? round2((needsSum / totalInflows) * 100) : 0,
-        wantsTotal: round2(wantsSum),
-        wantsPercentage: totalInflows > 0 ? round2((wantsSum / totalInflows) * 100) : 0,
-        savingsTotal: round2(savingsSum),
-        savingsPercentage: totalInflows > 0 ? round2((savingsSum / totalInflows) * 100) : 0,
-        isWantsBreached: totalInflows > 0 ? wantsSum / totalInflows > 0.3 : false,
-      },
-      ledgerBalances: {
-        totalDebits: round2(totalDebits),
-        totalCredits: round2(totalCredits),
-        variance,
-        accountBalances: accountMap,
-      },
-      commodities: {
-        totalGoldValue: round2(totalGoldValue),
-        totalSilverValue: round2(totalSilverValue),
-        totalPlatinumValue: round2(totalPlatinumValue),
-        totalPreciousMetalsValue: round2(totalPreciousMetals),
-        holdingsWeightGrams: round2(totalGrams),
-      },
-      ious: {
-        totalOwedToMe: round2(totalOwedToMe),
-        totalIOweOthers: round2(totalIOweOthers),
-        netIOUPosition: round2(totalOwedToMe - totalIOweOthers),
-      },
+      buckets: bucketsData,
+      buckets503020: bucketsData,
+      ledger: ledgerData,
+      ledgerBalances: ledgerData,
+      commodities: commoditiesData,
+      ious: iousData,
+      sliderBaselines,
       netWorth: {
         totalAssets,
         totalLiabilities,

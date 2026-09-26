@@ -15,6 +15,8 @@ import {
 } from '../services/commodityService';
 import FinancialMetric from '../components/common/FinancialMetric';
 import confetti from 'canvas-confetti';
+import { useCoherentFinancialState } from '../context/FinancialStateContext';
+import { formatCurrency } from '../services/fxService';
 import {
   ShieldAlert, ShieldCheck, AlertTriangle, Scale, CheckCircle2,
   TrendingDown, TrendingUp, Sparkles, MessageCircle, MapPin,
@@ -36,6 +38,7 @@ export default function BazaarSentinelView() {
   const { userCity, setUserCity } = useAppStore();
   const { t, country, bazaarTerms, locale } = useTranslation();
   const { convertToBase, baseCurrency } = useCurrency();
+  const { state: coherentState } = useCoherentFinancialState();
 
   const auditHistory = useLiveQuery(() =>
     db.sentinelReports.orderBy('timestamp').reverse().toArray()
@@ -304,22 +307,34 @@ export default function BazaarSentinelView() {
             </p>
           </div>
 
-          {/* Active City Selector */}
-          <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-aura-border shrink-0 self-start md:self-auto">
-            <MapPin size={16} className="text-cyan-400" />
-            <div className="text-left">
-              <p className="text-[10px] text-aura-text-muted uppercase tracking-wider">Benchmark Market</p>
-              <select
-                value={userCity}
-                onChange={(e) => setUserCity(e.target.value)}
-                className="bg-transparent text-sm font-semibold text-aura-text outline-none cursor-pointer"
-              >
-                {CITIES_LIST.map((c) => (
-                  <option key={c.id} value={c.id} className="bg-aura-card text-aura-text">
-                    {c.name} ({c.urduName})
-                  </option>
-                ))}
-              </select>
+          {/* Active City Selector & Ledger 5020 Live Pill */}
+          <div className="flex flex-wrap items-center gap-3 shrink-0 self-start md:self-auto">
+            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-aura-border">
+              <MapPin size={16} className="text-cyan-400" />
+              <div className="text-left">
+                <p className="text-[10px] text-aura-text-muted uppercase tracking-wider">Benchmark Market</p>
+                <select
+                  value={userCity}
+                  onChange={(e) => setUserCity(e.target.value)}
+                  className="bg-transparent text-sm font-semibold text-aura-text outline-none cursor-pointer"
+                >
+                  {CITIES_LIST.map((c) => (
+                    <option key={c.id} value={c.id} className="bg-aura-card text-aura-text">
+                      {c.name} ({c.urduName})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+              <Scale size={16} className="text-emerald-400" />
+              <div className="text-left">
+                <p className="text-[10px] text-emerald-400 font-semibold uppercase tracking-wider">5020 Groceries Expense</p>
+                <p className="text-sm font-bold text-white tabular-nums">
+                  {formatCurrency(coherentState?.ledger?.accountBalances?.['5020'] ?? 0, baseCurrency)}
+                </p>
+              </div>
             </div>
           </div>
         </div>

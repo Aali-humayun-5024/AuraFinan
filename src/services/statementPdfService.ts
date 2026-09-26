@@ -64,8 +64,10 @@ export class StatementPdfService {
       ];
     });
 
-    // If all sample data was created within the last 24h, compute realistic opening balance from liquid accounts
-    if (openingBalance === 0) {
+    // Use coherent SSOT balances if passed, or calculate from ledger
+    if (params.openingBalance !== undefined) {
+      openingBalance = params.openingBalance;
+    } else if (openingBalance === 0) {
       const accounts = await ledgerDb.accounts.toArray();
       const currentLiquid = accounts
         .filter((a) => a.code === '1010' || a.code === '1020')
@@ -75,7 +77,8 @@ export class StatementPdfService {
       }
     }
 
-    const closingBalance = openingBalance + totalCredits - totalDebits;
+    const calculatedClosing = openingBalance + totalCredits - totalDebits;
+    const closingBalance = params.closingBalance !== undefined ? params.closingBalance : calculatedClosing;
     const netVariance = openingBalance !== 0 ? ((closingBalance - openingBalance) / openingBalance) * 100 : 0;
 
     // 4. Generate SHA-256 Digital Verification Seal

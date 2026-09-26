@@ -7,6 +7,8 @@ import { formatCurrency } from '../services/fxService';
 import FinancialMetric from '../components/common/FinancialMetric';
 import { Plus, Target, Trophy, Clock, Sparkles, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { useCoherentFinancialState } from '../context/FinancialStateContext';
+import { ShieldCheck, Wallet, Coins } from 'lucide-react';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -51,9 +53,17 @@ function ProgressRing({ percent, size = 80, strokeWidth = 6 }: { percent: number
 
 export default function GoalsView() {
   const { baseCurrency } = useAppStore();
+  const { state: coherentState } = useCoherentFinancialState();
   const goals = useLiveQuery(() => db.goals.toArray()) || [];
   const [showAdd, setShowAdd] = useState(false);
   const [newGoal, setNewGoal] = useState({ title: '', targetAmount: '', deadline: '', icon: '🎯' });
+
+  // Dedicated savings balances strictly bound to ledger accounts 3020 Retained Earnings and 1060 Bullion Reserve
+  const retainedEarnings = coherentState?.ledger?.accountBalances?.['3020'] ?? 0;
+  const bullionReserve = coherentState?.commodities?.totalBullionValue ?? (coherentState?.ledger?.accountBalances?.['1060'] ?? 0);
+  const monthlySavingsBucket = coherentState?.buckets?.savingsTotal ?? 0;
+  const liquidCashAvailable = coherentState?.liquidity?.liquidCash ?? 0;
+  const totalLedgerSavingsReserve = Math.round((retainedEarnings + bullionReserve + monthlySavingsBucket) * 100) / 100;
 
   const handleAddGoal = async () => {
     if (!newGoal.title || !newGoal.targetAmount) return;
@@ -94,9 +104,9 @@ export default function GoalsView() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-aura-text flex items-center gap-2">
-            <Target size={24} className="text-aura-accent" /> Financial Goals
+            <Target size={24} className="text-aura-accent" /> Financial Goals & Asset Accumulation
           </h1>
-          <p className="text-sm text-aura-text-muted mt-1">Track your progress toward financial freedom</p>
+          <p className="text-sm text-aura-text-muted mt-1">Track life milestones bound to dedicated ledger savings reserves</p>
         </div>
         <motion.button
           whileHover={{ scale: 1.02 }}
@@ -109,6 +119,45 @@ export default function GoalsView() {
         </motion.button>
       </div>
 
+      {/* Dedicated Ledger Savings Ledger Strip (Account 3020 & 1060 Synchronization) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+        <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-400">
+            <Wallet size={18} />
+          </div>
+          <div>
+            <p className="text-[10px] text-emerald-400 font-semibold uppercase tracking-wider">3020 Retained Earnings + Savings</p>
+            <p className="text-sm font-bold text-white tabular-nums">
+              {formatCurrency(retainedEarnings + monthlySavingsBucket, baseCurrency)}
+            </p>
+          </div>
+        </div>
+
+        <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-amber-500/20 text-amber-400">
+            <Coins size={18} />
+          </div>
+          <div>
+            <p className="text-[10px] text-amber-400 font-semibold uppercase tracking-wider">1060 Bullion Reserve</p>
+            <p className="text-sm font-bold text-white tabular-nums">
+              {formatCurrency(bullionReserve, baseCurrency)}
+            </p>
+          </div>
+        </div>
+
+        <div className="p-3.5 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-purple-500/20 text-purple-400">
+            <ShieldCheck size={18} />
+          </div>
+          <div>
+            <p className="text-[10px] text-purple-400 font-semibold uppercase tracking-wider">Liquid Cash Backing (1010+1020)</p>
+            <p className="text-sm font-bold text-white tabular-nums">
+              {formatCurrency(liquidCashAvailable, baseCurrency)}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Overall Progress */}
       {goals.length > 0 && (
         <motion.div
@@ -119,12 +168,12 @@ export default function GoalsView() {
           <div className="flex items-center gap-6">
             <ProgressRing percent={overallPct} size={100} strokeWidth={8} />
             <div>
-              <h3 className="text-lg font-bold text-aura-text mb-1">Overall Progress</h3>
+              <h3 className="text-lg font-bold text-aura-text mb-1">Overall Goal Milestones</h3>
               <div className="flex items-baseline flex-wrap gap-1.5 text-sm text-aura-text-secondary">
                 <FinancialMetric value={totalSaved} currency={baseCurrency} size="sm" color="text-emerald-400 font-bold" />
                 <span className="text-aura-text-muted">saved of</span>
                 <FinancialMetric value={totalTarget} currency={baseCurrency} size="sm" color="text-aura-text font-bold" />
-                <span className="text-aura-text-muted">total</span>
+                <span className="text-aura-text-muted">total target</span>
               </div>
               <div className="flex items-center gap-4 mt-2">
                 <span className="flex items-center gap-1.5 text-xs text-aura-text-muted">

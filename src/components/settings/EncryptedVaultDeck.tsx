@@ -19,9 +19,11 @@ import { PasswordPromptModal } from './PasswordPromptModal';
 import { WipeConfirmModal } from './WipeConfirmModal';
 import type { AuraEncryptedVaultJSON, AuraMasterVaultJSON } from '../../types/vault';
 import { useAppStore } from '../../store/useAppStore';
+import { useCoherentFinancialState } from '../../context/FinancialStateContext';
 
 export const EncryptedVaultDeck: React.FC = () => {
   const { baseCurrency, activePersona } = useAppStore();
+  const { state: coherentState } = useCoherentFinancialState();
   const [encryptEnabled, setEncryptEnabled] = useState(false);
   const [exportPassword, setExportPassword] = useState('');
   const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -125,6 +127,8 @@ export const EncryptedVaultDeck: React.FC = () => {
         vaultName: 'Aura Primary Vault',
         accountHolder: activePersona ? `${activePersona.toUpperCase()} / Evaluator` : 'Global Freelancer / Evaluator',
         baseCurrency: baseCurrency || 'USD',
+        closingBalance: coherentState?.liquidity?.liquidCash ?? coherentState?.liquidity?.closingBalance,
+        openingBalance: coherentState?.liquidity?.openingBalance24h,
       });
       setStatusMessage({ type: 'success', text: 'Official 24-Hour Bank Statement PDF downloaded.' });
     } catch (err: any) {
