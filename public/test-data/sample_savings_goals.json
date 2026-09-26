@@ -1,0 +1,39 @@
+{
+  "project": "BudgetBasics",
+  "srsSection": "1.6.4",
+  "sampleGoals": [
+    {
+      "id": "goal-01",
+      "name": "Safety Net Emergency Buffer",
+      "category": "Safety Net",
+      "targetAmount": 500.00,
+      "currentSavings": 200.00,
+      "monthlyContribution": 50.00,
+      "calculatedRemaining": 300.00,
+      "estimatedMonths": 6,
+      "encouragingTip": "Skip one restaurant meal per week to shorten this timeline by 2 whole months!"
+    },
+    {
+      "id": "goal-02",
+      "name": "Coding Laptop & Research Rig Upgrade",
+      "category": "Education Hardware",
+      "targetAmount": 1200.00,
+      "currentSavings": 450.00,
+      "monthlyContribution": 100.00,
+      "calculatedRemaining": 750.00,
+      "estimatedMonths": 8,
+      "encouragingTip": "Sell unused textbooks or old hardware to instantly cover 25% of this goal!"
+    },
+    {
+      "id": "goal-03",
+      "name": "Semester Exam & Certification Voucher",
+      "category": "Certifications",
+      "targetAmount": 300.00,
+      "currentSavings": 180.00,
+      "monthlyContribution": 40.00,
+      "calculatedRemaining": 120.00,
+      "estimatedMonths": 3,
+      "encouragingTip": "Almost there! Just a couple more deposits to certification victory."
+    }
+  ]
+}

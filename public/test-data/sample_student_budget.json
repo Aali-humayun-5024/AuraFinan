@@ -1,0 +1,33 @@
+{
+  "project": "BudgetBasics",
+  "theme": "NextGen BudgetBee",
+  "srsVersion": "1.0",
+  "currency": "USD",
+  "sampleStudentBudget": {
+    "studentProfile": "College Freshman / Undergraduate",
+    "monthlyIncome": {
+      "pocketAllowance": 450.00,
+      "campusWorkStudy": 250.00,
+      "academicStipend": 100.00,
+      "totalMonthlyInflow": 800.00
+    },
+    "fixedExpenses": [
+      { "item": "Hostel / Dormitory Shared Rent", "category": "Housing", "amount": 350.00, "isEssential": true },
+      { "item": "Campus Monthly Bus / Transit Pass", "category": "Transport", "amount": 45.00, "isEssential": true },
+      { "item": "Campus High-Speed Internet & Data Bundle", "category": "Utilities", "amount": 25.00, "isEssential": true }
+    ],
+    "variableExpenses": [
+      { "item": "University Mess / Meal Hall & Canteen Snacks", "category": "Food", "amount": 160.00, "isEssential": true },
+      { "item": "Course Textbooks & Lab Stationary", "category": "Education", "amount": 40.00, "isEssential": true },
+      { "item": "Weekend Socializing & Movies", "category": "Entertainment", "amount": 50.00, "isEssential": false },
+      { "item": "Daily Coffee & Canteen Pastries", "category": "Food (Wants)", "amount": 30.00, "isEssential": false }
+    ],
+    "monthlySummary": {
+      "totalIncome": 800.00,
+      "totalNeeds": 620.00,
+      "totalWants": 80.00,
+      "plannedSavingsSurplus": 100.00,
+      "savingsRatePercentage": 12.5
+    }
+  }
+}

@@ -1,0 +1,78 @@
+================================================================================
+BUDGETBASICS — PROJECT SUBMISSION README
+TechWiz 7: The World Tech Championship
+Theme: NextGen BudgetBee | Category: Web Innovation Unleashed
+Software Requirements Specification (SRS) Version 1.0 Full Compliance
+================================================================================
+
+1. PROJECT IDENTIFICATION:
+   - Application Name: BudgetBasics
+   - Competition: TechWiz 7 (Aptech Limited)
+   - Category: Web Innovation Unleashed
+   - Target Audience: Students, High School Learners, College Undergraduates, Beginners
+   - Architecture: Client-Side Single Page Application (SPA)
+   - Live URL: https://aura-finance-silk.vercel.app/
+
+2. SUMMARY OF MANDATORY DELIVERABLES:
+   - Problem Definition: Detailed in Section 2 of Project Report.
+   - Design Specifications: Full responsive design system detailed in Section 5.
+   - Flowcharts & DFDs: Complete Mermaid diagrams included in Section 8.
+   - Test Data: Structured JSON test files located in /public/test-data/.
+   - Installation Manual: Step-by-step commands detailed in Section 12.
+   - Video Walkthrough Script: Structured 5-minute video guide in docs/DEMO_VIDEO_SCRIPT.md.
+
+3. ARCHITECTURAL ASSUMPTIONS MADE AT OUR END (SRS Section 1.9):
+   a. Client-Side Privacy:
+      Per SRS Section 1.2 & 1.5, the application operates with 100% client-side
+      persistence. No remote relational backend (e.g. MySQL/MongoDB) or server-side
+      database is utilized. State persistence is managed through IndexedDB (Dexie.js)
+      and Web Storage, ensuring zero user data leakage and immediate offline capability.
+
+   b. Currency Support:
+      While standard test currency defaults to USD ($), multi-currency toggle support
+      (PKR ₨, EUR €, GBP £) has been built into the top navigation bar to facilitate
+      international student evaluation without altering underlying ratio algorithms.
+
+   c. Persona Simulation:
+      To accelerate evaluators' assessment of the platform, a 1-click Quick-Start
+      Persona selector (College Student, Tech Freelancer, Family Household, Clean Slate)
+      has been integrated to instantly seed realistic data into all calculators.
+
+   d. Educational Scope:
+      BudgetBasics is designed as an educational and behavioral awareness platform.
+      All calculators present mathematical simulations and estimates for learning
+      purposes only, without claiming banking, custodial, or investment services.
+
+   e. Extended Commerce Simulator:
+      For accounting students requiring advanced double-entry practice beyond basic
+      cash budgeting, an optional General Ledger simulator has been included in the
+      "More" menu with atomic debit-credit balance validation ($Dr = $Cr).
+
+4. SYSTEM REQUIREMENTS & RUNTIME:
+   - Node.js: Version 18.0.0 or higher
+   - Package Manager: npm (v9+) or pnpm
+   - Recommended Browser: Google Chrome 120+, Mozilla Firefox 120+, Microsoft Edge 120+
+   - Display: Responsive layout optimized for 375px (Mobile) to 1920px (Desktop)
+
+5. QUICK START INSTALLATION:
+   Step 1: Extract project archive into workspace directory.
+   Step 2: Open terminal in project root.
+   Step 3: Run 'npm install' to install dependencies.
+   Step 4: Run 'npm run dev' to launch local development server (http://localhost:5173).
+   Step 5: Run 'npm run build' to compile production bundle (zero warnings/errors).
+
+6. TEST DATA LOCATIONS:
+   - /public/test-data/sample_student_budget.json
+   - /public/test-data/sample_spending_categories.json
+   - /public/test-data/sample_savings_goals.json
+   - /public/test-data/test_data_readme.txt
+
+7. AI USAGE ACKNOWLEDGEMENT:
+   In compliance with SRS Page 12 ("Important Note Regarding AI Usage"), AI-assisted
+   tools (Google Antigravity, Figma AI, Canva AI) were utilized as productivity aids
+   for brainstorming, code validation, and icon generation. All architectural design,
+   state management, component implementation, and responsive styling were manually
+   engineered, debugged, and verified by the development team.
+
+© Aptech Limited — TechWiz 7 World Tech Championship
+================================================================================

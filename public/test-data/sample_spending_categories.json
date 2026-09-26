@@ -1,0 +1,55 @@
+{
+  "project": "BudgetBasics",
+  "srsSection": "1.6.2 & 1.6.5",
+  "spendingCategories": [
+    {
+      "id": "food",
+      "name": "Food & Dining",
+      "essentialExample": "Daily Campus Mess, Nutrition, Clean Drinking Water",
+      "nonEssentialExample": "Midnight Fast Food Delivery, Caramel Frappuccinos",
+      "classificationRule": "Essential baseline nutrition is a Need; restaurant markups and delivery fees are Wants."
+    },
+    {
+      "id": "transport",
+      "name": "Transportation",
+      "essentialExample": "Monthly Student Metro/Bus Card, Bicycle Commuting",
+      "nonEssentialExample": "Ride-Hailing Surge Trips when buses are running",
+      "classificationRule": "Guaranteed arrival to exams and lectures is a Need; private premium transport is a Want."
+    },
+    {
+      "id": "education",
+      "name": "Education & Courseware",
+      "essentialExample": "Mandatory Textbooks, Lab Equipment, Exam Fees",
+      "nonEssentialExample": "Top-Tier Gaming Gear branded as Study Gear",
+      "classificationRule": "Direct academic graduation prerequisites are Needs."
+    },
+    {
+      "id": "entertainment",
+      "name": "Entertainment & Leisure",
+      "essentialExample": "Free Campus Clubs, Library Events",
+      "nonEssentialExample": "VIP Concert Passes, Multiple Video Game Pre-orders",
+      "classificationRule": "Discretionary leisure upgrades are Wants to be capped within the 30% bucket."
+    },
+    {
+      "id": "shopping",
+      "name": "Shopping & Apparel",
+      "essentialExample": "All-Weather Shoes, Seasonal Warm Coat",
+      "nonEssentialExample": "Designer Sneaker Drops, Fast-Fashion Hauls",
+      "classificationRule": "Adequate clothing is a Need; status fashion trends are Wants."
+    },
+    {
+      "id": "utilities",
+      "name": "Utilities & Telecom",
+      "essentialExample": "Electricity, Dorm Water Bill, Mobile Data for Class",
+      "nonEssentialExample": "Unlimited 5G Streaming Bundles",
+      "classificationRule": "Basic connectivity and utilities are Needs."
+    },
+    {
+      "id": "miscellaneous",
+      "name": "Miscellaneous & Buffer",
+      "essentialExample": "Emergency Prescription Medicine, Key Replacement",
+      "nonEssentialExample": "Spontaneous Gadget Accessories",
+      "classificationRule": "Emergency health and safety is a Need; non-essential impulse items are Wants."
+    }
+  ]
+}

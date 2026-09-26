@@ -71,6 +71,20 @@
 
 ---
 
+## 📚 Project Documentation & Deliverables (SRS Section 1.9)
+
+In full compliance with **SRS Section 1.9 (Project Deliverables)** and competition standards, the complete project documentation suite is organized in the `docs/` and `public/test-data/` directories:
+
+| Deliverable Artifact | File Location | Purpose & SRS Alignment |
+| :--- | :--- | :--- |
+| **Master Technical Report (MD)** | [`docs/PROJECT_REPORT.md`](file:///c:/Users/hijaz%20trd/Desktop/dreamPakistan/docs/PROJECT_REPORT.md) | 14-section comprehensive report: Problem Definition, DFD Level 0/1, Flowcharts, QA Test Matrix, Interface specs (SRS 1.1–1.9). |
+| **Interactive Printable Report (HTML)** | [`docs/BudgetBasics_Master_Project_Report.html`](file:///c:/Users/hijaz%20trd/Desktop/dreamPakistan/docs/BudgetBasics_Master_Project_Report.html) | Publication-grade styled document with cover banner, interactive table of contents, and print stylesheets. |
+| **Official Submission ReadMe** | [`docs/ReadMe.doc`](file:///c:/Users/hijaz%20trd/Desktop/dreamPakistan/docs/ReadMe.doc) | Mandatory `.doc` submission file detailing architectural assumptions, system runtime, and test data locations. |
+| **Mandatory Video Storyboard** | [`docs/DEMO_VIDEO_SCRIPT.md`](file:///c:/Users/hijaz%20trd/Desktop/dreamPakistan/docs/DEMO_VIDEO_SCRIPT.md) | 5-minute timed script (Scenes 1–7) covering all 11 SRS modules for the required MP4 submission. |
+| **Pre-Populated Test Data** | [`public/test-data/`](file:///c:/Users/hijaz%20trd/Desktop/dreamPakistan/public/test-data/) | Structured JSON & TXT files: `sample_student_budget.json`, `sample_spending_categories.json`, `sample_savings_goals.json`, `test_data_readme.txt`. |
+
+---
+
 ## 🛠️ Technology Stack
 - **Frontend Framework:** React 19 + TypeScript
 - **Styling:** Tailwind CSS v4 + Vanilla CSS Design Tokens
@@ -95,3 +109,4 @@ npm run dev
 # Build for production
 npm run build
 ```
+
