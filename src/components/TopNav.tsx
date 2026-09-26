@@ -138,7 +138,7 @@ export default function TopNav() {
   }, [activePersona, customPersona]);
 
   return (
-    <header className="border-b border-slate-200/90 dark:border-white/[0.08] bg-white/80 dark:bg-aura-surface/40 backdrop-blur-2xl hidden lg:flex items-center justify-between px-3 sm:px-4 xl:px-6 py-2.5 xl:py-3.5 gap-2 xl:gap-3 shrink-0 z-20 w-full min-w-0">
+    <header className="sticky top-0 h-16 z-40 w-full min-w-0 border-b border-slate-200/90 dark:border-white/[0.08] bg-white/80 dark:bg-[#050811]/80 backdrop-blur-2xl hidden lg:flex items-center justify-between px-6 gap-3 shrink-0">
       {/* Left: Persona Switcher + Country / Cultural Bazaar + Language */}
       <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 min-w-0">
         {/* Persona Switcher */}
@@ -147,11 +147,11 @@ export default function TopNav() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
-              className="persona-chip active flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl shrink-0 cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/80 dark:bg-white/[0.04] border border-slate-200/90 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-white/[0.18] text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-xs transition-all cursor-pointer shrink-0"
               disabled={loading}
             >
               <span className="text-sm shrink-0">{personaDisplay.emoji}</span>
-              <span className="text-xs md:text-sm font-semibold truncate max-w-[85px] sm:max-w-[120px] 2xl:max-w-[170px]">
+              <span className="text-xs font-semibold truncate max-w-[85px] sm:max-w-[120px] 2xl:max-w-[170px]">
                 {loading ? 'Switching...' : personaDisplay.label}
               </span>
             </motion.button>
@@ -159,7 +159,7 @@ export default function TopNav() {
           <DropdownMenu.Portal>
             <DropdownMenu.Content
               sideOffset={8}
-              className="min-w-[290px] bg-white/95 border border-slate-200/90 shadow-[0_20px_50px_rgba(15,23,42,0.12),0_4px_12px_rgba(15,23,42,0.06)] dark:bg-[#090D1A]/92 dark:border-white/[0.14] dark:shadow-[0_24px_64px_rgba(0,0,0,0.75),0_4px_16px_rgba(0,0,0,0.5)] backdrop-blur-3xl rounded-2xl p-1.5 z-[200]"
+              className="min-w-[290px] bg-white/96 border border-slate-200/90 shadow-[0_20px_50px_rgba(15,23,42,0.12),0_4px_12px_rgba(15,23,42,0.06)] dark:bg-[#090D1A]/94 dark:border-white/[0.14] dark:shadow-[0_24px_64px_rgba(0,0,0,0.75),0_4px_16px_rgba(0,0,0,0.5)] backdrop-blur-3xl rounded-2xl p-1.5 z-[200]"
             >
               <div className="px-3 py-2 mb-1 flex items-center justify-between">
                 <p className="text-xs font-semibold text-aura-text-muted tracking-wider uppercase">
@@ -232,7 +232,7 @@ export default function TopNav() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
               title="Select Country & Cultural Ledger"
-              className="flex items-center gap-1 px-2 py-1.5 rounded-xl bg-white/[0.04] border border-aura-border hover:border-aura-accent/40 text-xs text-aura-text transition-all cursor-pointer shrink-0"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/80 dark:bg-white/[0.04] border border-slate-200/90 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-white/[0.18] text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-xs transition-all cursor-pointer shrink-0"
             >
               <span className="text-sm leading-none shrink-0">{country.flag}</span>
               <span className="font-semibold hidden 2xl:inline">{country.name}</span>
@@ -243,7 +243,7 @@ export default function TopNav() {
             <DropdownMenu.Content
               sideOffset={8}
               align="start"
-              className="min-w-[280px] max-h-[380px] overflow-y-auto bg-white/95 border border-slate-200/90 shadow-[0_20px_50px_rgba(15,23,42,0.12),0_4px_12px_rgba(15,23,42,0.06)] dark:bg-[#090D1A]/92 dark:border-white/[0.14] dark:shadow-[0_24px_64px_rgba(0,0,0,0.75),0_4px_16px_rgba(0,0,0,0.5)] backdrop-blur-3xl rounded-2xl p-1.5 z-[200]"
+              className="min-w-[280px] max-h-[380px] overflow-y-auto bg-white/96 border border-slate-200/90 shadow-[0_20px_50px_rgba(15,23,42,0.12),0_4px_12px_rgba(15,23,42,0.06)] dark:bg-[#090D1A]/94 dark:border-white/[0.14] dark:shadow-[0_24px_64px_rgba(0,0,0,0.75),0_4px_16px_rgba(0,0,0,0.5)] backdrop-blur-3xl rounded-2xl p-1.5 z-[200]"
             >
               <div className="px-3 py-1.5 text-[10px] uppercase font-bold text-aura-text-muted flex items-center justify-between">
                 <span>🌍 Select Country & Culture</span>
@@ -276,18 +276,23 @@ export default function TopNav() {
         <LanguageDropdown />
       </div>
 
-      {/* Center: Search / Command Palette Trigger — Flexible & Adaptive */}
-      <motion.button
-        whileHover={{ scale: 1.01 }}
-        onClick={() => setCommandPaletteOpen(true)}
-        className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/[0.04] border border-aura-border hover:border-aura-border-bright text-aura-text-muted text-xs xl:text-sm flex-1 min-w-[70px] max-w-[170px] lg:max-w-[210px] xl:max-w-sm 2xl:max-w-md transition-all mx-1 xl:mx-2 cursor-pointer"
-      >
-        <Search size={14} className="shrink-0" />
-        <span className="truncate">{t.header.searchPlaceholder}</span>
-        <kbd className="ms-auto hidden 2xl:flex items-center gap-1 text-[10px] text-aura-text-muted bg-white/5 px-1.5 py-0.5 rounded-md border border-aura-border shrink-0">
-          <Command size={10} /> K
-        </kbd>
-      </motion.button>
+      {/* Center: Omnimodal Omnibox Search Container (Master Spec 5.1) */}
+      <div className="flex-1 flex justify-center max-w-xl mx-2">
+        <motion.button
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.99 }}
+          onClick={() => setCommandPaletteOpen(true)}
+          className="w-full h-10 ps-3.5 pe-2.5 py-1.5 rounded-xl bg-slate-100/90 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-white/[0.14] focus:outline-none focus-within:border-cyan-500/80 dark:focus-within:border-cyan-400/80 focus-within:ring-2 focus-within:ring-cyan-500/10 flex items-center gap-2 text-slate-500 dark:text-slate-400 text-xs transition-all cursor-pointer shadow-xs"
+        >
+          <Search size={14} className="shrink-0 text-slate-400 dark:text-slate-500" />
+          <span className="truncate text-slate-600 dark:text-slate-300 font-medium">
+            {t.header.searchPlaceholder}
+          </span>
+          <kbd className="ms-auto flex items-center gap-1 px-2 py-0.5 rounded-md bg-white dark:bg-white/[0.08] border border-slate-200 dark:border-white/[0.1] text-[10px] font-mono text-slate-500 dark:text-slate-400 shrink-0 select-none shadow-xs">
+            <Command size={10} /> K
+          </kbd>
+        </motion.button>
+      </div>
 
       {/* Right: Currency + Dual-Theme Toggle + Audio Synth + Voice + Notifications */}
       <div className="flex items-center gap-1 sm:gap-1.5 xl:gap-2.5 shrink-0 ms-auto">
@@ -298,7 +303,7 @@ export default function TopNav() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-1 px-2 py-1.5 rounded-xl bg-white/[0.04] border border-aura-border text-xs text-aura-text-secondary hover:text-aura-text hover:border-aura-border-bright transition-all shrink-0 cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/80 dark:bg-white/[0.04] border border-slate-200/90 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-white/[0.18] text-xs font-mono font-semibold text-slate-700 dark:text-slate-200 shadow-xs transition-all shrink-0 cursor-pointer"
             >
               <span className="text-sm shrink-0 leading-none">
                 {SUPPORTED_CURRENCIES.find((c) => c.code === baseCurrency)?.flag}
@@ -310,7 +315,7 @@ export default function TopNav() {
             <DropdownMenu.Content
               sideOffset={8}
               align="end"
-              className="min-w-[200px] bg-white/95 border border-slate-200/90 shadow-[0_20px_50px_rgba(15,23,42,0.12),0_4px_12px_rgba(15,23,42,0.06)] dark:bg-[#090D1A]/92 dark:border-white/[0.14] dark:shadow-[0_24px_64px_rgba(0,0,0,0.75),0_4px_16px_rgba(0,0,0,0.5)] backdrop-blur-3xl rounded-2xl p-1.5 z-[200]"
+              className="min-w-[200px] bg-white/96 border border-slate-200/90 shadow-[0_20px_50px_rgba(15,23,42,0.12),0_4px_12px_rgba(15,23,42,0.06)] dark:bg-[#090D1A]/94 dark:border-white/[0.14] dark:shadow-[0_24px_64px_rgba(0,0,0,0.75),0_4px_16px_rgba(0,0,0,0.5)] backdrop-blur-3xl rounded-2xl p-1.5 z-[200]"
             >
               {SUPPORTED_CURRENCIES.map((cur) => (
                 <DropdownMenu.Item

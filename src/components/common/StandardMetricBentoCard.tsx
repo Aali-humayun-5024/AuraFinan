@@ -47,7 +47,7 @@ export const StandardMetricBentoCard: React.FC<MetricCardProps> = ({
       hover:-translate-y-[1px] ${className}`}
     >
       {/* Top Header: Label (Left) and Trend Badge / Icon (Right) */}
-      <div className="flex items-center justify-between gap-3 mb-3">
+      <div className="h-6 flex items-center justify-between gap-3 mb-3">
         <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider select-none">
           {label}
         </span>
@@ -76,21 +76,26 @@ export const StandardMetricBentoCard: React.FC<MetricCardProps> = ({
 
       {/* Hero Financial Value with Optical Sub-Unit Alignment */}
       <div className="flex items-baseline gap-1 my-1">
-        <span className="text-base font-semibold text-slate-400 dark:text-slate-500 select-none">
+        {/* 1. Currency Marker: 45% Opacity, medium weight */}
+        <span className="text-sm font-semibold tracking-tight text-slate-500 dark:text-slate-400 select-none">
           {currencySymbol}
         </span>
+
+        {/* 2. Primary Integer Head: Bold, dominant, tracking-tight */}
         <span className="text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 tabular-nums">
           {integerAmount}
         </span>
+
+        {/* 3. Fractional Cents: Smaller, sharing exact typographic baseline */}
         {decimalAmount && (
-          <span className="text-sm font-medium text-slate-400 dark:text-slate-500 tabular-nums">
+          <span className="text-sm font-medium text-slate-500 dark:text-slate-400 tabular-nums">
             .{decimalAmount}
           </span>
         )}
       </div>
 
       {/* Subtext Footnote */}
-      <div className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-100 dark:border-white/[0.06] text-xs text-slate-500 dark:text-slate-400">
+      <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-slate-100 dark:border-white/[0.06] text-xs text-slate-500 dark:text-slate-400">
         <TrendingUp className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
         <span className="truncate">{comparisonText}</span>
       </div>

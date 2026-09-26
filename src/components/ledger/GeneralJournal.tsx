@@ -324,18 +324,18 @@ export default function GeneralJournal() {
 
   return (
     <div className="space-y-6">
-      {/* ─── 1. JOURNAL ENTRY CREATION DESK ─── */}
-      <div className="glass-card p-5 sm:p-6 border border-aura-border space-y-5">
+      {/* ─── 1. JOURNAL ENTRY CREATION DESK (Master Spec 5.4) ─── */}
+      <div className="p-6 rounded-3xl bg-white/85 dark:bg-[#0D121E]/70 backdrop-blur-2xl border border-slate-200/90 dark:border-white/[0.08] shadow-[0_1px_3px_rgba(15,23,42,0.03),0_10px_30px_-5px_rgba(15,23,42,0.04)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.40)] space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-aura-accent animate-pulse" />
-              <h2 className="text-base font-bold text-aura-text flex items-center gap-2">
-                <FileText size={17} className="text-aura-accent" />
+              <span className="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse" />
+              <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                <FileText size={17} className="text-cyan-500" />
                 <span>{t.generalLedger.journalTitle}</span>
               </h2>
             </div>
-            <p className="text-xs text-aura-text-muted">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               CPA-Grade Double-Entry Validation Engine. Automatic atomic posting to Chart of Accounts.
             </p>
           </div>
@@ -347,7 +347,7 @@ export default function GeneralJournal() {
                 playClickSound();
                 setOcrModalOpen(true);
               }}
-              className="px-3 py-1.5 rounded-xl bg-aura-accent/15 border border-aura-accent/30 text-aura-accent hover:bg-aura-accent/25 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+              className="px-4 py-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/15 border border-cyan-500/25 text-cyan-700 dark:text-cyan-300 text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer shadow-xs"
             >
               <Camera size={14} />
               <span>Multimodal OCR Receipt Scan</span>
@@ -357,65 +357,65 @@ export default function GeneralJournal() {
 
         {/* Alerts */}
         {errorMsg && (
-          <div className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-xs font-semibold flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-700 dark:text-rose-400 text-xs font-semibold flex items-center gap-2">
             <AlertTriangle size={15} className="shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
         {successMsg && (
-          <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-xs font-semibold flex items-center gap-2">
             <CheckCircle2 size={15} className="shrink-0" />
             <span>{successMsg}</span>
           </div>
         )}
 
         <form onSubmit={handlePost} className="space-y-4">
-          {/* Date & Narration */}
+          {/* Date & Narration (Master Spec 5.6 Inputs) */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-aura-text mb-1">{t.generalLedger.dateColumn}</label>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">{t.generalLedger.dateColumn}</label>
               <input
                 type="date"
                 required
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-white/5 border border-aura-border text-xs text-aura-text font-mono focus:outline-none focus:border-aura-accent"
+                className="w-full h-10 px-3.5 py-2 rounded-xl bg-white dark:bg-black/30 border border-slate-200 dark:border-white/[0.1] text-xs text-slate-900 dark:text-slate-100 font-mono focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/10"
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-xs font-semibold text-aura-text mb-1">{t.generalLedger.narrationColumn} *</label>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">{t.generalLedger.narrationColumn} *</label>
               <input
                 type="text"
                 required
                 placeholder={t.generalLedger.narrationPlaceholder}
                 value={narration}
                 onChange={(e) => setNarration(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-aura-border text-xs text-aura-text focus:outline-none focus:border-aura-accent"
+                className="w-full h-10 px-3.5 py-2 rounded-xl bg-white dark:bg-black/30 border border-slate-200 dark:border-white/[0.1] text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/10"
               />
             </div>
           </div>
 
-          {/* Line Items Table */}
-          <div className="overflow-x-auto rounded-xl border border-aura-border">
+          {/* Line Items Table (Master Spec 5.4) */}
+          <div className="overflow-x-auto rounded-2xl border border-slate-200/90 dark:border-white/[0.08]">
             <table className="w-full text-start text-xs min-w-[550px]">
-              <thead className="bg-white/[0.02] border-b border-aura-border text-aura-text-muted text-[10px] uppercase font-bold tracking-wider">
+              <thead className="bg-slate-50/80 dark:bg-white/[0.03]">
                 <tr>
-                  <th className="py-2.5 px-3 w-10">#</th>
-                  <th className="py-2.5 px-3">{t.generalLedger.accountHeadingColumn}</th>
-                  <th className="py-2.5 px-3 w-32 text-end">{t.generalLedger.debitColumn}</th>
-                  <th className="py-2.5 px-3 w-32 text-end">{t.generalLedger.creditColumn}</th>
-                  <th className="py-2.5 px-2 w-10"></th>
+                  <th className="px-4 py-3 w-10 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-white/[0.08]">#</th>
+                  <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-white/[0.08]">{t.generalLedger.accountHeadingColumn}</th>
+                  <th className="px-4 py-3 w-36 text-right text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-white/[0.08]">{t.generalLedger.debitColumn}</th>
+                  <th className="px-4 py-3 w-36 text-right text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-white/[0.08]">{t.generalLedger.creditColumn}</th>
+                  <th className="px-4 py-3 w-10 border-b border-slate-200 dark:border-white/[0.08]"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-aura-border/40">
+              <tbody className="divide-y divide-slate-100 dark:divide-white/[0.04]">
                 {lines.map((line, idx) => (
-                  <tr key={idx} className="hover:bg-white/[0.01]">
-                    <td className="py-2 px-3 font-mono text-aura-text-muted">{idx + 1}</td>
-                    <td className="py-2 px-3">
+                  <tr key={idx} className="hover:bg-slate-50/80 dark:hover:bg-white/[0.02] transition-colors duration-100">
+                    <td className="px-4 py-3.5 font-mono text-slate-400 dark:text-slate-500 border-b border-slate-100 dark:border-white/[0.04]">{idx + 1}</td>
+                    <td className="px-4 py-3.5 border-b border-slate-100 dark:border-white/[0.04]">
                       <select
                         value={line.accountId}
                         onChange={(e) => handleAccountChange(idx, e.target.value)}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-aura-card border border-aura-border text-xs text-aura-text focus:outline-none focus:border-aura-accent cursor-pointer"
+                        className="w-full h-10 px-3.5 py-2 rounded-xl bg-white dark:bg-black/30 border border-slate-200 dark:border-white/[0.1] text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/10 cursor-pointer"
                       >
                         {accounts.map((acc) => (
                           <option key={acc.code} value={acc.code}>
@@ -424,7 +424,7 @@ export default function GeneralJournal() {
                         ))}
                       </select>
                     </td>
-                    <td className="py-2 px-3">
+                    <td className="px-4 py-3.5 border-b border-slate-100 dark:border-white/[0.04]">
                       <input
                         type="number"
                         step="any"
@@ -432,10 +432,10 @@ export default function GeneralJournal() {
                         placeholder="0.00"
                         value={line.debit || ''}
                         onChange={(e) => handleAmountChange(idx, 'debit', e.target.value)}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-white/5 border border-aura-border text-xs text-right font-mono font-semibold text-aura-text focus:outline-none focus:border-aura-accent"
+                        className="w-full h-10 px-3.5 py-2 rounded-xl bg-white dark:bg-black/30 border border-slate-200 dark:border-white/[0.1] text-xs text-right font-mono font-semibold text-slate-900 dark:text-slate-100 tabular-nums focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/10"
                       />
                     </td>
-                    <td className="py-2 px-3">
+                    <td className="px-4 py-3.5 border-b border-slate-100 dark:border-white/[0.04]">
                       <input
                         type="number"
                         step="any"
@@ -443,17 +443,17 @@ export default function GeneralJournal() {
                         placeholder="0.00"
                         value={line.credit || ''}
                         onChange={(e) => handleAmountChange(idx, 'credit', e.target.value)}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-white/5 border border-aura-border text-xs text-right font-mono font-semibold text-aura-text focus:outline-none focus:border-aura-accent"
+                        className="w-full h-10 px-3.5 py-2 rounded-xl bg-white dark:bg-black/30 border border-slate-200 dark:border-white/[0.1] text-xs text-right font-mono font-semibold text-slate-900 dark:text-slate-100 tabular-nums focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/10"
                       />
                     </td>
-                    <td className="py-2 px-2 text-center">
+                    <td className="px-4 py-3.5 text-center border-b border-slate-100 dark:border-white/[0.04]">
                       {lines.length > 2 && (
                         <button
                           type="button"
                           onClick={() => handleRemoveLine(idx)}
-                          className="p-1.5 text-aura-text-muted hover:text-rose-500 rounded-lg transition-colors cursor-pointer"
+                          className="p-1.5 text-slate-400 hover:text-rose-500 rounded-lg transition-colors cursor-pointer"
                         >
-                          <Trash2 size={13} />
+                          <Trash2 size={14} />
                         </button>
                       )}
                     </td>
@@ -468,7 +468,7 @@ export default function GeneralJournal() {
             <button
               type="button"
               onClick={handleAddLine}
-              className="px-3 py-1.5 rounded-xl border border-dashed border-aura-border hover:border-aura-accent text-xs font-semibold text-aura-accent flex items-center gap-1.5 self-start cursor-pointer transition-all"
+              className="px-4 py-2 rounded-xl border border-dashed border-slate-300 dark:border-white/[0.18] hover:border-cyan-500 text-xs font-semibold text-cyan-600 dark:text-cyan-400 flex items-center gap-1.5 self-start cursor-pointer transition-all"
             >
               <Plus size={14} />
               <span>{t.generalLedger.addLineItemButton}</span>
@@ -477,24 +477,24 @@ export default function GeneralJournal() {
             {/* Live Balance Checker Badge */}
             <div className="flex flex-wrap items-center gap-3">
               <div className="text-end text-xs">
-                <span className="text-aura-text-muted block text-[10px] uppercase font-bold">{t.generalLedger.totalDebits}</span>
-                <span className="font-mono font-bold text-aura-text">
+                <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold">{t.generalLedger.totalDebits}</span>
+                <span className="font-mono font-bold text-slate-900 dark:text-slate-100 tabular-nums">
                   ${validation.totalDebits.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                 </span>
               </div>
               <div className="text-end text-xs">
-                <span className="text-aura-text-muted block text-[10px] uppercase font-bold">{t.generalLedger.totalCredits}</span>
-                <span className="font-mono font-bold text-aura-text">
+                <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-bold">{t.generalLedger.totalCredits}</span>
+                <span className="font-mono font-bold text-slate-900 dark:text-slate-100 tabular-nums">
                   ${validation.totalCredits.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                 </span>
               </div>
 
               {/* Status Badge */}
               <div
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 border shadow-sm ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 border shadow-xs ${
                   validation.isValid
-                    ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-600 dark:text-emerald-400'
-                    : 'bg-rose-500/15 border-rose-500/40 text-rose-600 dark:text-rose-400'
+                    ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-700 dark:text-emerald-400'
+                    : 'bg-rose-500/15 border-rose-500/40 text-rose-700 dark:text-rose-400'
                 }`}
               >
                 {validation.isValid ? (
@@ -510,11 +510,11 @@ export default function GeneralJournal() {
                 )}
               </div>
 
-              {/* Post Button */}
+              {/* Post Button (Master Spec 5.6 Primary Action Button) */}
               <button
                 type="submit"
                 disabled={!validation.isValid || posting}
-                className="px-5 py-2 rounded-xl bg-aura-accent hover:opacity-95 text-white font-bold text-xs shadow-lg shadow-aura-accent/25 transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                className="h-10 px-5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 text-xs font-bold shadow-md shadow-slate-900/10 active:scale-[0.98] transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer flex items-center gap-2"
               >
                 {posting ? 'Posting to Ledger...' : t.generalLedger.postEntryButton}
               </button>
@@ -523,8 +523,8 @@ export default function GeneralJournal() {
         </form>
       </div>
 
-      {/* ─── 2. RECENT POSTED JOURNAL ENTRIES ─── */}
-      <div className="glass-card p-5 border border-aura-border space-y-4">
+      {/* ─── 2. RECENT POSTED JOURNAL ENTRIES (Master Spec 5.4) ─── */}
+      <div className="p-6 rounded-3xl bg-white/85 dark:bg-[#0D121E]/70 backdrop-blur-2xl border border-slate-200/90 dark:border-white/[0.08] shadow-[0_1px_3px_rgba(15,23,42,0.03),0_10px_30px_-5px_rgba(15,23,42,0.04)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.40)] space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Clock size={16} className="text-aura-accent" />
@@ -565,22 +565,22 @@ export default function GeneralJournal() {
                     </div>
                   </div>
 
-                  <p className="text-xs text-aura-text font-medium">{entry.narration}</p>
+                  <p className="text-xs text-slate-800 dark:text-slate-200 font-medium">{entry.narration}</p>
 
-                  {/* Lines Breakdown */}
-                  <div className="bg-white/[0.02] rounded-xl p-2 text-[11px] overflow-x-auto">
+                  {/* Lines Breakdown (Master Spec 5.4) */}
+                  <div className="bg-slate-50/50 dark:bg-white/[0.02] rounded-xl p-2 text-[11px] overflow-x-auto border border-slate-100 dark:border-white/[0.04]">
                     <table className="w-full text-left font-mono">
                       <tbody>
                         {(entry.lines || []).map((l: JournalLineItem, lIdx: number) => (
-                          <tr key={lIdx} className="border-b border-aura-border/30 last:border-none">
-                            <td className="py-1 px-2 text-aura-text-muted w-16">{l.accountId}</td>
-                            <td className={`py-1 px-2 font-sans ${Number(l.credit) > 0 ? 'pl-6 text-aura-text-secondary' : 'font-medium text-aura-text'}`}>
+                          <tr key={lIdx} className="border-b border-slate-100 dark:border-white/[0.04] last:border-none">
+                            <td className="py-1.5 px-3 text-slate-400 dark:text-slate-500 w-16">{l.accountId}</td>
+                            <td className={`py-1.5 px-3 font-sans ${Number(l.credit) > 0 ? 'ps-6 text-slate-500 dark:text-slate-400' : 'font-medium text-slate-800 dark:text-slate-200'}`}>
                               {l.accountName}
                             </td>
-                            <td className="py-1 px-2 text-right text-aura-text w-24 tabular-nums">
+                            <td className="py-1.5 px-3 text-right text-slate-800 dark:text-slate-200 w-28 tabular-nums">
                               {Number(l.debit) > 0 ? `$${Number(l.debit).toFixed(2)}` : '—'}
                             </td>
-                            <td className="py-1 px-2 text-right text-aura-text w-24 tabular-nums">
+                            <td className="py-1.5 px-3 text-right text-slate-800 dark:text-slate-200 w-28 tabular-nums">
                               {Number(l.credit) > 0 ? `$${Number(l.credit).toFixed(2)}` : '—'}
                             </td>
                           </tr>
@@ -595,30 +595,32 @@ export default function GeneralJournal() {
         </div>
       </div>
 
-      {/* ─── 3. MODAL: MULTIMODAL OCR RECEIPT SCANNER ─── */}
+      {/* ─── 3. MODAL: MULTIMODAL OCR RECEIPT SCANNER (Master Spec 5.7) ─── */}
       <AnimatePresence>
         {ocrModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 dark:bg-black/75 backdrop-blur-md">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="glass-card w-full max-w-lg p-6 bg-aura-card border border-aura-border shadow-2xl relative"
+              className="w-full max-w-lg p-6 lg:p-8 rounded-3xl bg-white/95 dark:bg-[#080C14]/95 border border-slate-200 dark:border-white/[0.12] backdrop-blur-3xl shadow-2xl relative"
             >
               <button
                 onClick={() => setOcrModalOpen(false)}
-                className="absolute top-4 right-4 p-2 rounded-full text-aura-text-muted hover:text-aura-text hover:bg-white/5"
+                className="absolute top-5 right-5 p-2 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
               >
                 <X size={18} />
               </button>
 
-              <div className="flex items-center gap-2 mb-1">
-                <Camera size={18} className="text-aura-accent" />
-                <h3 className="text-base font-bold text-aura-text">Multimodal OCR Receipt Parser</h3>
+              <div className="pb-5 mb-6 border-b border-slate-200 dark:border-white/[0.08]">
+                <div className="flex items-center gap-2 mb-1">
+                  <Camera size={18} className="text-cyan-500" />
+                  <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">Multimodal OCR Receipt Parser</h3>
+                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Powered by Gemini 2.0 Flash Vision with zero-latency deterministic CPA regex fallback.
+                </p>
               </div>
-              <p className="text-xs text-aura-text-muted mb-4">
-                Powered by Gemini 2.0 Flash Vision with zero-latency deterministic CPA regex fallback.
-              </p>
 
               {/* Drag and Drop Zone */}
               {!ocrPreviewResult ? (
@@ -792,12 +794,12 @@ export default function GeneralJournal() {
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
-                  <div className="flex items-center justify-between gap-3 pt-2">
+                  {/* Action Buttons (Master Spec 5.6 & 5.7) */}
+                  <div className="gap-3 pt-6 mt-6 border-t border-slate-200 dark:border-white/[0.08] flex items-center justify-end">
                     <button
                       type="button"
                       onClick={() => setOcrPreviewResult(null)}
-                      className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-aura-text-muted hover:text-aura-text text-xs font-bold border border-aura-border transition cursor-pointer"
+                      className="h-10 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] text-slate-700 dark:text-slate-200 text-xs font-semibold transition-all cursor-pointer"
                     >
                       ← Scan Another
                     </button>
@@ -805,7 +807,7 @@ export default function GeneralJournal() {
                     <button
                       type="button"
                       onClick={applyOcrToDesk}
-                      className="px-4 py-2 rounded-xl bg-aura-accent hover:brightness-110 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-md cursor-pointer"
+                      className="h-10 px-5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 text-xs font-bold shadow-md shadow-slate-900/10 active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer"
                     >
                       <Check size={14} />
                       <span>Apply to Entry Desk ({baseCurrency})</span>
